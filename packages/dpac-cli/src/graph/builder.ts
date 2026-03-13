@@ -75,11 +75,6 @@ export function buildDependencyGraph(workspace: Workspace): DependencyGraph {
         addEdge(graph, {
           from: `flow:${flow.name}`,
           to: `dataset:${step.target}`,
-          type: 'consumes',
-        });
-        addEdge(graph, {
-          from: `flow:${flow.name}`,
-          to: `dataset:${step.input}`,
           type: 'produces',
         });
       }
