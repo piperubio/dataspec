@@ -74,7 +74,7 @@ export function buildDependencyGraph(workspace: Workspace): DependencyGraph {
       } else if (step.type === 'load') {
         addEdge(graph, {
           from: `flow:${flow.name}`,
-          to: `dataset:${step.input}`,
+          to: `dataset:${step.target}`,
           type: 'consumes',
         });
         addEdge(graph, {
