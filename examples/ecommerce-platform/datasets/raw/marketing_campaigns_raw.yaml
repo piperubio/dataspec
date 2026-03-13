@@ -1,0 +1,27 @@
+# Dataset: Marketing Campaigns Raw
+# Raw ingestion of marketing campaign data from external S3 bucket
+# Source: external_s3_bucket.marketing_csv_exports
+
+name: marketing_campaigns_raw
+layer: raw
+storage:
+  backend: s3-data-lake
+  format: parquet
+  location: s3://data-lake/raw/marketing_campaigns/
+
+contract:
+  name: marketing_campaigns_raw_schema
+  version: "1.0.0"
+
+metadata:
+  description: Marketing campaign data ingested from external S3 bucket CSV exports
+  owner: marketing-team
+  tags:
+    - raw
+    - marketing
+    - campaigns
+    - external-s3
+    - attribution
+  refresh_frequency: daily
+  retention_days: 365
+  source_location: s3://external-bucket/marketing/campaigns/*.csv

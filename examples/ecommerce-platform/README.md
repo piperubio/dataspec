@@ -14,12 +14,14 @@ This example showcases a complete data platform architecture for a global e-comm
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                    SOURCES (Data Origins)                   │
-├─────────────────────────────────────────────────────────────┤
-│  production_db  │  payment_api  │  analytics_db │ external  │
-│  (PostgreSQL)   │  (REST API)   │ (ClickHouse)  │  APIs     │
-└────────┬────────┴───────┬───────┴───────┬───────┴─────┬─────┘
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                         SOURCES (Data Origins)                               │
+├──────────────────────────────────────────────────────────────────────────────┤
+│  production_db  │  payment_api  │  analytics_db │ external    │ external     │
+│  (PostgreSQL)   │  (REST API)   │ (ClickHouse)  │  APIs       │ S3 Bucket    │
+│                 │               │               │             │(CSV, JSON,   │
+│                 │               │               │             │ Parquet)     │
+└────────┬────────┴───────┬───────┴───────┬───────┴─────┬───────┴──────────────┘
          │                │               │             │
          ▼                ▼               ▼             ▼
 ┌─────────────────────────────────────────────────────────────┐
@@ -68,7 +70,8 @@ examples/ecommerce-platform/
 │   ├── production_db.yaml     # PostgreSQL production database
 │   ├── payment_api.yaml       # Payment processor API
 │   ├── analytics_db.yaml      # ClickHouse analytics database
-│   └── external_apis.yaml     # Third-party integrations
+│   ├── external_apis.yaml     # Third-party integrations
+│   └── external_s3_bucket.yaml # External S3 bucket (file-based source)
 ├── contracts/                 # Data contracts organized by layer
 │   ├── raw/                   # Source schemas (document expected structure from sources)
 │   │   ├── users_raw_schema.yaml
@@ -104,8 +107,10 @@ examples/ecommerce-platform/
 │       ├── customer_analytics.yaml
 │       ├── sales_dashboard.yaml
 │       └── product_analytics.yaml
-└── flows/                     # ETL pipeline definitions
-    ├── user_etl_pipeline.yaml
+└── flows/                     # ETL/ELT pipeline definitions
+    ├── user_etl_pipeline.yaml          # Traditional ETL
+    ├── marketing_elt_pipeline.yaml     # ELT pattern (Extract-Load-Transform)
+    ├── marketing_s3_ingestion.yaml     # S3 to Raw pipeline
     ├── orders_etl_pipeline.yaml
     ├── products_etl_pipeline.yaml
     └── unified_analytics_pipeline.yaml
@@ -260,6 +265,52 @@ type: load
 input: refined_users
 target: users_refined
 ```
+
+## ETL vs ELT Patterns
+
+This example demonstrates both traditional ETL and modern ELT patterns:
+
+### ETL (Extract-Transform-Load)
+Transform data **before** loading to the data warehouse.
+
+```
+Source → Extract → Transform → Load → Refined Layer
+```
+
+**Use when:**
+- Data quality is critical and bad data should not land in raw
+- Transformations are simple and fast
+- Storage in raw layer is expensive
+- Compliance requires filtering PII before storage
+
+**Example:** `user_etl_pipeline.yaml`
+
+### ELT (Extract-Load-Transform)
+Load data **as-is** to raw layer, then transform to refined.
+
+```
+Source → Extract → Load (Raw) → Transform → Load (Refined)
+```
+
+**Use when:**
+- Data scientists need access to raw data
+- Complex transformations that might fail
+- Need to preserve original data for debugging
+- Storage is cheap and compute is elastic
+- Want to reprocess raw data with new logic
+
+**Example:** `marketing_elt_pipeline.yaml`
+
+### Comparison
+
+| Aspect | ETL | ELT |
+|--------|-----|-----|
+| Raw Data Available | ❌ No | ✅ Yes |
+| Debugging Failed Transforms | Hard | Easy |
+| Reprocessing Capability | Limited | Full |
+| Storage Cost | Lower | Higher |
+| Data Freshness to Raw | Delayed | Immediate |
+| Schema Evolution | Rigid | Flexible |
 
 ## Best Practices Demonstrated
 

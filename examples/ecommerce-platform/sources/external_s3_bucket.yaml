@@ -1,0 +1,59 @@
+# Source: External S3 Data Lake
+# Object storage bucket containing exported data, logs, and third-party datasets
+# This is an external S3 bucket (not our internal storage) that serves as a data source
+
+name: external_s3_bucket
+type: file_system
+entities:
+  - name: marketing_csv_exports
+    description: Marketing campaign data exported as CSV files
+    entityType: file_pattern
+    pattern: "marketing/campaigns/*.csv"
+    format: csv
+    
+  - name: application_logs
+    description: Application log files in JSON format
+    entityType: file_pattern
+    pattern: "logs/application/*.json"
+    format: json
+    
+  - name: legacy_data_exports
+    description: Historical data exports from legacy system
+    entityType: file_pattern
+    pattern: "legacy/exports/*.parquet"
+    format: parquet
+    
+  - name: third_party_datasets
+    description: Third-party datasets and enrichments
+    entityType: file_pattern
+    pattern: "external/datasets/*"
+    format: mixed
+    
+  - name: clickstream_s3
+    description: Real-time clickstream data streamed to S3
+    entityType: file_pattern
+    pattern: "clickstream/year=*/month=*/day=*/*.json.gz"
+    format: json
+    compression: gzip
+    partitioning: year/month/day
+
+metadata:
+  description: External S3 bucket serving as file-based data source for batch ingestion
+  owner: data-engineering-team
+  tags:
+    - external
+    - s3
+    - object-storage
+    - file-system
+    - batch
+  refresh_frequency: hourly
+  notes: |
+    This S3 bucket is owned by the Data Platform team but acts as a landing zone
+    for various external data sources. Files are organized by source system and date.
+    
+    Access patterns:
+    - marketing_csv_exports: Updated daily at 2 AM UTC
+    - application_logs: Real-time streaming via Kinesis Firehose
+    - legacy_data_exports: One-time migration, static
+    - third_party_datasets: Updated weekly on Mondays
+    - clickstream_s3: Real-time, partitioned by date

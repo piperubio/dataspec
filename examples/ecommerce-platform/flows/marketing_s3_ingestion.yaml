@@ -1,0 +1,41 @@
+# Flow: Marketing S3 Ingestion Pipeline
+# Extracts marketing campaign data from external S3 bucket
+
+name: marketing_s3_ingestion
+steps:
+  # Step 1: Extract from external S3 bucket
+  - type: extract
+    source: external_s3_bucket
+    entity: marketing_csv_exports
+    output: raw_marketing_csv
+
+  # Step 2: Transform CSV to structured format and validate
+  - type: transform
+    inputs:
+      - raw_marketing_csv
+    engine: spark-cluster
+    output: validated_campaigns
+
+  # Step 3: Load to raw layer
+  - type: load
+    input: validated_campaigns
+    target: marketing_campaigns_raw
+
+metadata:
+  description: Daily pipeline to ingest marketing campaign data from external S3 bucket
+  owner: marketing-team
+  schedule: "0 3 * * *"
+  tags:
+    - etl
+    - marketing
+    - s3
+    - csv
+    - external-source
+    - daily
+  notes: |
+    This pipeline extracts CSV files from an external S3 bucket (not our data lake),
+    validates the schema matches marketing_campaigns_raw_schema contract,
+    and loads the data into our raw layer.
+    
+    Source: s3://external-bucket/marketing/campaigns/*.csv
+    Destination: s3://data-lake/raw/marketing_campaigns/
