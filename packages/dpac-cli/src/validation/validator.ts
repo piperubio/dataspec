@@ -30,6 +30,7 @@ export class Validator {
 
   private validateCrossResourceReferences(): void {
     for (const flow of this.workspace.flows) {
+      const priorOutputs = new Set<string>();
       for (const step of flow.steps) {
         if (step.type === 'extract') {
           const sourceExists = this.workspace.sources.some(s => s.name === step.source);
@@ -41,18 +42,19 @@ export class Validator {
               'UNRESOLVED_SOURCE'
             ));
           }
+          priorOutputs.add(step.output);
         } else if (step.type === 'transform') {
           for (const input of step.inputs) {
-            const datasetExists = this.workspace.datasets.some(d => d.name === input);
-            if (!datasetExists) {
+            if (!priorOutputs.has(input)) {
               this.errors.push(createError(
-                `Undefined dataset reference '${input}' in flow '${flow.name}'`,
+                `Unresolved input '${input}' in transform step of flow '${flow.name}': no prior step produces this output`,
                 { file: flow.file, line: flow.line },
                 'error',
-                'UNRESOLVED_DATASET'
+                'UNRESOLVED_STEP_OUTPUT'
               ));
             }
           }
+          priorOutputs.add(step.output);
         } else if (step.type === 'load') {
           const datasetExists = this.workspace.datasets.some(d => d.name === step.target);
           if (!datasetExists) {
@@ -125,21 +127,6 @@ export class Validator {
               'INVALID_STEP_TYPE'
             ));
           }
-        } else if (step.type === 'transform') {
-          for (const input of step.inputs) {
-            const datasetExists = this.workspace.datasets.some(d => d.name === input);
-            if (!datasetExists) continue;
-            
-            const dataset = this.workspace.datasets.find(d => d.name === input);
-            if (dataset && dataset.layer === 'raw') {
-              this.warnings.push(createError(
-                `Transform step typically references refined/serving datasets, but '${input}' is in raw layer`,
-                { file: flow.file, line: flow.line },
-                'warning',
-                'LAYER_WARNING'
-              ));
-            }
-          }
         }
       }
     }
@@ -164,34 +151,22 @@ export class Validator {
       }
     }
 
-    const consumedDatasets = new Set<string>();
     const producedDatasets = new Set<string>();
 
     for (const flow of this.workspace.flows) {
       for (const step of flow.steps) {
-        if (step.type === 'transform') {
-          for (const input of step.inputs) {
-            consumedDatasets.add(input);
-          }
-        }
-      }
-
-      const lastLoadStep = flow.steps.filter(s => s.type === 'load').pop();
-      if (lastLoadStep) {
-        const targetName = (lastLoadStep as { target?: string }).target;
-        if (targetName) {
-          producedDatasets.add(targetName);
+        if (step.type === 'load') {
+          producedDatasets.add(step.target);
         }
       }
     }
 
     for (const dataset of this.workspace.datasets) {
-      const isConsumed = consumedDatasets.has(dataset.name);
       const isProduced = producedDatasets.has(dataset.name);
 
-      if (!isConsumed && !isProduced && this.workspace.flows.length > 0) {
+      if (!isProduced && this.workspace.flows.length > 0) {
         this.warnings.push(createError(
-          `Orphaned dataset '${dataset.name}' - not produced or consumed by any flow`,
+          `Orphaned dataset '${dataset.name}' - not produced by any flow`,
           { file: dataset.file, line: dataset.line },
           'warning',
           'ORPHANED_DATASET'
@@ -302,19 +277,17 @@ export class Validator {
 
     for (const flow of this.workspace.flows) {
       for (const step of flow.steps) {
-        if (step.type === 'transform') {
-          for (const input of step.inputs) {
-            const contractName = datasetContractMap.get(input);
-            if (contractName) {
-              const fields = sourceFields.get(contractName);
-              if (fields && fields.size === 0) {
-                this.errors.push(createError(
-                  `Breaking change: Contract '${contractName}' has no fields but is referenced by flow '${flow.name}'`,
-                  { file: flow.file, line: flow.line },
-                  'error',
-                  'BREAKING_CHANGE'
-                ));
-              }
+        if (step.type === 'load') {
+          const contractName = datasetContractMap.get(step.target);
+          if (contractName) {
+            const fields = sourceFields.get(contractName);
+            if (fields && fields.size === 0) {
+              this.errors.push(createError(
+                `Breaking change: Contract '${contractName}' has no fields but is referenced by flow '${flow.name}'`,
+                { file: flow.file, line: flow.line },
+                'error',
+                'BREAKING_CHANGE'
+              ));
             }
           }
         }
@@ -330,10 +303,8 @@ export class Validator {
           const affectedDatasets = this.workspace.datasets.filter(d => d.contract?.name === contract.name);
           const affectedFlows = this.workspace.flows.filter(f => 
             f.steps.some(s => {
-              if (s.type === 'transform') {
-                return s.inputs.some(input => 
-                  this.workspace.datasets.find(d => d.name === input)?.contract?.name === contract.name
-                );
+              if (s.type === 'load') {
+                return this.workspace.datasets.find(d => d.name === s.target)?.contract?.name === contract.name;
               }
               return false;
             })
