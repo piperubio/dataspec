@@ -1,0 +1,31 @@
+#!/usr/bin/env bun
+/**
+ * DPAC CLI Entry Point
+ * Command-line interface for the Declarative Data Platform Architecture
+ */
+
+import { Command } from 'commander';
+import { validateCommand } from '../dist/commands/validate.js';
+import { initCommand } from '../dist/commands/init.js';
+import { listCommand } from '../dist/commands/list.js';
+import { showCommand } from '../dist/commands/show.js';
+
+const program = new Command();
+
+program
+  .name('dpac')
+  .description('DPAC CLI - Declarative Data Platform Architecture Command-Line Interface')
+  .version('0.1.0');
+
+// Register commands
+program.addCommand(validateCommand);
+program.addCommand(initCommand);
+program.addCommand(listCommand);
+program.addCommand(showCommand);
+
+// Global options
+program
+  .option('-v, --verbose', 'Enable verbose output');
+
+// Parse and execute
+program.parse(process.argv);
