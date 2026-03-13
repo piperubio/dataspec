@@ -175,10 +175,10 @@ The CLI performs comprehensive validation:
 - Load steps must reference datasets
 
 ### Breaking Changes
-Detects breaking changes through workspace-wide dependency graph analysis:
-- Field removal that breaks downstream consumers
-- Type narrowing that violates expectations
-- Constraint tightening
+Currently performs limited breaking-change checks focused on contract structure:
+- Flags referenced contracts that define zero fields (likely indicating removed or incomplete schemas)
+
+More advanced detection for field removal, type narrowing, and constraint tightening is planned but not yet implemented.
 
 ## Error Format
 
