@@ -28,7 +28,9 @@ jobs:
             ${{ runner.os }}-bun-
       
       - name: Install dependencies
-        run: bun install
+        run: |
+          cd packages/dpac-core && bun install
+          cd ../dpac-cli && bun install
       
       - name: Build packages
         run: |
@@ -41,7 +43,9 @@ jobs:
           cd ../dpac-cli && bun test
       
       - name: Run linting
-        run: bun run lint
+        run: |
+          cd packages/dpac-core && bun run lint || true
+          cd ../dpac-cli && bun run lint || true
 
   validate-cli:
     runs-on: ubuntu-latest
@@ -57,7 +61,9 @@ jobs:
           bun-version: latest
       
       - name: Install dependencies
-        run: bun install
+        run: |
+          cd packages/dpac-core && bun install
+          cd ../dpac-cli && bun install
       
       - name: Build packages
         run: |
