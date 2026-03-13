@@ -1,4 +1,4 @@
-import type { DependencyGraph, GraphNode, GraphEdge } from './types.js';
+import type { DependencyGraph, GraphNode } from './types.js';
 
 /**
  * Get all upstream dependencies of a node (what this node depends on)

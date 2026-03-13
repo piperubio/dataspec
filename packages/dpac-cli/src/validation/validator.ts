@@ -1,7 +1,7 @@
 import { Workspace } from '../parsing/index.js';
-import { detectCycles, getDownstream, getImpactChain, formatImpactChain, DependencyGraph } from '../graph/index.js';
+import { detectCycles, getDownstream, getImpactChain,  DependencyGraph } from '../graph/index.js';
 import { buildDependencyGraph } from '../graph/builder.js';
-import { ValidationError, ValidationResult, createError, createSuccessResult, createFailureResult } from './error.js';
+import { ValidationError, ValidationResult, createError, createFailureResult } from './error.js';
 
 export class Validator {
   private workspace: Workspace;
@@ -164,7 +164,6 @@ export class Validator {
       }
     }
 
-    const datasetNames = new Set(this.workspace.datasets.map(d => d.name));
     const consumedDatasets = new Set<string>();
     const producedDatasets = new Set<string>();
 
@@ -363,8 +362,6 @@ export class Validator {
       const impactChain = getImpactChain(this.graph, contractId);
       
       if (impactChain && impactChain.dependents.length > 0) {
-        // Format the full impact chain
-        const impactTree = formatImpactChain(impactChain);
         
         // Check if any fields were removed (simulated by checking if the contract has changes)
         // In a real scenario, we'd compare with a previous version

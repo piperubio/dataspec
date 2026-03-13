@@ -1,11 +1,8 @@
 import { readYamlFile, scanWorkspace } from './scanner.js';
 import { parseYamlWithLineNumbers } from './yaml.js';
 import type {
-  Source, SourceEntity,
-  Dataset,
-  Contract,
-  Flow, FlowStep,
-  PlatformConfig
+  SourceEntity,
+  FlowStep,
 } from '@dataspec/dpac-core';
 
 export interface ParsedSource {
@@ -71,7 +68,7 @@ export interface Workspace {
 
 export async function parseWorkspace(dirPath: string): Promise<Workspace> {
   const resources = await scanWorkspace(dirPath);
-  
+
   const workspace: Workspace = {
     platform: null,
     sources: [],

@@ -1,5 +1,5 @@
 import YAML from 'yaml';
-import type { ValidationError, SourceLocation } from '../validation/error.js';
+import type { ValidationError } from '../validation/error.js';
 
 export interface YamlNode {
   value: unknown;
