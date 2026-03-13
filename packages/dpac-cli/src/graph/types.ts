@@ -55,14 +55,17 @@ export function getUpstream(graph: DependencyGraph, startNodeId: string): GraphN
   function traverse(nodeId: string) {
     if (visited.has(nodeId)) return;
     visited.add(nodeId);
+
+    if (nodeId !== startNodeId) {
+      const node = graph.nodes.get(nodeId);
+      if (node) {
+        result.push(node);
+      }
+    }
     
     const incoming = getIncomingEdges(graph, nodeId);
     for (const edge of incoming) {
-      const node = graph.nodes.get(edge.from);
-      if (node) {
-        result.push(node);
-        traverse(edge.from);
-      }
+      traverse(edge.from);
     }
   }
   
@@ -77,14 +80,17 @@ export function getDownstream(graph: DependencyGraph, startNodeId: string): Grap
   function traverse(nodeId: string) {
     if (visited.has(nodeId)) return;
     visited.add(nodeId);
+
+    if (nodeId !== startNodeId) {
+      const node = graph.nodes.get(nodeId);
+      if (node) {
+        result.push(node);
+      }
+    }
     
     const outgoing = getOutgoingEdges(graph, nodeId);
     for (const edge of outgoing) {
-      const node = graph.nodes.get(edge.to);
-      if (node) {
-        result.push(node);
-        traverse(edge.to);
-      }
+      traverse(edge.to);
     }
   }
   
