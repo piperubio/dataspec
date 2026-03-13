@@ -76,7 +76,7 @@ async function scanYamlFilesRecursive(dirPath: string, _basePath: string): Promi
       const fullPath = join(dirPath, entry.name);
       
       if (entry.isDirectory()) {
-        const subFiles = await scanYamlFilesRecursive(fullPath, basePath);
+        const subFiles = await scanYamlFilesRecursive(fullPath, _basePath);
         files.push(...subFiles);
       } else if (entry.isFile() && entry.name.endsWith('.yaml')) {
         files.push(fullPath);
