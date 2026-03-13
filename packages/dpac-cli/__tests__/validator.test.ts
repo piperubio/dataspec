@@ -205,11 +205,11 @@ describe('Validation Engine', () => {
               output: 'intermediate',
               engine: 'dbt',
             },
-            {
-              type: 'load',
-              input: 'produced',  // This produces the 'produced' dataset
-              target: 'data_lake',
-            },
+          {
+            type: 'load',
+            input: 'consumed',
+            target: 'produced',
+          },
           ],
           file: 'flows/flow1.yaml',
           line: 1,
@@ -223,10 +223,10 @@ describe('Validation Engine', () => {
       
       // 'orphaned' is not used at all - should be flagged
       expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes('orphaned'))).toBe(true);
-      // 'consumed' is consumed by the transform step - should NOT be flagged
-      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes('consumed'))).toBe(false);
-      // 'produced' is produced by the load step - should NOT be flagged
-      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes('produced'))).toBe(false);
+      // 'consumed' is consumed - should NOT be flagged as orphaned
+      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes("'consumed'"))).toBe(false);
+      // 'produced' is produced - should NOT be flagged as orphaned
+      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes("'produced'"))).toBe(false);
     });
   });
 });
