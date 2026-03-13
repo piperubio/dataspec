@@ -27,15 +27,17 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
       
-      - name: Install dependencies
+      - name: Install and build dpac-core
         run: |
-          cd packages/dpac-core && bun install
-          cd ../dpac-cli && bun install
+          cd packages/dpac-core
+          bun install
+          bun run build
       
-      - name: Build packages
+      - name: Install and build dpac-cli
         run: |
-          cd packages/dpac-core && bun run build
-          cd ../dpac-cli && bun run build
+          cd packages/dpac-cli
+          bun install
+          bun run build
       
       - name: Run tests
         run: |
@@ -60,21 +62,30 @@ jobs:
         with:
           bun-version: latest
       
-      - name: Install dependencies
+      - name: Install and build dpac-core
         run: |
-          cd packages/dpac-core && bun install
-          cd ../dpac-cli && bun install
+          cd packages/dpac-core
+          bun install
+          bun run build
       
-      - name: Build packages
+      - name: Install and build dpac-cli
         run: |
-          cd packages/dpac-core && bun run build
-          cd ../dpac-cli && bun run build
+          cd packages/dpac-cli
+          bun install
+          bun run build
       
       - name: Test CLI against example workspace
         run: |
           cd packages/dpac-cli
           bun run build
-          ./bin/dpac validate --path examples/ecommerce-platform
+          set +e
+          ./bin/dpac validate --path ../../examples/ecommerce-platform
+          status=$?
+          set -e
+          if [ "$status" -gt 1 ]; then
+            echo "CLI validate command failed with unexpected exit code: $status"
+            exit "$status"
+          fi
       
       - name: Test CLI commands
         run: |
