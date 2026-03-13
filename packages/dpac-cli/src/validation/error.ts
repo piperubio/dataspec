@@ -32,10 +32,10 @@ export function formatValidationError(error: ValidationError): string {
   return `${file}:${line}:${error.severity}: ${error.message}`;
 }
 
-export function createSuccessResult(): ValidationResult {
+export function createSuccessResult(warnings: ValidationError[] = []): ValidationResult {
   return {
     errors: [],
-    warnings: [],
+    warnings,
     passed: true,
   };
 }
