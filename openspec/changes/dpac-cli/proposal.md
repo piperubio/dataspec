@@ -14,6 +14,8 @@ dpac-core defines what the data platform IS — the resources (sources, datasets
 - **`cli-tooling`**: Developer-facing command-line interface providing:
   - `dpac validate`: Run all validations and report errors with file paths and line numbers
   - `dpac init`: Scaffold new DPaC projects with directory structure and optional examples
+  - `dpac list [resource]`: List resources in the workspace (sources, datasets, contracts, flows) with optional filtering
+  - `dpac show <resource> <name>`: Display detailed information about a specific resource, including `--deps` flag to show upstream/downstream dependencies
   - `dpac --version`: Display CLI version
   - `dpac --help`: Display usage information and available commands
   - Consistent error formatting across all commands
@@ -27,14 +29,14 @@ dpac-core defines what the data platform IS — the resources (sources, datasets
 
 ### New Capabilities
 - `validation-engine`: Validate graph integrity, contract consistency, cross-resource references, step type coherence, and breaking changes via workspace dependency graph analysis
-- `cli-tooling`: CLI commands for validation (`dpac validate`), project scaffolding (`dpac init`), version display (`--version`), help (`--help`), and consistent error formatting
+- `cli-tooling`: CLI commands for validation (`dpac validate`), project scaffolding (`dpac init`), resource discovery (`dpac list`), resource inspection (`dpac show`), version display (`--version`), help (`--help`), and consistent error formatting
 
 ### Modified Capabilities
 <!-- No existing capabilities are being modified — this change introduces tooling on top of dpac-core -->
 
 ## Impact
 
-- **For data engineers**: Run `dpac validate` locally during development and in CI pipelines to catch errors before they reach production. Breaking changes are detected through workspace dependency analysis, ensuring that contract modifications that would break downstream flows are caught immediately — even in fresh checkouts without Git history.
+- **For data engineers**: Run `dpac validate` locally during development and in CI pipelines to catch errors before they reach production. Use `dpac list` and `dpac show` to navigate and inspect the workspace without opening YAML files. Breaking changes are detected through workspace dependency analysis, ensuring that contract modifications that would break downstream flows are caught immediately — even in fresh checkouts without Git history.
 - **For platform teams**: Establish validation gates in CI/CD pipelines. All cross-resource references, contract compatibilities, and graph constraints are verified automatically.
 - **For AI coding agents**: Validation errors provide structured feedback with file paths and line numbers, enabling agents to fix issues programmatically.
 

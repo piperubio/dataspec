@@ -1,6 +1,5 @@
 # Dependencies
 node_modules/
-package-lock.json
 yarn.lock
 pnpm-lock.yaml
 bun.lockb
@@ -40,6 +39,3 @@ coverage/
 tmp/
 temp/
 *.tmp
-
-# Misc
-.sisyphus

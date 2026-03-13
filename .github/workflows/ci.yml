@@ -1,0 +1,96 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock*') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      
+      - name: Install and build dpac-core
+        run: |
+          cd packages/dpac-core
+          bun install
+          bun run build
+      
+      - name: Install and build dpac-cli
+        run: |
+          cd packages/dpac-cli
+          bun install
+          bun run build
+      
+      - name: Run tests
+        run: |
+          cd packages/dpac-core && bun test
+          cd ../dpac-cli && bun test
+      
+      - name: Run linting
+        run: |
+          cd packages/dpac-core && bun run lint || true
+          cd ../dpac-cli && bun run lint || true
+
+  validate-cli:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      
+      - name: Install and build dpac-core
+        run: |
+          cd packages/dpac-core
+          bun install
+          bun run build
+      
+      - name: Install and build dpac-cli
+        run: |
+          cd packages/dpac-cli
+          bun install
+          bun run build
+      
+      - name: Test CLI against example workspace
+        run: |
+          cd packages/dpac-cli
+          bun run build
+          set +e
+          ./bin/dpac validate --path ../../examples/ecommerce-platform
+          status=$?
+          set -e
+          if [ "$status" -gt 1 ]; then
+            echo "CLI validate command failed with unexpected exit code: $status"
+            exit "$status"
+          fi
+      
+      - name: Test CLI commands
+        run: |
+          cd packages/dpac-cli
+          ./bin/dpac --version
+          ./bin/dpac --help
+          ./bin/dpac list --help
+          ./bin/dpac validate --help

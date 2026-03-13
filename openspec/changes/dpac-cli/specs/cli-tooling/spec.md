@@ -97,3 +97,65 @@ The system SHALL use specific exit codes to enable CI/CD pipeline integration.
 #### Scenario: CLI error exit code
 - **WHEN** a CLI error occurs (invalid arguments, file not found)
 - **THEN** the CLI SHALL exit with code 2
+
+### Requirement: Provide list command
+The system SHALL provide a CLI command `dpac list [resource]` that lists resources in the workspace.
+
+#### Scenario: List all resources
+- **WHEN** a user runs `dpac list` without specifying a resource type
+- **THEN** the CLI SHALL display a summary of all resource types with counts
+
+#### Scenario: List sources
+- **WHEN** a user runs `dpac list sources`
+- **THEN** the CLI SHALL display all sources with their names and types
+
+#### Scenario: List datasets
+- **WHEN** a user runs `dpac list datasets`
+- **THEN** the CLI SHALL display all datasets with their names and tier (raw/refined/serving)
+
+#### Scenario: List datasets filtered by tier
+- **WHEN** a user runs `dpac list datasets --tier raw`
+- **THEN** the CLI SHALL display only datasets in the raw tier
+
+#### Scenario: List flows
+- **WHEN** a user runs `dpac list flows`
+- **THEN** the CLI SHALL display all flows with their names and validation status
+
+#### Scenario: List contracts
+- **WHEN** a user runs `dpac list contracts`
+- **THEN** the CLI SHALL display all contracts with their names and versions
+
+#### Scenario: List with JSON output
+- **WHEN** a user runs `dpac list --format json`
+- **THEN** the CLI SHALL output the resource list in JSON format
+
+### Requirement: Provide show command
+The system SHALL provide a CLI command `dpac show <resource> <name>` that displays detailed information about a specific resource.
+
+#### Scenario: Show source details
+- **WHEN** a user runs `dpac show source production_db`
+- **THEN** the CLI SHALL display detailed information about the source including connection type, host, and referenced datasets
+
+#### Scenario: Show dataset details
+- **WHEN** a user runs `dpac show dataset users_raw`
+- **THEN** the CLI SHALL display detailed information about the dataset including schema reference, tier, and associated flows
+
+#### Scenario: Show flow details
+- **WHEN** a user runs `dpac show flow orders_etl_pipeline`
+- **THEN** the CLI SHALL display detailed information about the flow including steps, inputs, and outputs
+
+#### Scenario: Show contract details
+- **WHEN** a user runs `dpac show contract user_contract`
+- **THEN** the CLI SHALL display detailed information about the contract including fields, types, and constraints
+
+#### Scenario: Show with dependencies
+- **WHEN** a user runs `dpac show dataset users_raw --deps`
+- **THEN** the CLI SHALL display the dataset details plus upstream and downstream dependencies
+
+#### Scenario: Show resource not found
+- **WHEN** a user runs `dpac show dataset nonexistent`
+- **THEN** the CLI SHALL exit with code 2 and display an error message indicating the resource was not found
+
+#### Scenario: Show with JSON output
+- **WHEN** a user runs `dpac show dataset users_raw --format json`
+- **THEN** the CLI SHALL output the resource details in JSON format
