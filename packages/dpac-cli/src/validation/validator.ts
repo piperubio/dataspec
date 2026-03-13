@@ -25,7 +25,7 @@ export class Validator {
       return createFailureResult(this.errors, this.warnings);
     }
 
-    return createSuccessResult();
+    return { errors: [], warnings: this.warnings, passed: true };
   }
 
   private validateCrossResourceReferences(): void {
@@ -181,9 +181,9 @@ export class Validator {
 
       const lastLoadStep = flow.steps.filter(s => s.type === 'load').pop();
       if (lastLoadStep) {
-        const dataset = this.workspace.datasets.find(d => d.name === lastLoadStep.input);
-        if (dataset) {
-          producedDatasets.add(dataset.name);
+        const targetName = (lastLoadStep as { target?: string }).target;
+        if (targetName) {
+          producedDatasets.add(targetName);
         }
       }
     }
