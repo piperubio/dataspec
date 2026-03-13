@@ -48,10 +48,13 @@ function showSource(workspace: Workspace, name: string, options: { format: strin
     file: source.file,
   };
 
+  let upstream: GraphNode[] = [];
+  let downstream: GraphNode[] = [];
+
   if (options.deps) {
     const graph = buildDependencyGraph(workspace);
-    const upstream = getUpstream(graph, `source:${name}`);
-    const downstream = getDownstream(graph, `source:${name}`);
+    upstream = getUpstream(graph, `source:${name}`);
+    downstream = getDownstream(graph, `source:${name}`);
     output.upstream = upstream.map((n: GraphNode) => ({ type: n.type, name: n.name }));
     output.downstream = downstream.map((n: GraphNode) => ({ type: n.type, name: n.name }));
   }
@@ -65,6 +68,24 @@ function showSource(workspace: Workspace, name: string, options: { format: strin
     console.log('  Entities:');
     for (const entity of source.entities) {
       console.log(`    - ${entity.name}${entity.description ? `: ${entity.description}` : ''}`);
+    }
+    if (options.deps) {
+      console.log('  Upstream:');
+      if (upstream.length === 0) {
+        console.log('    (none)');
+      } else {
+        for (const n of upstream) {
+          console.log(`    - ${n.type}:${n.name}`);
+        }
+      }
+      console.log('  Downstream:');
+      if (downstream.length === 0) {
+        console.log('    (none)');
+      } else {
+        for (const n of downstream) {
+          console.log(`    - ${n.type}:${n.name}`);
+        }
+      }
     }
   }
 }
@@ -88,10 +109,13 @@ function showDataset(workspace: Workspace, name: string, options: { format: stri
     output.contract = dataset.contract;
   }
 
+  let upstream: GraphNode[] = [];
+  let downstream: GraphNode[] = [];
+
   if (options.deps) {
     const graph = buildDependencyGraph(workspace);
-    const upstream = getUpstream(graph, `dataset:${name}`);
-    const downstream = getDownstream(graph, `dataset:${name}`);
+    upstream = getUpstream(graph, `dataset:${name}`);
+    downstream = getDownstream(graph, `dataset:${name}`);
     output.upstream = upstream.map((n: GraphNode) => ({ type: n.type, name: n.name }));
     output.downstream = downstream.map((n: GraphNode) => ({ type: n.type, name: n.name }));
   }
@@ -106,6 +130,24 @@ function showDataset(workspace: Workspace, name: string, options: { format: stri
       console.log(`  Contract: ${dataset.contract.name} (${dataset.contract.version})`);
     }
     console.log(`  File: ${dataset.file}`);
+    if (options.deps) {
+      console.log('  Upstream:');
+      if (upstream.length === 0) {
+        console.log('    (none)');
+      } else {
+        for (const n of upstream) {
+          console.log(`    - ${n.type}:${n.name}`);
+        }
+      }
+      console.log('  Downstream:');
+      if (downstream.length === 0) {
+        console.log('    (none)');
+      } else {
+        for (const n of downstream) {
+          console.log(`    - ${n.type}:${n.name}`);
+        }
+      }
+    }
   }
 }
 

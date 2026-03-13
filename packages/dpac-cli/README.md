@@ -154,9 +154,9 @@ my-platform/
 The CLI performs comprehensive validation:
 
 ### Graph Integrity
-- Detects cycles in flow dependencies
 - Identifies orphaned datasets (not produced or consumed)
-- Checks for incomplete pipelines
+
+> Note: Cycle detection and incomplete pipeline checks are planned for a future release.
 
 ### Cross-Resource References
 - Ensures all references resolve to declared resources
@@ -175,10 +175,10 @@ The CLI performs comprehensive validation:
 - Load steps must reference datasets
 
 ### Breaking Changes
-Detects breaking changes through workspace-wide dependency graph analysis:
-- Field removal that breaks downstream consumers
-- Type narrowing that violates expectations
-- Constraint tightening
+Currently performs limited breaking-change checks focused on contract structure:
+- Flags referenced contracts that define zero fields (likely indicating removed or incomplete schemas)
+
+More advanced detection for field removal, type narrowing, and constraint tightening is planned but not yet implemented.
 
 ## Error Format
 

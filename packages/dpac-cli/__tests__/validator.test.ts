@@ -218,9 +218,6 @@ describe('Validation Engine', () => {
 
       const result = validateWorkspace(workspace);
       
-      // Debug: log all warnings
-      console.log('Warnings:', result.warnings.map(w => w.message));
-      
       // 'orphaned' is not used at all - should be flagged
       expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes('orphaned'))).toBe(true);
       // 'consumed' is consumed - should NOT be flagged as orphaned

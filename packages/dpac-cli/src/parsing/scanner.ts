@@ -66,7 +66,7 @@ async function scanYamlFiles(dirPath: string, _basePath: string): Promise<string
   return files;
 }
 
-async function scanYamlFilesRecursive(dirPath: string, basePath: string): Promise<string[]> {
+async function scanYamlFilesRecursive(dirPath: string, _basePath: string): Promise<string[]> {
   const files: string[] = [];
   
   try {
