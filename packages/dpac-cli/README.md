@@ -154,9 +154,9 @@ my-platform/
 The CLI performs comprehensive validation:
 
 ### Graph Integrity
-- Detects cycles in flow dependencies
 - Identifies orphaned datasets (not produced or consumed)
-- Checks for incomplete pipelines
+
+> Note: Cycle detection and incomplete pipeline checks are planned for a future release.
 
 ### Cross-Resource References
 - Ensures all references resolve to declared resources
