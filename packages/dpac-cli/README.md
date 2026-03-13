@@ -155,8 +155,8 @@ The CLI performs comprehensive validation:
 
 ### Graph Integrity
 - Identifies orphaned datasets (not produced or consumed)
-
-> Note: Cycle detection and incomplete pipeline checks are planned for a future release.
+- Detects cycles in the dataset and flow graph
+- Warns about incomplete pipelines (e.g., missing sinks or unreachable outputs)
 
 ### Cross-Resource References
 - Ensures all references resolve to declared resources
