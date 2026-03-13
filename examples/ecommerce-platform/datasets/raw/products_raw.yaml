@@ -1,0 +1,24 @@
+# Dataset: Raw Products
+# Raw ingestion of product data from production database
+
+name: products_raw
+layer: raw
+storage:
+  backend: s3-data-lake
+  format: parquet
+  location: s3://data-lake/raw/products/
+
+contract:
+  name: products_raw_schema
+  version: "1.0.0"
+
+metadata:
+  description: Raw product catalog data ingested from production database
+  owner: data-engineering-team
+  tags:
+    - raw
+    - products
+    - catalog
+    - production-db
+  refresh_frequency: daily
+  retention_days: 90

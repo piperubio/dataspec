@@ -1,0 +1,90 @@
+# Flow: Orders ETL Pipeline
+# Extracts order data from production database, transforms, and loads to serving layer
+
+name: orders_etl_pipeline
+steps:
+  # Step 1: Extract raw order data from production database
+  - type: extract
+    source: production_db
+    entity: orders
+    output: raw_orders
+    
+  # Step 2: Extract order items for enrichment
+  - type: extract
+    source: production_db
+    entity: order_items
+    output: raw_order_items
+    
+  # Step 3: Extract user data for joins
+  - type: extract
+    source: production_db
+    entity: users
+    output: raw_users_for_orders
+    
+  # Step 4: Transform and load raw orders
+  - type: transform
+    inputs:
+      - raw_orders
+    engine: dbt-transforms
+    output: prepared_orders
+    
+  - type: load
+    input: prepared_orders
+    target: orders_raw
+    
+  # Step 5: Transform and load raw order items
+  - type: transform
+    inputs:
+      - raw_order_items
+    engine: dbt-transforms
+    output: prepared_order_items
+    
+  - type: load
+    input: prepared_order_items
+    target: order_items_raw
+    
+  # Step 6: Transform orders to refined layer with validation
+  - type: transform
+    inputs:
+      - raw_orders
+      - raw_users_for_orders
+    engine: dbt-transforms
+    output: refined_orders
+    
+  - type: load
+    input: refined_orders
+    target: orders_refined
+    
+  # Step 7: Transform order items to refined layer
+  - type: transform
+    inputs:
+      - raw_order_items
+      - raw_orders
+    engine: dbt-transforms
+    output: refined_order_items
+    
+  - type: load
+    input: refined_order_items
+    target: order_items_refined
+    
+  # Step 8: Transform for sales dashboard
+  - type: transform
+    inputs:
+      - refined_orders
+      - refined_order_items
+    engine: dbt-transforms
+    output: sales_metrics
+    
+  - type: load
+    input: sales_metrics
+    target: sales_dashboard
+
+metadata:
+  description: Complete ETL pipeline for order data including items and sales metrics
+  version: "1.0.0"
+  labels:
+    - etl
+    - orders
+    - sales
+    - production-to-serving
+  definedAt: flows/orders_etl_pipeline.yaml

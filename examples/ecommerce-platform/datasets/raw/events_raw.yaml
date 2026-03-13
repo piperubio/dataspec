@@ -1,0 +1,25 @@
+# Dataset: Raw Events
+# Raw ingestion of clickstream events from analytics database
+
+name: events_raw
+layer: raw
+storage:
+  backend: s3-data-lake
+  format: parquet
+  location: s3://data-lake/raw/events/
+
+contract:
+  name: events_raw_schema
+  version: "1.0.0"
+
+metadata:
+  description: Raw clickstream and analytics events ingested from analytics database
+  owner: analytics-team
+  tags:
+    - raw
+    - events
+    - clickstream
+    - analytics-db
+    - high-volume
+  refresh_frequency: realtime
+  retention_days: 30

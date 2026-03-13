@@ -1,0 +1,87 @@
+# Contract: Analytics Events Contract
+# Defines the schema for clickstream and analytics events
+
+name: analytics_events_contract
+version: "1.0.0"
+fields:
+  - name: event_id
+    type: uuid
+    constraints:
+      unique: true
+      not_null: true
+    description: Unique identifier for the event
+    
+  - name: event_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of event (page_view, click, add_to_cart, purchase, etc.)
+    
+  - name: user_id
+    type: uuid
+    description: Reference to user (null for anonymous users)
+    
+  - name: session_id
+    type: string
+    constraints:
+      not_null: true
+    description: Anonymous session identifier
+    
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Event timestamp
+    
+  - name: page_url
+    type: string
+    description: Current page URL
+    
+  - name: referrer_url
+    type: string
+    description: Referrer URL
+    
+  - name: device_type
+    type: string
+    description: Device type (desktop, mobile, tablet)
+    
+  - name: browser
+    type: string
+    description: Browser name and version
+    
+  - name: operating_system
+    type: string
+    description: Operating system
+    
+  - name: country
+    type: string
+    description: Country based on IP geolocation
+    
+  - name: city
+    type: string
+    description: City based on IP geolocation
+    
+  - name: properties
+    type: json
+    description: Event-specific properties stored as JSON
+    
+  - name: utm_source
+    type: string
+    description: UTM source parameter
+    
+  - name: utm_medium
+    type: string
+    description: UTM medium parameter
+    
+  - name: utm_campaign
+    type: string
+    description: UTM campaign parameter
+
+metadata:
+  description: Schema contract for analytics and clickstream events
+  owner: analytics-team
+  tags:
+    - events
+    - clickstream
+    - analytics
+    - high-volume

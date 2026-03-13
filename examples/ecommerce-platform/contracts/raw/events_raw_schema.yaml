@@ -1,0 +1,93 @@
+# Contract: Events Raw Schema
+# Defines the expected schema from the analytics events API
+
+name: events_raw_schema
+version: "1.0.0"
+fields:
+  - name: event_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique event identifier
+    
+  - name: event_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of event (page_view, click, purchase, etc.)
+    
+  - name: user_id
+    type: uuid
+    description: User who triggered the event (null if anonymous)
+    
+  - name: session_id
+    type: string
+    description: Analytics session identifier
+    
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: When event occurred
+    
+  - name: page_url
+    type: string
+    description: Page where event occurred
+    
+  - name: referrer_url
+    type: string
+    description: Referring page
+    
+  - name: device_type
+    type: string
+    description: Device type (desktop, mobile, tablet)
+    
+  - name: browser
+    type: string
+    description: Browser name
+    
+  - name: os
+    type: string
+    description: Operating system
+    
+  - name: ip_address
+    type: string
+    description: User IP address
+    
+  - name: country
+    type: string
+    description: Country from IP geolocation
+    
+  - name: city
+    type: string
+    description: City from IP geolocation
+    
+  - name: utm_source
+    type: string
+    description: Marketing source
+    
+  - name: utm_medium
+    type: string
+    description: Marketing medium
+    
+  - name: utm_campaign
+    type: string
+    description: Marketing campaign
+    
+  - name: properties
+    type: json
+    description: Event-specific properties as JSON
+
+metadata:
+  description: Source schema for analytics events from analytics API
+  owner: analytics-team
+  layer: raw
+  source: analytics_db
+  pii: true
+  tags:
+    - raw
+    - source-schema
+    - events
+    - clickstream
+    - behavioral
+    - external-api

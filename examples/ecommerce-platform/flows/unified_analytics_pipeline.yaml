@@ -1,0 +1,158 @@
+# Flow: Unified Analytics Pipeline
+# Comprehensive pipeline that joins multiple sources for unified analytics
+
+name: unified_analytics_pipeline
+steps:
+  # === EXTRACT PHASE: Pull data from all sources ===
+  
+  # Extract production data
+  - type: extract
+    source: production_db
+    entity: users
+    output: prod_users
+    
+  - type: extract
+    source: production_db
+    entity: orders
+    output: prod_orders
+    
+  - type: extract
+    source: production_db
+    entity: order_items
+    output: prod_order_items
+    
+  - type: extract
+    source: production_db
+    entity: products
+    output: prod_products
+    
+  - type: extract
+    source: production_db
+    entity: categories
+    output: prod_categories
+    
+  # Extract analytics events
+  - type: extract
+    source: analytics_db
+    entity: events
+    output: analytics_events
+    
+  - type: extract
+    source: analytics_db
+    entity: sessions
+    output: analytics_sessions
+    
+  # Extract payment data
+  - type: extract
+    source: payment_api
+    entity: transactions
+    output: payment_transactions
+    
+  # Extract external data
+  - type: extract
+    source: external_apis
+    entity: shipments
+    output: shipping_data
+    
+  - type: extract
+    source: external_apis
+    entity: campaigns
+    output: marketing_campaigns
+    
+  # === TRANSFORM PHASE: Process and enrich ===
+  
+  # Transform events to refined layer
+  - type: transform
+    inputs:
+      - analytics_events
+    engine: spark-cluster
+    output: refined_events
+    
+  - type: load
+    input: refined_events
+    target: events_refined
+    
+  # Transform payment data
+  - type: transform
+    inputs:
+      - payment_transactions
+    engine: dbt-transforms
+    output: refined_payments
+    
+  # Create unified customer view
+  - type: transform
+    inputs:
+      - prod_users
+      - prod_orders
+      - analytics_sessions
+      - marketing_campaigns
+    engine: spark-cluster
+    output: unified_customers
+    
+  # Create unified orders view with payments and shipping
+  - type: transform
+    inputs:
+      - prod_orders
+      - prod_order_items
+      - refined_payments
+      - shipping_data
+    engine: spark-cluster
+    output: unified_orders
+    
+  # Create unified products view
+  - type: transform
+    inputs:
+      - prod_products
+      - prod_categories
+      - analytics_events
+    engine: dbt-transforms
+    output: unified_products
+    
+  # === LOAD PHASE: Serving layer datasets ===
+  
+  # Load comprehensive customer analytics
+  - type: transform
+    inputs:
+      - unified_customers
+      - refined_events
+    engine: dbt-transforms
+    output: final_customer_analytics
+    
+  - type: load
+    input: final_customer_analytics
+    target: customer_analytics
+    
+  # Load comprehensive sales dashboard
+  - type: transform
+    inputs:
+      - unified_orders
+      - marketing_campaigns
+    engine: dbt-transforms
+    output: final_sales_metrics
+    
+  - type: load
+    input: final_sales_metrics
+    target: sales_dashboard
+    
+  # Load comprehensive product analytics
+  - type: transform
+    inputs:
+      - unified_products
+      - refined_events
+      - prod_order_items
+    engine: spark-cluster
+    output: final_product_analytics
+    
+  - type: load
+    input: final_product_analytics
+    target: product_analytics
+
+metadata:
+  description: Comprehensive unified analytics pipeline joining production, analytics, payment, and external data sources
+  version: "1.0.0"
+  labels:
+    - unified
+    - analytics
+    - multi-source
+    - comprehensive
+  definedAt: flows/unified_analytics_pipeline.yaml

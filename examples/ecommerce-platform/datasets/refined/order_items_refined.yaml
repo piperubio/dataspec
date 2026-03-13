@@ -1,0 +1,29 @@
+# Dataset: Refined Order Items
+# Cleaned and validated order line items
+
+name: order_items_refined
+layer: refined
+storage:
+  backend: s3-data-lake
+  format: delta
+  location: s3://data-lake/refined/order_items/
+
+contract:
+  name: order_item_contract
+  version: "1.0.0"
+
+metadata:
+  description: Cleaned order line items with calculated fields and referential integrity
+  owner: data-platform-team
+  tags:
+    - refined
+    - order-items
+    - line-items
+    - silver-layer
+  refresh_frequency: hourly
+  quality_checks:
+    - unique_item_id
+    - valid_order_reference
+    - valid_product_reference
+    - quantity_positive
+    - price_calculations_correct

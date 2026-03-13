@@ -1,0 +1,105 @@
+# Contract: Product Analytics
+# Defines the schema for product performance analytics in serving layer
+
+name: product_analytics_contract
+version: "1.0.0"
+fields:
+  - name: product_id
+    type: uuid
+    constraints:
+      unique: true
+      not_null: true
+    description: Product identifier
+    
+  - name: product_name
+    type: string
+    constraints:
+      not_null: true
+    description: Product name
+    
+  - name: sku
+    type: string
+    constraints:
+      not_null: true
+    description: Stock keeping unit
+    
+  - name: category_name
+    type: string
+    description: Product category
+    
+  - name: current_price
+    type: decimal
+    constraints:
+      not_null: true
+    description: Current price
+    
+  - name: units_sold_30d
+    type: integer
+    description: Units sold in last 30 days
+    
+  - name: units_sold_90d
+    type: integer
+    description: Units sold in last 90 days
+    
+  - name: revenue_30d
+    type: decimal
+    description: Revenue in last 30 days
+    
+  - name: revenue_90d
+    type: decimal
+    description: Revenue in last 90 days
+    
+  - name: current_stock
+    type: integer
+    description: Current inventory level
+    
+  - name: stock_status
+    type: string
+    description: Stock status (in_stock, low_stock, out_of_stock)
+    
+  - name: days_of_inventory
+    type: integer
+    description: Days of inventory remaining based on sales velocity
+    
+  - name: views_30d
+    type: integer
+    description: Product page views in last 30 days
+    
+  - name: conversion_rate
+    type: decimal
+    description: View to purchase conversion rate
+    
+  - name: average_rating
+    type: decimal
+    description: Average customer rating
+    
+  - name: review_count
+    type: integer
+    description: Number of reviews
+    
+  - name: related_products
+    type: json
+    description: JSON array of related product IDs
+    
+  - name: recommendation_score
+    type: decimal
+    description: Score for recommendation engine
+    
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Record creation timestamp
+
+metadata:
+  description: Product analytics schema for serving layer - performance metrics and recommendations
+  owner: analytics-team
+  layer: serving
+  pii: false
+  tags:
+    - serving
+    - products
+    - analytics
+    - gold-layer
+    - recommendations
+    - inventory

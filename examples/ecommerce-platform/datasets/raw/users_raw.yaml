@@ -8,9 +8,17 @@ storage:
   format: parquet
   location: s3://data-lake/raw/users/
 
+contract:
+  name: users_raw_schema
+  version: "1.0.0"
+
 metadata:
   description: Raw user data ingested from production database
+  owner: data-engineering-team
   tags:
     - raw
     - users
     - pii
+    - production-db
+  refresh_frequency: hourly
+  retention_days: 90

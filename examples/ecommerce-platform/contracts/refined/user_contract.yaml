@@ -26,6 +26,14 @@ fields:
     type: string
     description: User last name
     
+  - name: phone
+    type: string
+    description: User phone number
+    
+  - name: date_of_birth
+    type: date
+    description: User date of birth
+    
   - name: created_at
     type: timestamp
     constraints:
@@ -36,10 +44,31 @@ fields:
     type: timestamp
     description: Last update timestamp
     
+  - name: last_login_at
+    type: timestamp
+    description: Last login timestamp
+    
   - name: preferences
     type: json
     description: User preferences stored as JSON
+    
+  - name: marketing_consent
+    type: boolean
+    description: User consent for marketing communications
+    
+  - name: country_code
+    type: string
+    description: ISO country code
+    
+  - name: timezone
+    type: string
+    description: User timezone
 
 metadata:
-  description: Schema contract for user data
+  description: Schema contract for user/customer data - PII sensitive
   owner: data-platform-team
+  pii: true
+  tags:
+    - pii
+    - customers
+    - core

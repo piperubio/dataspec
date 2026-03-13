@@ -1,0 +1,112 @@
+# Source: External APIs
+# Third-party integrations for shipping, marketing, and other services
+
+name: external_apis
+type: api
+entities:
+  # Shipping Provider API
+  - name: shipments
+    description: Shipment tracking and status updates
+    entityType: endpoint
+    method: GET
+    pathParams:
+      - tracking_number
+    queryParams:
+      - carrier
+      - status
+      - date_from
+      - date_to
+    metadata:
+      provider: fedex-ups-dhl
+      rate_limit: 5000
+      
+  - name: shipping_rates
+    description: Real-time shipping rate calculations
+    entityType: endpoint
+    method: POST
+    metadata:
+      cache_duration: 1800
+      
+  - name: delivery_estimates
+    description: Estimated delivery dates
+    entityType: endpoint
+    method: GET
+    queryParams:
+      - origin_zip
+      - destination_zip
+      - service_type
+    metadata:
+      cache_duration: 3600
+      
+  # Marketing Platform API
+  - name: campaigns
+    description: Marketing campaign metadata
+    entityType: endpoint
+    method: GET
+    queryParams:
+      - status
+      - channel
+      - start_date
+      - end_date
+    metadata:
+      provider: hubspot/marketo
+      rate_limit: 1000
+      
+  - name: email_metrics
+    description: Email campaign performance metrics
+    entityType: endpoint
+    method: GET
+    queryParams:
+      - campaign_id
+      - metric_type
+      - date_range
+    metadata:
+      rate_limit: 500
+      
+  - name: ad_spend
+    description: Advertising spend by platform and campaign
+    entityType: endpoint
+    method: GET
+    queryParams:
+      - platform
+      - date_from
+      - date_to
+      - campaign_id
+    metadata:
+      provider: google-ads-meta
+      rate_limit: 300
+      
+  # Customer Support API
+  - name: support_tickets
+    description: Customer support ticket data
+    entityType: endpoint
+    method: GET
+    queryParams:
+      - status
+      - priority
+      - created_after
+      - category
+    metadata:
+      provider: zendesk
+      rate_limit: 700
+      
+  - name: customer_satisfaction
+    description: CSAT and NPS survey responses
+    entityType: endpoint
+    method: GET
+    queryParams:
+      - survey_type
+      - date_from
+      - date_to
+    metadata:
+      rate_limit: 200
+
+metadata:
+  description: External third-party API integrations for shipping, marketing, and support
+  owner: integrations-team
+  tags:
+    - external
+    - integrations
+    - shipping
+    - marketing
+    - support

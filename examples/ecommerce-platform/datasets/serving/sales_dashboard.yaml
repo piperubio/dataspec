@@ -1,0 +1,28 @@
+# Dataset: Sales Dashboard (Serving)
+# Aggregated sales metrics for executive dashboards
+
+name: sales_dashboard
+layer: serving
+storage:
+  backend: clickhouse-analytics
+  format: native
+  location: analytics.sales_metrics
+
+contract:
+  name: sales_dashboard_contract
+  version: "1.0.0"
+
+metadata:
+  description: Aggregated sales metrics for real-time dashboards and reporting
+  owner: analytics-team
+  tags:
+    - serving
+    - sales
+    - dashboard
+    - gold-layer
+    - kpi
+  refresh_frequency: hourly
+  use_cases:
+    - executive_dashboard
+    - sales_reporting
+    - revenue_tracking

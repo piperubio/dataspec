@@ -1,0 +1,24 @@
+# Dataset: Raw Order Items
+# Raw ingestion of order line items from production database
+
+name: order_items_raw
+layer: raw
+storage:
+  backend: s3-data-lake
+  format: parquet
+  location: s3://data-lake/raw/order_items/
+
+contract:
+  name: order_items_raw_schema
+  version: "1.0.0"
+
+metadata:
+  description: Raw order line items data ingested from production database
+  owner: data-engineering-team
+  tags:
+    - raw
+    - order-items
+    - line-items
+    - production-db
+  refresh_frequency: hourly
+  retention_days: 90

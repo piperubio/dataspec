@@ -1,0 +1,75 @@
+# Contract: Order Item Contract
+# Defines the schema for order line items
+
+name: order_item_contract
+version: "1.0.0"
+fields:
+  - name: item_id
+    type: uuid
+    constraints:
+      unique: true
+      not_null: true
+    description: Unique identifier for the order item
+    
+  - name: order_id
+    type: uuid
+    constraints:
+      not_null: true
+      ref: "order_contract.order_id"
+    description: Reference to parent order
+    
+  - name: product_id
+    type: uuid
+    constraints:
+      not_null: true
+      ref: "product_contract.product_id"
+    description: Reference to product
+    
+  - name: quantity
+    type: integer
+    constraints:
+      not_null: true
+    description: Quantity ordered
+    
+  - name: unit_price
+    type: decimal
+    constraints:
+      not_null: true
+    description: Price per unit at time of order
+    
+  - name: total_price
+    type: decimal
+    constraints:
+      not_null: true
+    description: Total price (quantity * unit_price)
+    
+  - name: discount_amount
+    type: decimal
+    description: Discount applied to this item
+    
+  - name: tax_amount
+    type: decimal
+    description: Tax amount for this item
+    
+  - name: fulfillment_status
+    type: string
+    description: Fulfillment status (pending, picked, packed, shipped)
+    
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Item creation timestamp
+    
+  - name: fulfilled_at
+    type: timestamp
+    description: Fulfillment timestamp
+
+metadata:
+  description: Schema contract for order line items
+  owner: data-platform-team
+  tags:
+    - orders
+    - items
+    - line-items
+    - core

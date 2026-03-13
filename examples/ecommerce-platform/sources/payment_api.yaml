@@ -1,0 +1,75 @@
+# Source: External Payment API
+# REST API for payment processing data
+
+name: payment_api
+type: api
+entities:
+  - name: transactions
+    description: Payment transactions endpoint - returns all payment transactions
+    entityType: endpoint
+    method: GET
+    pathParams:
+      - transaction_id
+    queryParams:
+      - start_date
+      - end_date
+      - status
+      - payment_method
+    metadata:
+      rate_limit: 1000
+      pagination: cursor
+      
+  - name: refunds
+    description: Refund transactions endpoint - returns processed refunds
+    entityType: endpoint
+    method: GET
+    pathParams:
+      - refund_id
+    queryParams:
+      - start_date
+      - end_date
+      - status
+      - original_transaction_id
+    metadata:
+      rate_limit: 500
+      pagination: offset
+      
+  - name: payment_methods
+    description: Available payment methods and configurations
+    entityType: endpoint
+    method: GET
+    metadata:
+      cache_duration: 3600
+      
+  - name: chargebacks
+    description: Chargeback and dispute records
+    entityType: endpoint
+    method: GET
+    queryParams:
+      - start_date
+      - end_date
+      - status
+    metadata:
+      rate_limit: 100
+      pagination: cursor
+      
+  - name: settlements
+    description: Daily settlement batches
+    entityType: endpoint
+    method: GET
+    queryParams:
+      - date
+      - currency
+    metadata:
+      rate_limit: 200
+
+metadata:
+  description: External payment processor API - Stripe/PayPal integration
+  owner: payments-team
+  base_url: https://api.payment-provider.com/v1
+  auth_type: oauth2
+  tags:
+    - external
+    - payments
+    - financial
+    - pii

@@ -1,0 +1,90 @@
+# Contract: Order Contract
+# Defines the schema for order data
+
+name: order_contract
+version: "1.0.0"
+fields:
+  - name: order_id
+    type: uuid
+    constraints:
+      unique: true
+      not_null: true
+    description: Unique identifier for the order
+    
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+      ref: "user_contract.user_id"
+    description: Reference to the user who placed the order
+    
+  - name: total_amount
+    type: decimal
+    constraints:
+      not_null: true
+    description: Total order amount including taxes and shipping
+    
+  - name: currency
+    type: string
+    constraints:
+      not_null: true
+    description: Currency code (ISO 4217)
+    
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+    description: Order status (pending, confirmed, shipped, delivered, cancelled)
+    
+  - name: payment_status
+    type: string
+    constraints:
+      not_null: true
+    description: Payment status (pending, paid, failed, refunded)
+    
+  - name: shipping_address
+    type: json
+    description: Shipping address stored as JSON
+    
+  - name: billing_address
+    type: json
+    description: Billing address stored as JSON
+    
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Order creation timestamp
+    
+  - name: updated_at
+    type: timestamp
+    description: Last update timestamp
+    
+  - name: shipped_at
+    type: timestamp
+    description: Shipping timestamp
+    
+  - name: delivered_at
+    type: timestamp
+    description: Delivery timestamp
+    
+  - name: discount_amount
+    type: decimal
+    description: Total discount applied
+    
+  - name: shipping_amount
+    type: decimal
+    description: Shipping cost
+    
+  - name: tax_amount
+    type: decimal
+    description: Tax amount
+
+metadata:
+  description: Schema contract for order transaction data
+  owner: data-platform-team
+  tags:
+    - orders
+    - transactions
+    - financial
+    - core

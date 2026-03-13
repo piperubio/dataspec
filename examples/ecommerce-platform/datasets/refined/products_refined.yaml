@@ -1,0 +1,28 @@
+# Dataset: Refined Products
+# Cleaned and validated product data
+
+name: products_refined
+layer: refined
+storage:
+  backend: s3-data-lake
+  format: delta
+  location: s3://data-lake/refined/products/
+
+contract:
+  name: product_contract
+  version: "1.0.0"
+
+metadata:
+  description: Cleaned and validated product catalog with standardized attributes
+  owner: data-platform-team
+  tags:
+    - refined
+    - products
+    - catalog
+    - silver-layer
+  refresh_frequency: daily
+  quality_checks:
+    - unique_product_id
+    - unique_sku
+    - positive_prices
+    - valid_category_references

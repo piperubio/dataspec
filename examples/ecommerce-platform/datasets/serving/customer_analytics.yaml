@@ -1,0 +1,28 @@
+# Dataset: Customer Analytics (Serving)
+# Aggregated customer metrics and KPIs
+
+name: customer_analytics
+layer: serving
+storage:
+  backend: clickhouse-analytics
+  format: native
+  location: analytics.customers
+
+contract:
+  name: customer_analytics_contract
+  version: "1.0.0"
+
+metadata:
+  description: Aggregated customer analytics with lifetime value, purchase frequency, and segmentation
+  owner: analytics-team
+  tags:
+    - serving
+    - analytics
+    - customers
+    - gold-layer
+    - kpi
+  refresh_frequency: hourly
+  use_cases:
+    - customer_segmentation
+    - ltv_analysis
+    - churn_prediction

@@ -1,0 +1,28 @@
+# Dataset: Refined Events
+# Cleaned and enriched analytics events
+
+name: events_refined
+layer: refined
+storage:
+  backend: s3-data-lake
+  format: delta
+  location: s3://data-lake/refined/events/
+
+contract:
+  name: analytics_events_contract
+  version: "1.0.0"
+
+metadata:
+  description: Cleaned and enriched clickstream events with user attribution
+  owner: analytics-team
+  tags:
+    - refined
+    - events
+    - clickstream
+    - silver-layer
+    - high-volume
+  refresh_frequency: hourly
+  quality_checks:
+    - valid_event_types
+    - timestamp_range_valid
+    - deduplicated_events

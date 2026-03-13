@@ -1,0 +1,28 @@
+# Dataset: Product Analytics (Serving)
+# Product performance metrics and recommendations
+
+name: product_analytics
+layer: serving
+storage:
+  backend: clickhouse-analytics
+  format: native
+  location: analytics.product_metrics
+
+contract:
+  name: product_analytics_contract
+  version: "1.0.0"
+
+metadata:
+  description: Product analytics with performance metrics, inventory status, and recommendations
+  owner: analytics-team
+  tags:
+    - serving
+    - products
+    - analytics
+    - gold-layer
+    - recommendations
+  refresh_frequency: hourly
+  use_cases:
+    - product_performance
+    - inventory_management
+    - recommendation_engine

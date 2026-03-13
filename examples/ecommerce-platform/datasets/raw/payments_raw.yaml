@@ -1,0 +1,25 @@
+# Dataset: Raw Payments
+# Raw ingestion of payment data from payment API
+
+name: payments_raw
+layer: raw
+storage:
+  backend: s3-data-lake
+  format: json
+  location: s3://data-lake/raw/payments/
+
+contract:
+  name: payments_raw_schema
+  version: "1.0.0"
+
+metadata:
+  description: Raw payment transaction data ingested from external payment API
+  owner: payments-team
+  tags:
+    - raw
+    - payments
+    - financial
+    - external-api
+    - pii
+  refresh_frequency: hourly
+  retention_days: 2555  # 7 years for compliance
