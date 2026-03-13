@@ -115,5 +115,5 @@ steps:
 
   await writeFile(join(projectPath, 'flows', 'example_flow.yaml'), flowYaml);
 
-  console.log('Created example resources (use --with-examples)');
+  console.log('Created example resources.');
 }
