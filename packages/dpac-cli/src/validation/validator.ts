@@ -54,10 +54,10 @@ export class Validator {
             }
           }
         } else if (step.type === 'load') {
-          const datasetExists = this.workspace.datasets.some(d => d.name === step.input);
+          const datasetExists = this.workspace.datasets.some(d => d.name === step.target);
           if (!datasetExists) {
             this.errors.push(createError(
-              `Undefined dataset reference '${step.input}' in flow '${flow.name}'`,
+              `Undefined dataset reference '${step.target}' in flow '${flow.name}'`,
               { file: flow.file, line: flow.line },
               'error',
               'UNRESOLVED_DATASET'
@@ -173,8 +173,6 @@ export class Validator {
           for (const input of step.inputs) {
             consumedDatasets.add(input);
           }
-        } else if (step.type === 'load') {
-          consumedDatasets.add(step.input);
         }
       }
 
