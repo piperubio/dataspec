@@ -28,6 +28,7 @@ export interface ParsedDataset {
     name: string;
     version: string;
   };
+  producedBy?: string;
   file: string;
   line: number;
 }
@@ -82,7 +83,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
 
   if (resources.platformYaml) {
     const content = await readYamlFile(resources.platformYaml);
-    const result = parseYamlWithLineNumbers<ParsedPlatform>(content);
+    const result = parseYamlWithLineNumbers<ParsedPlatform>(content, { file: resources.platformYaml });
     if (result.errors.length === 0 && result.data) {
       workspace.platform = {
         ...result.data,
@@ -94,7 +95,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
 
   for (const file of resources.sources) {
     const content = await readYamlFile(file);
-    const result = parseYamlWithLineNumbers<{ name: string; type: string; entities: SourceEntity[] }>(content);
+    const result = parseYamlWithLineNumbers<{ name: string; type: string; entities: SourceEntity[] }>(content, { file });
     if (result.errors.length === 0 && result.data) {
       workspace.sources.push({
         ...result.data,
@@ -106,7 +107,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
 
   for (const file of resources.datasets) {
     const content = await readYamlFile(file);
-    const result = parseYamlWithLineNumbers<ParsedDataset>(content);
+    const result = parseYamlWithLineNumbers<ParsedDataset>(content, { file });
     if (result.errors.length === 0 && result.data) {
       workspace.datasets.push({
         ...result.data,
@@ -118,7 +119,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
 
   for (const file of resources.contracts) {
     const content = await readYamlFile(file);
-    const result = parseYamlWithLineNumbers<ParsedContract>(content);
+    const result = parseYamlWithLineNumbers<ParsedContract>(content, { file });
     if (result.errors.length === 0 && result.data) {
       workspace.contracts.push({
         ...result.data,
@@ -130,7 +131,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
 
   for (const file of resources.flows) {
     const content = await readYamlFile(file);
-    const result = parseYamlWithLineNumbers<ParsedFlow>(content);
+    const result = parseYamlWithLineNumbers<ParsedFlow>(content, { file });
     if (result.errors.length === 0 && result.data) {
       workspace.flows.push({
         ...result.data,

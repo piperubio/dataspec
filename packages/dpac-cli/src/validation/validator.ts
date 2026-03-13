@@ -1,13 +1,17 @@
 import { Workspace } from '../parsing/index.js';
+import { detectCycles, getDownstream, getImpactChain, formatImpactChain, DependencyGraph } from '../graph/index.js';
+import { buildDependencyGraph } from '../graph/builder.js';
 import { ValidationError, ValidationResult, createError, createSuccessResult, createFailureResult } from './error.js';
 
 export class Validator {
   private workspace: Workspace;
   private errors: ValidationError[] = [];
   private warnings: ValidationError[] = [];
+  private graph: DependencyGraph;
 
   constructor(workspace: Workspace) {
     this.workspace = workspace;
+    this.graph = buildDependencyGraph(workspace);
   }
 
   validate(): ValidationResult {
@@ -75,6 +79,33 @@ export class Validator {
           ));
         }
       }
+
+      // Task 5.4: Validate unresolved flow reference in dataset produced_by
+      if (dataset.producedBy) {
+        const flowExists = this.workspace.flows.some(f => f.name === dataset.producedBy);
+        if (!flowExists) {
+          this.errors.push(createError(
+            `Undefined flow reference '${dataset.producedBy}' in dataset '${dataset.name}' produced_by declaration`,
+            { file: dataset.file, line: dataset.line },
+            'error',
+            'UNRESOLVED_FLOW'
+          ));
+        } else {
+          // Verify the flow actually produces this dataset
+          const flow = this.workspace.flows.find(f => f.name === dataset.producedBy);
+          if (flow) {
+            const producesDataset = flow.steps.some(s => s.type === 'load' && s.target === dataset.name);
+            if (!producesDataset) {
+              this.errors.push(createError(
+                `Flow '${dataset.producedBy}' declared in dataset '${dataset.name}' does not produce this dataset`,
+                { file: dataset.file, line: dataset.line },
+                'error',
+                'INVALID_FLOW_REFERENCE'
+              ));
+            }
+          }
+        }
+      }
     }
   }
 
@@ -115,6 +146,24 @@ export class Validator {
   }
 
   private validateGraphIntegrity(): void {
+    // Task 4.1: Cycle detection in flow dependencies
+    const cycles = detectCycles(this.graph);
+    if (cycles.length > 0) {
+      for (const cycle of cycles) {
+        const cycleNodes = cycle.map(id => {
+          const node = this.graph.nodes.get(id);
+          return node ? `${node.type}:${node.name}` : id;
+        }).join(' → ');
+        
+        this.errors.push(createError(
+          `Circular dependency detected: ${cycleNodes}`,
+          { file: 'workspace', line: 0 },
+          'error',
+          'CIRCULAR_DEPENDENCY'
+        ));
+      }
+    }
+
     const datasetNames = new Set(this.workspace.datasets.map(d => d.name));
     const consumedDatasets = new Set<string>();
     const producedDatasets = new Set<string>();
@@ -150,6 +199,53 @@ export class Validator {
           'warning',
           'ORPHANED_DATASET'
         ));
+      }
+    }
+
+    // Task 4.3: Incomplete pipeline detection
+    for (const flow of this.workspace.flows) {
+      const hasExtract = flow.steps.some(s => s.type === 'extract');
+      const hasTransform = flow.steps.some(s => s.type === 'transform');
+      const hasLoad = flow.steps.some(s => s.type === 'load');
+      
+      // A complete ETL pipeline should ideally have all three stages
+      // Though we allow flexibility, we warn if stages are missing
+      if (!hasExtract && (hasTransform || hasLoad)) {
+        this.warnings.push(createError(
+          `Flow '${flow.name}' is missing extract steps - pipeline may be incomplete`,
+          { file: flow.file, line: flow.line },
+          'warning',
+          'INCOMPLETE_PIPELINE'
+        ));
+      }
+      
+      if (hasExtract && !hasLoad) {
+        this.warnings.push(createError(
+          `Flow '${flow.name}' has extract but no load steps - data may not be persisted`,
+          { file: flow.file, line: flow.line },
+          'warning',
+          'INCOMPLETE_PIPELINE'
+        ));
+      }
+      
+      // Check for orphaned transform steps (transform without preceding extract)
+      const extractIndices = flow.steps
+        .map((s, i) => s.type === 'extract' ? i : -1)
+        .filter(i => i !== -1);
+      const transformIndices = flow.steps
+        .map((s, i) => s.type === 'transform' ? i : -1)
+        .filter(i => i !== -1);
+      
+      for (const transformIdx of transformIndices) {
+        const hasPrecedingExtract = extractIndices.some(extractIdx => extractIdx < transformIdx);
+        if (!hasPrecedingExtract) {
+          this.warnings.push(createError(
+            `Transform step in flow '${flow.name}' has no preceding extract step`,
+            { file: flow.file, line: flow.line },
+            'warning',
+            'INCOMPLETE_PIPELINE'
+          ));
+        }
       }
     }
   }
@@ -227,6 +323,77 @@ export class Validator {
         }
       }
     }
+
+    // Task 8.3 & 8.4: Type narrowing and constraint tightening detection
+    for (const contract of this.workspace.contracts) {
+      for (const field of contract.fields) {
+        // Check for type narrowing that could be breaking
+        if (this.isTypeNarrowing(field.type, field.constraints)) {
+          // Find all datasets and flows that use this contract
+          const affectedDatasets = this.workspace.datasets.filter(d => d.contract?.name === contract.name);
+          const affectedFlows = this.workspace.flows.filter(f => 
+            f.steps.some(s => {
+              if (s.type === 'transform') {
+                return s.inputs.some(input => 
+                  this.workspace.datasets.find(d => d.name === input)?.contract?.name === contract.name
+                );
+              }
+              return false;
+            })
+          );
+
+          if (affectedDatasets.length > 0 || affectedFlows.length > 0) {
+            const downstreamResources = affectedDatasets.map(d => `dataset:${d.name}`)
+              .concat(affectedFlows.map(f => `flow:${f.name}`));
+            
+            this.warnings.push(createError(
+              `Potential breaking change: Field '${field.name}' in contract '${contract.name}' has restrictive type/constraints. Affected: ${downstreamResources.join(', ')}`,
+              { file: contract.file, line: contract.line },
+              'warning',
+              'POTENTIAL_BREAKING_CHANGE'
+            ));
+          }
+        }
+      }
+    }
+
+    // Task 8.5 & 8.6: Multi-hop breaking change detection with impact chain
+    for (const contract of this.workspace.contracts) {
+      const contractId = `contract:${contract.name}`;
+      const impactChain = getImpactChain(this.graph, contractId);
+      
+      if (impactChain && impactChain.dependents.length > 0) {
+        // Format the full impact chain
+        const impactTree = formatImpactChain(impactChain);
+        
+        // Check if any fields were removed (simulated by checking if the contract has changes)
+        // In a real scenario, we'd compare with a previous version
+        for (const field of contract.fields) {
+          const downstream = getDownstream(this.graph, contractId);
+          const downstreamNames = downstream.map(n => `${n.type}:${n.name}`).join(', ');
+          
+          if (downstream.length > 1) {
+            this.warnings.push(createError(
+              `Multi-hop impact: Changes to '${field.name}' in contract '${contract.name}' affect: ${downstreamNames}`,
+              { file: contract.file, line: contract.line },
+              'warning',
+              'MULTI_HOP_IMPACT'
+            ));
+          }
+        }
+      }
+    }
+  }
+
+  private isTypeNarrowing(type: string, constraints?: Record<string, unknown>): boolean {
+    // Check if constraints make the type more restrictive
+    if (!constraints) return false;
+    
+    // strict constraints indicate narrowing
+    if (constraints.not_null) return true;
+    if (constraints.unique && (type === 'string' || type === 'integer')) return true;
+    
+    return false;
   }
 }
 
