@@ -29,7 +29,7 @@ describe('Validation Engine', () => {
       expect(result.errors.some(e => e.code === 'UNRESOLVED_SOURCE')).toBe(true);
     });
 
-    it('should detect unresolved dataset references', () => {
+    it('should detect unresolved step output references in transform inputs', () => {
       const workspace: Workspace = {
         platform: null,
         rootPath: '/test',
@@ -40,7 +40,7 @@ describe('Validation Engine', () => {
           name: 'flow1',
           steps: [{
             type: 'transform',
-            inputs: ['nonexistent_dataset'],
+            inputs: ['nonexistent_variable'],
             output: 'output',
             engine: 'dbt',
           }],
@@ -51,7 +51,56 @@ describe('Validation Engine', () => {
 
       const result = validateWorkspace(workspace);
       expect(result.passed).toBe(false);
-      expect(result.errors.some(e => e.code === 'UNRESOLVED_DATASET')).toBe(true);
+      expect(result.errors.some(e => e.code === 'UNRESOLVED_STEP_OUTPUT')).toBe(true);
+    });
+
+    it('should not flag transform inputs that match prior step outputs', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [{
+          name: 'db1',
+          type: 'database',
+          entities: [],
+          file: 'sources/db.yaml',
+          line: 1,
+        }],
+        datasets: [{
+          name: 'output_ds',
+          layer: 'refined',
+          storage: { backend: 's3', format: 'parquet', location: 's3://bucket/output' },
+          file: 'datasets/output.yaml',
+          line: 1,
+        }],
+        contracts: [],
+        flows: [{
+          name: 'flow1',
+          steps: [
+            {
+              type: 'extract',
+              source: 'db1',
+              entity: 'users',
+              output: 'raw_users',
+            },
+            {
+              type: 'transform',
+              inputs: ['raw_users'],  // references the extract step's output variable
+              engine: 'dbt',
+              output: 'transformed_users',
+            },
+            {
+              type: 'load',
+              input: 'transformed_users',
+              target: 'output_ds',
+            },
+          ],
+          file: 'flows/flow1.yaml',
+          line: 1,
+        }],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(result.errors.some(e => e.code === 'UNRESOLVED_STEP_OUTPUT')).toBe(false);
     });
 
     it('should detect unresolved dataset target in load step', () => {
@@ -227,13 +276,6 @@ describe('Validation Engine', () => {
         }],
         datasets: [
           {
-            name: 'consumed',
-            layer: 'raw',
-            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/consumed' },
-            file: 'datasets/consumed.yaml',
-            line: 1,
-          },
-          {
             name: 'produced',
             layer: 'refined',
             storage: { backend: 's3', format: 'parquet', location: 's3://bucket/produced' },
@@ -243,7 +285,7 @@ describe('Validation Engine', () => {
           {
             name: 'orphaned',
             layer: 'raw',
-            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/users' },
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/orphaned' },
             file: 'datasets/orphaned.yaml',
             line: 1,
           },
@@ -253,16 +295,22 @@ describe('Validation Engine', () => {
           name: 'flow1',
           steps: [
             {
+              type: 'extract',
+              source: 'db1',
+              entity: 'users',
+              output: 'raw_users',
+            },
+            {
               type: 'transform',
-              inputs: ['consumed'],  // This consumes the 'consumed' dataset
-              output: 'intermediate',
+              inputs: ['raw_users'],  // flow-local variable, not a dataset name
+              output: 'transformed_users',
               engine: 'dbt',
             },
-          {
-            type: 'load',
-            input: 'consumed',
-            target: 'produced',
-          },
+            {
+              type: 'load',
+              input: 'transformed_users',
+              target: 'produced',  // 'produced' dataset is targeted by this load step
+            },
           ],
           file: 'flows/flow1.yaml',
           line: 1,
@@ -271,11 +319,9 @@ describe('Validation Engine', () => {
 
       const result = validateWorkspace(workspace);
       
-      // 'orphaned' is not used at all - should be flagged
+      // 'orphaned' is not targeted by any load step - should be flagged
       expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes('orphaned'))).toBe(true);
-      // 'consumed' is consumed - should NOT be flagged as orphaned
-      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes("'consumed'"))).toBe(false);
-      // 'produced' is produced - should NOT be flagged as orphaned
+      // 'produced' is targeted by a load step - should NOT be flagged as orphaned
       expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes("'produced'"))).toBe(false);
     });
   });
