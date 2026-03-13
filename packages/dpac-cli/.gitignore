@@ -40,6 +40,3 @@ coverage/
 tmp/
 temp/
 *.tmp
-
-# Misc
-.sisyphus

@@ -38,14 +38,15 @@ describe('Dependency Graph', () => {
       addNode(graph, { id: 'source:db1', type: 'source', name: 'db1', file: '', line: 1 });
       addNode(graph, { id: 'flow:f1', type: 'flow', name: 'f1', file: '', line: 1 });
       addNode(graph, { id: 'dataset:d1', type: 'dataset', name: 'd1', file: '', line: 1 });
-      // Edge direction: from -> to means "from references to"
-      // So flow:f1 references source:db1, and dataset:d1 references flow:f1
+      // Edge direction: from -> to means "from uses/references to"
+      // flow:f1 references source:db1 (flow uses source)
+      // dataset:d1 is produced by flow:f1, so edge goes flow:f1 -> dataset:d1
       // Upstream of dataset:d1 should be flow:f1 and source:db1
       addEdge(graph, { from: 'flow:f1', to: 'source:db1', type: 'references' });
-      addEdge(graph, { from: 'dataset:d1', to: 'flow:f1', type: 'references' });
+      addEdge(graph, { from: 'flow:f1', to: 'dataset:d1', type: 'produces' });
 
       const upstream = getUpstream(graph, 'dataset:d1');
-      // Upstream traverses incoming edges, so from dataset:d1 we follow edge from flow:f1
+      // Upstream traverses incoming edges, so from dataset:d1 we find edge from flow:f1
       expect(upstream.map(n => n.id)).toContain('flow:f1');
     });
 
@@ -54,12 +55,14 @@ describe('Dependency Graph', () => {
       addNode(graph, { id: 'source:db1', type: 'source', name: 'db1', file: '', line: 1 });
       addNode(graph, { id: 'flow:f1', type: 'flow', name: 'f1', file: '', line: 1 });
       addNode(graph, { id: 'dataset:d1', type: 'dataset', name: 'd1', file: '', line: 1 });
+      // Edge direction: from -> to means "from uses/references to"
+      // flow:f1 references source:db1 and produces dataset:d1
+      // Downstream of flow:f1 should be dataset:d1
       addEdge(graph, { from: 'flow:f1', to: 'source:db1', type: 'references' });
-      addEdge(graph, { from: 'dataset:d1', to: 'flow:f1', type: 'references' });
+      addEdge(graph, { from: 'flow:f1', to: 'dataset:d1', type: 'produces' });
 
-      // Downstream of source:db1 should include flow:f1 (since flow:f1 references source:db1)
-      const downstream = getDownstream(graph, 'source:db1');
-      expect(downstream.map(n => n.id)).toContain('flow:f1');
+      const downstream = getDownstream(graph, 'flow:f1');
+      expect(downstream.map(n => n.id)).toContain('dataset:d1');
     });
   });
 

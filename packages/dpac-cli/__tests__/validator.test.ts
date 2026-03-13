@@ -172,29 +172,61 @@ describe('Validation Engine', () => {
           file: 'sources/db.yaml',
           line: 1,
         }],
-        datasets: [{
-          name: 'orphaned',
-          layer: 'raw',
-          storage: { backend: 's3', format: 'parquet', location: 's3://bucket/users' },
-          file: 'datasets/orphaned.yaml',
-          line: 1,
-        }],
+        datasets: [
+          {
+            name: 'consumed',
+            layer: 'raw',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/consumed' },
+            file: 'datasets/consumed.yaml',
+            line: 1,
+          },
+          {
+            name: 'produced',
+            layer: 'refined',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/produced' },
+            file: 'datasets/produced.yaml',
+            line: 1,
+          },
+          {
+            name: 'orphaned',
+            layer: 'raw',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/users' },
+            file: 'datasets/orphaned.yaml',
+            line: 1,
+          },
+        ],
         contracts: [],
         flows: [{
           name: 'flow1',
-          steps: [{
-            type: 'extract',
-            source: 'db1',
-            entity: 'users',
-            output: 'other',
-          }],
+          steps: [
+            {
+              type: 'transform',
+              inputs: ['consumed'],  // This consumes the 'consumed' dataset
+              output: 'intermediate',
+              engine: 'dbt',
+            },
+            {
+              type: 'load',
+              input: 'produced',  // This produces the 'produced' dataset
+              target: 'data_lake',
+            },
+          ],
           file: 'flows/flow1.yaml',
           line: 1,
         }],
       };
 
       const result = validateWorkspace(workspace);
-      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET')).toBe(true);
+      
+      // Debug: log all warnings
+      console.log('Warnings:', result.warnings.map(w => w.message));
+      
+      // 'orphaned' is not used at all - should be flagged
+      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes('orphaned'))).toBe(true);
+      // 'consumed' is consumed by the transform step - should NOT be flagged
+      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes('consumed'))).toBe(false);
+      // 'produced' is produced by the load step - should NOT be flagged
+      expect(result.warnings.some(w => w.code === 'ORPHANED_DATASET' && w.message.includes('produced'))).toBe(false);
     });
   });
 });
