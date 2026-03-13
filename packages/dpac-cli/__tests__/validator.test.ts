@@ -54,6 +54,59 @@ describe('Validation Engine', () => {
       expect(result.errors.some(e => e.code === 'UNRESOLVED_DATASET')).toBe(true);
     });
 
+    it('should detect unresolved dataset target in load step', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [],
+        contracts: [],
+        flows: [{
+          name: 'flow1',
+          steps: [{
+            type: 'load',
+            input: 'some_variable',
+            target: 'nonexistent_dataset',
+          }],
+          file: 'flows/flow1.yaml',
+          line: 1,
+        }],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(result.passed).toBe(false);
+      expect(result.errors.some(e => e.code === 'UNRESOLVED_DATASET')).toBe(true);
+    });
+
+    it('should not flag load step input as a dataset reference', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [{
+          name: 'target_ds',
+          layer: 'refined',
+          storage: { backend: 's3', format: 'parquet', location: 's3://bucket/target' },
+          file: 'datasets/target.yaml',
+          line: 1,
+        }],
+        contracts: [],
+        flows: [{
+          name: 'flow1',
+          steps: [{
+            type: 'load',
+            input: 'flow_variable',  // flow-local variable; does not need to match a dataset
+            target: 'target_ds',
+          }],
+          file: 'flows/flow1.yaml',
+          line: 1,
+        }],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(result.errors.some(e => e.code === 'UNRESOLVED_DATASET')).toBe(false);
+    });
+
     it('should detect unresolved contract references', () => {
       const workspace: Workspace = {
         platform: null,
