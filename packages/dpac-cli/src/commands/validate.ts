@@ -10,6 +10,16 @@ export const validateCommand = new Command()
   .action(async (options) => {
     try {
       const workspace = await parseWorkspace(options.path);
+
+      // If no workspace configuration (e.g., platform.yaml) is found, emit a clear CLI error.
+      if (!workspace || (workspace as any).platform == null) {
+        console.error(
+          `Error: No workspace configuration (platform.yaml) found at '${options.path}'.\n` +
+          "Run 'dpac init' in that directory to create a new workspace."
+        );
+        process.exit(2);
+      }
+
       const result = validateWorkspace(workspace);
 
       if (options.format === 'json') {
