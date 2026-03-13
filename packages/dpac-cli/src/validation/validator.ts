@@ -1,7 +1,7 @@
 import { Workspace } from '../parsing/index.js';
 import { detectCycles, getDownstream, getImpactChain,  DependencyGraph } from '../graph/index.js';
 import { buildDependencyGraph } from '../graph/builder.js';
-import { ValidationError, ValidationResult, createError, createFailureResult } from './error.js';
+import { ValidationError, ValidationResult, createError, createSuccessResult, createFailureResult } from './error.js';
 
 export class Validator {
   private workspace: Workspace;
@@ -25,7 +25,7 @@ export class Validator {
       return createFailureResult(this.errors, this.warnings);
     }
 
-    return { errors: [], warnings: this.warnings, passed: true };
+    return createSuccessResult(this.warnings);
   }
 
   private validateCrossResourceReferences(): void {
