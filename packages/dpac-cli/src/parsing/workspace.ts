@@ -97,7 +97,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
       workspace.sources.push({
         ...result.data,
         file,
-        line: 1,
+        line: typeof (result as any).line === 'number' ? (result as any).line : 1,
       });
     }
   }
@@ -109,7 +109,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
       workspace.datasets.push({
         ...result.data,
         file,
-        line: 1,
+        line: typeof (result as any).line === 'number' ? (result as any).line : 1,
       });
     }
   }
@@ -121,7 +121,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
       workspace.contracts.push({
         ...result.data,
         file,
-        line: 1,
+        line: typeof (result as any).line === 'number' ? (result as any).line : 1,
       });
     }
   }
@@ -133,7 +133,7 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
       workspace.flows.push({
         ...result.data,
         file,
-        line: 1,
+        line: typeof (result as any).line === 'number' ? (result as any).line : 1,
       });
     }
   }
