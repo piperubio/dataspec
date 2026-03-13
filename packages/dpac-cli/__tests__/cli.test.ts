@@ -4,6 +4,8 @@ import { mkdtemp, writeFile, mkdir, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 
+// Use 'bun' as interpreter for cross-platform compatibility
+// (Windows can't execute shebang scripts directly via Bun shell)
 const CLI_PATH = join(import.meta.dir, '..', 'bin', 'dpac');
 
 // Helper to create a valid test workspace
@@ -59,7 +61,7 @@ describe('CLI Integration', () => {
 
   describe('dpac validate', () => {
     it('should validate a valid workspace', async () => {
-      const result = await $`${CLI_PATH} validate --path ${testWorkspace}`;
+      const result = await $`bun ${CLI_PATH} validate --path ${testWorkspace}`;
       expect(result.exitCode).toBe(0);
       expect(result.stdout.toString()).toContain('Validation passed');
     });
@@ -70,7 +72,7 @@ describe('CLI Integration', () => {
       await writeFile(join(invalidDir, 'platform.yaml'), 'name: test');
       await writeFile(join(invalidDir, 'flows', 'bad.yaml'), 'name: bad_flow\nsteps:\n  - type: extract\n    source: nonexistent\n    entity: test\n    output: out');
       
-      const result = await $`${CLI_PATH} validate --path ${invalidDir}`.nothrow();
+      const result = await $`bun ${CLI_PATH} validate --path ${invalidDir}`.nothrow();
       expect(result.exitCode).toBe(1);
       expect(result.stdout.toString()).toContain('error');
       
@@ -80,7 +82,7 @@ describe('CLI Integration', () => {
 
   describe('dpac list', () => {
     it('should list all resources', async () => {
-      const result = await $`${CLI_PATH} list --path ${testWorkspace}`;
+      const result = await $`bun ${CLI_PATH} list --path ${testWorkspace}`;
       const output = result.stdout.toString();
       expect(output).toContain('Sources: 1');
       expect(output).toContain('Datasets: 1');
@@ -88,21 +90,21 @@ describe('CLI Integration', () => {
     });
 
     it('should list sources', async () => {
-      const result = await $`${CLI_PATH} list sources --path ${testWorkspace}`;
+      const result = await $`bun ${CLI_PATH} list sources --path ${testWorkspace}`;
       const output = result.stdout.toString();
       expect(output).toContain('test_db');
       expect(output).toContain('database');
     });
 
     it('should list datasets filtered by tier', async () => {
-      const result = await $`${CLI_PATH} list datasets --path ${testWorkspace} --tier raw`;
+      const result = await $`bun ${CLI_PATH} list datasets --path ${testWorkspace} --tier raw`;
       const output = result.stdout.toString();
       expect(output).toContain('users_raw');
       expect(output).toContain('raw');
     });
 
     it('should output JSON when requested', async () => {
-      const result = await $`${CLI_PATH} list --path ${testWorkspace} --format json`;
+      const result = await $`bun ${CLI_PATH} list --path ${testWorkspace} --format json`;
       const json = JSON.parse(result.stdout.toString());
       expect(json.sources).toBe(1);
       expect(json.datasets).toBe(1);
@@ -111,33 +113,33 @@ describe('CLI Integration', () => {
 
   describe('dpac show', () => {
     it('should show dataset details', async () => {
-      const result = await $`${CLI_PATH} show dataset users_raw --path ${testWorkspace}`;
+      const result = await $`bun ${CLI_PATH} show dataset users_raw --path ${testWorkspace}`;
       const output = result.stdout.toString();
       expect(output).toContain('Dataset: users_raw');
       expect(output).toContain('Layer: raw');
     });
 
     it('should show source details', async () => {
-      const result = await $`${CLI_PATH} show source test_db --path ${testWorkspace}`;
+      const result = await $`bun ${CLI_PATH} show source test_db --path ${testWorkspace}`;
       const output = result.stdout.toString();
       expect(output).toContain('Source: test_db');
       expect(output).toContain('database');
     });
 
     it('should return error for non-existent resource', async () => {
-      const result = await $`${CLI_PATH} show dataset nonexistent --path ${testWorkspace}`.nothrow();
+      const result = await $`bun ${CLI_PATH} show dataset nonexistent --path ${testWorkspace}`.nothrow();
       expect(result.exitCode).toBe(2);
     });
 
     it('should show JSON format', async () => {
-      const result = await $`${CLI_PATH} show dataset users_raw --path ${testWorkspace} --format json`;
+      const result = await $`bun ${CLI_PATH} show dataset users_raw --path ${testWorkspace} --format json`;
       const json = JSON.parse(result.stdout.toString());
       expect(json.name).toBe('users_raw');
       expect(json.layer).toBe('raw');
     });
 
     it('should show with dependencies', async () => {
-      const result = await $`${CLI_PATH} show dataset users_raw --path ${testWorkspace} --deps`;
+      const result = await $`bun ${CLI_PATH} show dataset users_raw --path ${testWorkspace} --deps`;
       const output = result.stdout.toString();
       expect(output).toContain('Dataset: users_raw');
     });
@@ -148,7 +150,7 @@ describe('CLI Integration', () => {
       const tempDir = await mkdtemp(join(tmpdir(), 'dpac-test-'));
       
       try {
-        const result = await $`${CLI_PATH} init --path ${tempDir} --name test-project`;
+        const result = await $`bun ${CLI_PATH} init --path ${tempDir} --name test-project`;
         expect(result.exitCode).toBe(0);
         expect(result.stdout.toString()).toContain('Initialized DPAC project');
         
@@ -169,7 +171,7 @@ describe('CLI Integration', () => {
       
       try {
         await writeFile(join(tempDir, 'existing.txt'), 'test');
-        const result = await $`${CLI_PATH} init --path ${tempDir}`.nothrow();
+        const result = await $`bun ${CLI_PATH} init --path ${tempDir}`.nothrow();
         expect(result.exitCode).toBe(2);
       } finally {
         await rm(tempDir, { recursive: true, force: true });
@@ -180,7 +182,7 @@ describe('CLI Integration', () => {
       const tempDir = await mkdtemp(join(tmpdir(), 'dpac-test-'));
       
       try {
-        const result = await $`${CLI_PATH} init --path ${tempDir} --name test --with-examples`;
+        const result = await $`bun ${CLI_PATH} init --path ${tempDir} --name test --with-examples`;
         expect(result.exitCode).toBe(0);
         
         const fs = await import('node:fs/promises');
