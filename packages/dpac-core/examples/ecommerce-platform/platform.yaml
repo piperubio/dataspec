@@ -1,0 +1,39 @@
+# E-commerce Data Platform Example
+# This example demonstrates a complete DPAC platform specification
+# for an e-commerce company with orders, customers, and products data.
+
+platform:
+  name: ecommerce-platform
+  version: "1.0.0"
+
+# Storage backends configuration
+storage:
+  - name: s3-data-lake
+    type: s3
+    # Connection details would be configured in deployment tool
+    
+  - name: postgresql-warehouse
+    type: postgresql
+    # Connection details would be configured in deployment tool
+    
+  - name: clickhouse-analytics
+    type: clickhouse
+    # Connection details would be configured in deployment tool
+
+# Analytics engines available in the platform
+engines:
+  - name: dbt-transforms
+    type: dbt
+    version: ">=1.5.0"
+    
+  - name: duckdb-local
+    type: duckdb
+    version: ">=0.9.0"
+    
+  - name: spark-cluster
+    type: spark
+    version: ">=3.4.0"
+
+# Default settings
+defaults:
+  storage: s3-data-lake

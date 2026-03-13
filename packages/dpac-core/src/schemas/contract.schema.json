@@ -1,0 +1,115 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "definitions": {
+        "ContractField": {
+            "additionalProperties": false,
+            "description": "Represents a single field definition within a contract.",
+            "properties": {
+                "constraints": {
+                    "$ref": "#/definitions/FieldConstraints",
+                    "description": "Constraints applied to this field"
+                },
+                "description": {
+                    "description": "Human-readable description of the field",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the field (should be camelCase)",
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/DataType",
+                    "description": "The data type of the field"
+                }
+            },
+            "required": [
+                "name",
+                "type"
+            ],
+            "type": "object"
+        },
+        "DataType": {
+            "description": "Supported data types for contract fields.",
+            "enum": [
+                "boolean",
+                "date",
+                "decimal",
+                "integer",
+                "json",
+                "string",
+                "timestamp",
+                "uuid"
+            ],
+            "type": "string"
+        },
+        "FieldConstraints": {
+            "additionalProperties": false,
+            "description": "Field constraints for data validation and integrity.",
+            "properties": {
+                "not_null": {
+                    "description": "Whether the field value cannot be null",
+                    "type": "boolean"
+                },
+                "ref": {
+                    "description": "Reference to another contract field in format 'ContractName.fieldName'",
+                    "type": "string"
+                },
+                "unique": {
+                    "description": "Whether the field value must be unique across all records",
+                    "type": "boolean"
+                }
+            },
+            "type": "object"
+        },
+        "Metadata": {
+            "additionalProperties": false,
+            "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
+            "type": "object"
+        }
+    },
+    "description": "Represents a data contract that defines the structure and constraints\nfor a specific type of data entity.",
+    "properties": {
+        "createdAt": {
+            "description": "Creation timestamp",
+            "type": "string"
+        },
+        "fields": {
+            "description": "Array of field definitions that make up this contract",
+            "items": {
+                "$ref": "#/definitions/ContractField"
+            },
+            "type": "array"
+        },
+        "metadata": {
+            "$ref": "#/definitions/Metadata",
+            "description": "Metadata associated with the resource"
+        },
+        "name": {
+            "description": "The name of the contract (should be PascalCase)",
+            "type": "string"
+        },
+        "tags": {
+            "description": "Tags for categorization and filtering",
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "updatedAt": {
+            "description": "Last update timestamp",
+            "type": "string"
+        },
+        "version": {
+            "description": "Semantic version of the contract (e.g., \"1.0.0\")",
+            "type": "string"
+        }
+    },
+    "required": [
+        "fields",
+        "name",
+        "version"
+    ],
+    "type": "object"
+}
+

@@ -1,0 +1,30 @@
+# Flow: User ETL Pipeline
+# Extracts users from production, transforms, and loads to serving layer
+
+name: user_etl_pipeline
+steps:
+  # Step 1: Extract users from production database
+  - type: extract
+    source: production_db
+    entity: users
+    output: raw_users
+
+  # Step 2: Transform raw users to refined format
+  - type: transform
+    inputs:
+      - raw_users
+    engine: dbt-transforms
+    output: refined_users
+
+  # Step 3: Load to serving layer
+  - type: load
+    input: refined_users
+    target: customer_analytics
+
+metadata:
+  description: Daily ETL pipeline for user data
+  schedule: "0 2 * * *"
+  tags:
+    - etl
+    - users
+    - daily

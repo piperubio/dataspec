@@ -1,0 +1,45 @@
+# Contract: User Contract
+# Defines the schema for user/customer data
+
+name: user_contract
+version: "1.0.0"
+fields:
+  - name: user_id
+    type: uuid
+    constraints:
+      unique: true
+      not_null: true
+    description: Unique identifier for the user
+    
+  - name: email
+    type: string
+    constraints:
+      unique: true
+      not_null: true
+    description: User email address
+    
+  - name: first_name
+    type: string
+    description: User first name
+    
+  - name: last_name
+    type: string
+    description: User last name
+    
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Account creation timestamp
+    
+  - name: updated_at
+    type: timestamp
+    description: Last update timestamp
+    
+  - name: preferences
+    type: json
+    description: User preferences stored as JSON
+
+metadata:
+  description: Schema contract for user data
+  owner: data-platform-team

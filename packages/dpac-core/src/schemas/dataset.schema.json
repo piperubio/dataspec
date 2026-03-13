@@ -1,0 +1,116 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "definitions": {
+        "ContractReference": {
+            "additionalProperties": false,
+            "description": "Reference to a contract definition by name and version.\nUsed to link datasets to their validation contracts.",
+            "properties": {
+                "name": {
+                    "description": "Name of the contract",
+                    "type": "string"
+                },
+                "version": {
+                    "description": "Version of the contract (semver format)",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "version"
+            ],
+            "type": "object"
+        },
+        "DatasetLayer": {
+            "description": "Dataset layer in the medallion architecture.\nRepresents the quality/stage of data.\n- raw: Unprocessed source data (landing/bronze layer)\n- refined: Cleaned and transformed data (silver layer)\n- serving: Aggregated data ready for consumption (gold layer)\nDataset layer values.",
+            "enum": [
+                "raw",
+                "refined",
+                "serving"
+            ],
+            "type": "string"
+        },
+        "Metadata": {
+            "additionalProperties": false,
+            "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
+            "type": "object"
+        },
+        "Record<string,unknown>": {
+            "additionalProperties": false,
+            "type": "object"
+        },
+        "StorageConfig": {
+            "additionalProperties": false,
+            "description": "Storage configuration for a dataset.\nReferences a storage backend and specifies location and format.",
+            "properties": {
+                "backend": {
+                    "description": "Reference to the storage backend by name",
+                    "type": "string"
+                },
+                "config": {
+                    "$ref": "#/definitions/Record%3Cstring%2Cunknown%3E",
+                    "description": "Optional format-specific configuration"
+                },
+                "format": {
+                    "description": "Data format (e.g., 'parquet', 'csv', 'json', 'delta')",
+                    "type": "string"
+                },
+                "location": {
+                    "description": "Storage location path (type-specific, e.g., S3 path, GCS path, local path)",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "backend",
+                "format",
+                "location"
+            ],
+            "type": "object"
+        }
+    },
+    "description": "Represents a dataset definition in the data platform.\nA dataset is a logical collection of data with defined storage and optional contracts.",
+    "properties": {
+        "contract": {
+            "$ref": "#/definitions/ContractReference",
+            "description": "Optional reference to a validation contract"
+        },
+        "createdAt": {
+            "description": "Creation timestamp",
+            "type": "string"
+        },
+        "layer": {
+            "$ref": "#/definitions/DatasetLayer",
+            "description": "Layer in the data architecture (raw, refined, serving)"
+        },
+        "metadata": {
+            "$ref": "#/definitions/Metadata",
+            "description": "Metadata associated with the resource"
+        },
+        "name": {
+            "description": "Unique name for this dataset",
+            "type": "string"
+        },
+        "storage": {
+            "$ref": "#/definitions/StorageConfig",
+            "description": "Storage configuration referencing a backend"
+        },
+        "tags": {
+            "description": "Tags for categorization and filtering",
+            "items": {
+                "type": "string"
+            },
+            "type": "array"
+        },
+        "updatedAt": {
+            "description": "Last update timestamp",
+            "type": "string"
+        }
+    },
+    "required": [
+        "layer",
+        "name",
+        "storage"
+    ],
+    "type": "object"
+}
+

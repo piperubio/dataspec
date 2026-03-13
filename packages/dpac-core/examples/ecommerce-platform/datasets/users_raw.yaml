@@ -1,0 +1,16 @@
+# Dataset: Raw Users
+# Raw ingestion of user data from production database
+
+name: users_raw
+layer: raw
+storage:
+  backend: s3-data-lake
+  format: parquet
+  location: s3://data-lake/raw/users/
+
+metadata:
+  description: Raw user data ingested from production database
+  tags:
+    - raw
+    - users
+    - pii

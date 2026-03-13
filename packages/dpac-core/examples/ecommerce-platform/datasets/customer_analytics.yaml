@@ -1,0 +1,16 @@
+# Dataset: Customer Analytics (Serving)
+# Aggregated customer data ready for analytics
+
+name: customer_analytics
+layer: serving
+storage:
+  backend: clickhouse-analytics
+  format: native
+  location: analytics.customers
+
+metadata:
+  description: Aggregated customer analytics data
+  tags:
+    - serving
+    - analytics
+    - customers

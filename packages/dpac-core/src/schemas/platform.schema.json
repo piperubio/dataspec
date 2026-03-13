@@ -1,0 +1,118 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "additionalProperties": false,
+    "definitions": {
+        "AnalyticsEngine": {
+            "additionalProperties": false,
+            "description": "Analytics engine configuration.\nRepresents a processing engine for data transformations.",
+            "properties": {
+                "config": {
+                    "$ref": "#/definitions/Record%3Cstring%2Cunknown%3E",
+                    "description": "Engine-specific configuration"
+                },
+                "name": {
+                    "description": "Unique identifier for the analytics engine",
+                    "type": "string"
+                },
+                "type": {
+                    "$ref": "#/definitions/EngineType",
+                    "description": "Type of analytics engine"
+                },
+                "version": {
+                    "description": "Version constraint (e.g., '>=3.0.0')",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "name",
+                "type"
+            ],
+            "type": "object"
+        },
+        "EngineType": {
+            "description": "Supported analytics engine types.\nAnalytics engine type values.",
+            "enum": [
+                "dbt",
+                "duckdb",
+                "python",
+                "spark"
+            ],
+            "type": "string"
+        },
+        "Record<string,unknown>": {
+            "additionalProperties": false,
+            "type": "object"
+        },
+        "StorageBackend": {
+            "additionalProperties": false,
+            "description": "Storage backend configuration.\nRepresents a connection to a storage system.",
+            "properties": {
+                "connection": {
+                    "description": "Connection string or configuration",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Unique identifier for the storage backend",
+                    "type": "string"
+                },
+                "options": {
+                    "$ref": "#/definitions/Record%3Cstring%2Cunknown%3E",
+                    "description": "Additional storage-specific options"
+                },
+                "type": {
+                    "$ref": "#/definitions/StorageType",
+                    "description": "Type of storage backend"
+                }
+            },
+            "required": [
+                "connection",
+                "name",
+                "type"
+            ],
+            "type": "object"
+        },
+        "StorageType": {
+            "description": "Supported storage backend types.\nStorage type values.",
+            "enum": [
+                "clickhouse",
+                "postgresql",
+                "s3"
+            ],
+            "type": "string"
+        }
+    },
+    "description": "Platform configuration for data platform resources.\nDefines storage backends and analytics engines available to the platform.",
+    "properties": {
+        "defaults": {
+            "additionalProperties": false,
+            "description": "Optional default settings",
+            "properties": {
+                "storage": {
+                    "description": "Default storage backend name",
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
+        "engines": {
+            "description": "Array of analytics engines available to the platform",
+            "items": {
+                "$ref": "#/definitions/AnalyticsEngine"
+            },
+            "type": "array"
+        },
+        "storage": {
+            "description": "Array of storage backends available to the platform",
+            "items": {
+                "$ref": "#/definitions/StorageBackend"
+            },
+            "type": "array"
+        }
+    },
+    "required": [
+        "engines",
+        "storage"
+    ],
+    "type": "object"
+}
+

@@ -1,0 +1,20 @@
+# Dataset: Refined Users
+# Cleaned and validated user data
+
+name: users_refined
+layer: refined
+storage:
+  backend: s3-data-lake
+  format: delta
+  location: s3://data-lake/refined/users/
+
+contract:
+  name: user_contract
+  version: "1.0.0"
+
+metadata:
+  description: Cleaned and validated user data
+  tags:
+    - refined
+    - users
+    - pii

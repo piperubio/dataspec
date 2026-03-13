@@ -1,0 +1,30 @@
+{
+  "name": "dpac-core",
+  "version": "0.1.0",
+  "description": "Declarative Data Platform Architecture Core - YAML-based DSL for modeling data platforms",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "bun test",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "data-platform",
+    "data-engineering",
+    "yaml",
+    "dsl",
+    "declarative",
+    "schema"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.3.0",
+    "typescript-json-schema": "^0.67.1"
+  },
+  "dependencies": {
+    "yaml": "^2.3.4"
+  }
+}
