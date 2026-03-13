@@ -68,7 +68,7 @@ jobs:
         run: |
           cd packages/dpac-cli
           bun run build
-          ./bin/dpac validate --path examples/ecommerce-platform || true
+          ./bin/dpac validate --path examples/ecommerce-platform
       
       - name: Test CLI commands
         run: |
