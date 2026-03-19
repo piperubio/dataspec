@@ -1,6 +1,6 @@
 {
   "name": "@dataspec/dataspec-core",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Declarative Data Platform Architecture Core - YAML-based DSL for modeling data platforms",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
