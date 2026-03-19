@@ -8,13 +8,16 @@ import { tmpdir } from 'node:os';
 // (Windows can't execute shebang scripts directly via Bun shell)
 const CLI_PATH = join(import.meta.dir, '..', 'bin', 'dataspec');
 
-// Helper to create a valid test workspace
+// Helper to create a valid test workspace with dataspec/ folder
 async function createTestWorkspace(basePath: string): Promise<void> {
-  await mkdir(join(basePath, 'sources'), { recursive: true });
-  await mkdir(join(basePath, 'datasets', 'raw'), { recursive: true });
-  await mkdir(join(basePath, 'flows'), { recursive: true });
+  // Create dataspec container folder
+  const dataspecPath = join(basePath, 'dataspec');
+  await mkdir(dataspecPath, { recursive: true });
+  await mkdir(join(dataspecPath, 'sources'), { recursive: true });
+  await mkdir(join(dataspecPath, 'datasets', 'raw'), { recursive: true });
+  await mkdir(join(dataspecPath, 'flows'), { recursive: true });
 
-  await writeFile(join(basePath, 'platform.yaml'), `name: test-platform
+  await writeFile(join(dataspecPath, 'platform.yaml'), `name: test-platform
 version: "0.1.0"
 description: Test platform
 
@@ -23,14 +26,14 @@ storage:
     type: s3
 `);
 
-  await writeFile(join(basePath, 'sources', 'test_db.yaml'), `name: test_db
+  await writeFile(join(dataspecPath, 'sources', 'test_db.yaml'), `name: test_db
 type: database
 entities:
   - name: users
     description: Users table
 `);
 
-  await writeFile(join(basePath, 'datasets', 'raw', 'users_raw.yaml'), `name: users_raw
+  await writeFile(join(dataspecPath, 'datasets', 'raw', 'users_raw.yaml'), `name: users_raw
 layer: raw
 storage:
   backend: data-lake
@@ -38,7 +41,7 @@ storage:
   location: s3://bucket/users/
 `);
 
-  await writeFile(join(basePath, 'flows', 'test_flow.yaml'), `name: test_flow
+  await writeFile(join(dataspecPath, 'flows', 'test_flow.yaml'), `name: test_flow
 steps:
   - type: extract
     source: test_db
@@ -66,11 +69,13 @@ describe('CLI Integration', () => {
       expect(result.stdout.toString()).toContain('Validation passed');
     });
 
-    it('should show validation errors in invalid workspace', async () => {
+it('should show validation errors in invalid workspace', async () => {
       const invalidDir = await mkdtemp(join(tmpdir(), 'dataspec-invalid-'));
-      await mkdir(join(invalidDir, 'flows'), { recursive: true });
-      await writeFile(join(invalidDir, 'platform.yaml'), 'name: test');
-      await writeFile(join(invalidDir, 'flows', 'bad.yaml'), 'name: bad_flow\nsteps:\n  - type: extract\n    source: nonexistent\n    entity: test\n    output: out');
+      // Create dataspec folder structure for invalid test
+      const dataspecPath = join(invalidDir, 'dataspec');
+      await mkdir(join(dataspecPath, 'flows'), { recursive: true });
+      await writeFile(join(dataspecPath, 'platform.yaml'), 'name: test');
+      await writeFile(join(dataspecPath, 'flows', 'bad.yaml'), 'name: bad_flow\nsteps:\n  - type: extract\n    source: nonexistent\n    entity: test\n    output: out');
       
       const result = await $`bun ${CLI_PATH} validate --path ${invalidDir}`.nothrow();
       expect(result.exitCode).toBe(1);
@@ -145,22 +150,27 @@ describe('CLI Integration', () => {
     });
   });
 
-    describe('dataspec init', () => {
-    it('should create project structure', async () => {
+describe('dataspec init', () => {
+    it('should create project structure with dataspec folder', async () => {
         const tempDir = await mkdtemp(join(tmpdir(), 'dataspec-test-'));
       
         try {
         const result = await $`bun ${CLI_PATH} init --path ${tempDir} --name test-project`;
         expect(result.exitCode).toBe(0);
         expect(result.stdout.toString()).toContain('Initialized DataSpec project');
+        expect(result.stdout.toString()).toContain('dataspec');
         
         const fs = await import('node:fs/promises');
         const entries = await fs.readdir(tempDir);
-        expect(entries).toContain('sources');
-        expect(entries).toContain('datasets');
-        expect(entries).toContain('contracts');
-        expect(entries).toContain('flows');
-        expect(entries).toContain('platform.yaml');
+        expect(entries).toContain('dataspec');
+        
+        // Check inside dataspec folder
+        const dataspecEntries = await fs.readdir(join(tempDir, 'dataspec'));
+        expect(dataspecEntries).toContain('sources');
+        expect(dataspecEntries).toContain('datasets');
+        expect(dataspecEntries).toContain('contracts');
+        expect(dataspecEntries).toContain('flows');
+        expect(dataspecEntries).toContain('platform.yaml');
       } finally {
         await rm(tempDir, { recursive: true, force: true });
       }
@@ -178,7 +188,7 @@ describe('CLI Integration', () => {
       }
     });
 
-    it('should create with examples', async () => {
+    it('should create with examples inside dataspec folder', async () => {
       const tempDir = await mkdtemp(join(tmpdir(), 'dataspec-test-'));
       
       try {
@@ -186,10 +196,61 @@ describe('CLI Integration', () => {
         expect(result.exitCode).toBe(0);
         
         const fs = await import('node:fs/promises');
-        const sources = await fs.readdir(join(tempDir, 'sources'));
+        const sources = await fs.readdir(join(tempDir, 'dataspec', 'sources'));
         expect(sources.length).toBeGreaterThan(0);
       } finally {
         await rm(tempDir, { recursive: true, force: true });
+      }
+    });
+  });
+
+  describe('dataspec validate - workspace structure', () => {
+    it('should fail when workspace has no dataspec folder', async () => {
+      const noDataspecDir = await mkdtemp(join(tmpdir(), 'dataspec-no-folder-'));
+      
+      try {
+        // Create files at root level (legacy structure)
+        await mkdir(join(noDataspecDir, 'sources'), { recursive: true });
+        await writeFile(join(noDataspecDir, 'platform.yaml'), 'name: test');
+        
+        const result = await $`bun ${CLI_PATH} validate --path ${noDataspecDir}`.nothrow();
+        expect(result.exitCode).toBe(2);
+        expect(result.stderr.toString()).toContain("Workspace must contain a 'dataspec/' folder");
+      } finally {
+        await rm(noDataspecDir, { recursive: true, force: true });
+      }
+    });
+
+    it('should fail when resources are at root level (legacy structure)', async () => {
+      const legacyDir = await mkdtemp(join(tmpdir(), 'dataspec-legacy-'));
+      
+      try {
+        // Create both dataspec folder AND legacy resources at root
+        await mkdir(join(legacyDir, 'dataspec'), { recursive: true });
+        await mkdir(join(legacyDir, 'sources'), { recursive: true });
+        await writeFile(join(legacyDir, 'platform.yaml'), 'name: test');
+        
+        const result = await $`bun ${CLI_PATH} validate --path ${legacyDir}`.nothrow();
+        expect(result.exitCode).toBe(2);
+        expect(result.stderr.toString()).toContain("Found resources outside 'dataspec/' folder");
+      } finally {
+        await rm(legacyDir, { recursive: true, force: true });
+      }
+    });
+
+    it('should pass when workspace has proper dataspec folder structure', async () => {
+      const properDir = await mkdtemp(join(tmpdir(), 'dataspec-proper-'));
+      
+      try {
+        // Create proper dataspec folder structure
+        const dsPath = join(properDir, 'dataspec');
+        await mkdir(join(dsPath, 'sources'), { recursive: true });
+        await writeFile(join(dsPath, 'platform.yaml'), 'name: test');
+        
+        const result = await $`bun ${CLI_PATH} validate --path ${properDir}`;
+        expect(result.exitCode).toBe(0);
+      } finally {
+        await rm(properDir, { recursive: true, force: true });
       }
     });
   });
@@ -204,9 +265,11 @@ describe('CLI Integration', () => {
 
     it('should exit with code 1 for validation errors', async () => {
       const invalidDir = await mkdtemp(join(tmpdir(), 'dataspec-invalid-'));
-      await mkdir(join(invalidDir, 'flows'), { recursive: true });
-      await writeFile(join(invalidDir, 'platform.yaml'), 'name: test');
-      await writeFile(join(invalidDir, 'flows', 'bad.yaml'), `name: bad_flow
+      // Create dataspec folder structure for invalid test
+      const dataspecPath = join(invalidDir, 'dataspec');
+      await mkdir(join(dataspecPath, 'flows'), { recursive: true });
+      await writeFile(join(dataspecPath, 'platform.yaml'), 'name: test');
+      await writeFile(join(dataspecPath, 'flows', 'bad.yaml'), `name: bad_flow
 steps:
   - type: extract
     source: nonexistent
@@ -238,9 +301,11 @@ steps:
 
     it('should output errors in standard format for CI parsing', async () => {
       const invalidDir = await mkdtemp(join(tmpdir(), 'dataspec-invalid-'));
-      await mkdir(join(invalidDir, 'flows'), { recursive: true });
-      await writeFile(join(invalidDir, 'platform.yaml'), 'name: test');
-      await writeFile(join(invalidDir, 'flows', 'bad.yaml'), `name: bad_flow
+      // Create dataspec folder structure for invalid test
+      const dataspecPath = join(invalidDir, 'dataspec');
+      await mkdir(join(dataspecPath, 'flows'), { recursive: true });
+      await writeFile(join(dataspecPath, 'platform.yaml'), 'name: test');
+      await writeFile(join(dataspecPath, 'flows', 'bad.yaml'), `name: bad_flow
 steps:
   - type: extract
     source: nonexistent

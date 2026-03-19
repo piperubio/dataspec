@@ -9,6 +9,8 @@ interface InitOptions {
   force?: boolean;
 }
 
+const DATASPEC_DIR = 'dataspec';
+
 export const initCommand = new Command()
   .name('init')
   .description('Initialize a new DataSpec project')
@@ -20,6 +22,7 @@ export const initCommand = new Command()
     try {
       const projectPath = options.path || process.cwd();
       const projectName = options.name || 'my-data-platform';
+      const dataspecPath = join(projectPath, DATASPEC_DIR);
 
       if (!options.force) {
         const entries = await readdir(projectPath).catch(() => []);
@@ -29,14 +32,18 @@ export const initCommand = new Command()
         }
       }
 
-      await mkdir(join(projectPath, 'sources'), { recursive: true });
-      await mkdir(join(projectPath, 'datasets', 'raw'), { recursive: true });
-      await mkdir(join(projectPath, 'datasets', 'refined'), { recursive: true });
-      await mkdir(join(projectPath, 'datasets', 'serving'), { recursive: true });
-      await mkdir(join(projectPath, 'contracts', 'raw'), { recursive: true });
-      await mkdir(join(projectPath, 'contracts', 'refined'), { recursive: true });
-      await mkdir(join(projectPath, 'contracts', 'serving'), { recursive: true });
-      await mkdir(join(projectPath, 'flows'), { recursive: true });
+      // Create dataspec container folder
+      await mkdir(dataspecPath, { recursive: true });
+
+      // Create subdirectories inside dataspec/
+      await mkdir(join(dataspecPath, 'sources'), { recursive: true });
+      await mkdir(join(dataspecPath, 'datasets', 'raw'), { recursive: true });
+      await mkdir(join(dataspecPath, 'datasets', 'refined'), { recursive: true });
+      await mkdir(join(dataspecPath, 'datasets', 'serving'), { recursive: true });
+      await mkdir(join(dataspecPath, 'contracts', 'raw'), { recursive: true });
+      await mkdir(join(dataspecPath, 'contracts', 'refined'), { recursive: true });
+      await mkdir(join(dataspecPath, 'contracts', 'serving'), { recursive: true });
+      await mkdir(join(dataspecPath, 'flows'), { recursive: true });
 
       const platformYaml = `name: ${projectName}
 version: "0.1.0"
@@ -54,13 +61,15 @@ defaults:
   storage: data-lake
 `;
 
-      await writeFile(join(projectPath, 'platform.yaml'), platformYaml);
+      // Write platform.yaml inside dataspec/
+      await writeFile(join(dataspecPath, 'platform.yaml'), platformYaml);
 
       if (options.withExamples) {
-        await createExamples(projectPath);
+        await createExamples(dataspecPath);
       }
 
       console.log(`Initialized DataSpec project '${projectName}' at ${projectPath}`);
+      console.log(`All resources created in ${DATASPEC_DIR}/ folder.`);
       console.log('Run "dataspec validate" to validate your workspace.');
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
@@ -69,7 +78,7 @@ defaults:
     }
   });
 
-async function createExamples(projectPath: string): Promise<void> {
+async function createExamples(dataspecPath: string): Promise<void> {
   const sourceYaml = `name: example_db
 type: database
 entities:
@@ -77,7 +86,7 @@ entities:
     description: Example users table
 `;
 
-  await writeFile(join(projectPath, 'sources', 'example.yaml'), sourceYaml);
+  await writeFile(join(dataspecPath, 'sources', 'example.yaml'), sourceYaml);
 
   const contractYaml = `name: user_contract
 version: 1.0.0
@@ -93,7 +102,7 @@ fields:
       not_null: true
 `;
 
-  await writeFile(join(projectPath, 'contracts', 'refined', 'user_contract.yaml'), contractYaml);
+  await writeFile(join(dataspecPath, 'contracts', 'refined', 'user_contract.yaml'), contractYaml);
 
   const datasetYaml = `name: users_raw
 layer: raw
@@ -103,7 +112,7 @@ storage:
   location: s3://bucket/raw/users/
 `;
 
-  await writeFile(join(projectPath, 'datasets', 'raw', 'users_raw.yaml'), datasetYaml);
+  await writeFile(join(dataspecPath, 'datasets', 'raw', 'users_raw.yaml'), datasetYaml);
 
   const flowYaml = `name: example_flow
 steps:
@@ -113,7 +122,7 @@ steps:
     output: raw_users
 `;
 
-  await writeFile(join(projectPath, 'flows', 'example_flow.yaml'), flowYaml);
+  await writeFile(join(dataspecPath, 'flows', 'example_flow.yaml'), flowYaml);
 
   console.log('Created example resources.');
 }

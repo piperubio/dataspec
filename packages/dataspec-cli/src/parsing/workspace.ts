@@ -1,4 +1,4 @@
-import { readYamlFile, scanWorkspace } from './scanner.js';
+import { readYamlFile, scanWorkspaceWithStructure } from './scanner.js';
 import { parseYamlWithLineNumbers } from './yaml.js';
 import type {
   SourceEntity,
@@ -66,8 +66,30 @@ export interface Workspace {
   rootPath: string;
 }
 
+export interface WorkspaceStructureInfo {
+  hasDataspecFolder: boolean;
+  legacyResources: {
+    platformYaml: string | null;
+    sources: string[];
+    datasets: string[];
+    contracts: string[];
+    flows: string[];
+  };
+}
+
+export interface ParseResult {
+  workspace: Workspace;
+  structure: WorkspaceStructureInfo;
+}
+
 export async function parseWorkspace(dirPath: string): Promise<Workspace> {
-  const resources = await scanWorkspace(dirPath);
+  const result = await parseWorkspaceWithStructure(dirPath);
+  return result.workspace;
+}
+
+export async function parseWorkspaceWithStructure(dirPath: string): Promise<ParseResult> {
+  const scanResult = await scanWorkspaceWithStructure(dirPath);
+  const resources = scanResult.resources;
 
   const workspace: Workspace = {
     platform: null,
@@ -76,6 +98,11 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
     contracts: [],
     flows: [],
     rootPath: dirPath,
+  };
+
+  const structure: WorkspaceStructureInfo = {
+    hasDataspecFolder: scanResult.hasDataspecFolder,
+    legacyResources: scanResult.legacyResources,
   };
 
   if (resources.platformYaml) {
@@ -138,5 +165,5 @@ export async function parseWorkspace(dirPath: string): Promise<Workspace> {
     }
   }
 
-  return workspace;
+  return { workspace, structure };
 }

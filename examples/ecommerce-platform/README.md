@@ -64,56 +64,56 @@ This example showcases a complete data platform architecture for a global e-comm
 
 ```
 examples/ecommerce-platform/
-├── platform.yaml              # Platform configuration (storage, engines)
-├── README.md                  # This file
-├── sources/                   # Data source definitions
-│   ├── production_db.yaml     # PostgreSQL production database
-│   ├── payment_api.yaml       # Payment processor API
-│   ├── analytics_db.yaml      # ClickHouse analytics database
-│   ├── external_apis.yaml     # Third-party integrations
-│   └── external_s3_bucket.yaml # External S3 bucket (file-based source)
-├── contracts/                 # Data contracts organized by layer
-│   ├── raw/                   # Source schemas (document expected structure from sources)
-│   │   ├── users_raw_schema.yaml
-│   │   ├── orders_raw_schema.yaml
-│   │   ├── products_raw_schema.yaml
-│   │   ├── order_items_raw_schema.yaml
-│   │   ├── payments_raw_schema.yaml
-│   │   └── events_raw_schema.yaml
-│   ├── refined/               # Data quality contracts (enforced schemas)
-│   │   ├── user_contract.yaml
-│   │   ├── order_contract.yaml
-│   │   ├── product_contract.yaml
-│   │   ├── order_item_contract.yaml
-│   │   └── analytics_events_contract.yaml
-│   └── serving/               # Analytics contracts (aggregated schemas)
-│       ├── customer_analytics_contract.yaml
-│       ├── sales_dashboard_contract.yaml
-│       └── product_analytics_contract.yaml
-├── datasets/                  # Dataset definitions by layer
-│   ├── raw/                   # Bronze layer
-│   │   ├── users_raw.yaml
-│   │   ├── orders_raw.yaml
-│   │   ├── products_raw.yaml
-│   │   ├── events_raw.yaml
-│   │   └── payments_raw.yaml
-│   ├── refined/               # Silver layer
-│   │   ├── users_refined.yaml
-│   │   ├── orders_refined.yaml
-│   │   ├── products_refined.yaml
-│   │   ├── order_items_refined.yaml
-│   │   └── events_refined.yaml
-│   └── serving/               # Gold layer
-│       ├── customer_analytics.yaml
-│       ├── sales_dashboard.yaml
-│       └── product_analytics.yaml
-└── flows/                     # ETL/ELT pipeline definitions
-    ├── user_etl_pipeline.yaml          # Traditional ETL
-    ├── marketing_elt_pipeline.yaml     # ELT pattern (Extract-Load-Transform)
-    ├── marketing_s3_ingestion.yaml     # S3 to Raw pipeline
-    ├── orders_etl_pipeline.yaml
-    ├── products_etl_pipeline.yaml
-    └── unified_analytics_pipeline.yaml
+└── dataspec/                   # Container folder for all dataspec resources
+    ├── platform.yaml           # Platform configuration (storage, engines)
+    ├── sources/                # Data source definitions
+    │   ├── production_db.yaml  # PostgreSQL production database
+    │   ├── payment_api.yaml    # Payment processor API
+    │   ├── analytics_db.yaml   # ClickHouse analytics database
+    │   ├── external_apis.yaml # Third-party integrations
+    │   └── external_s3_bucket.yaml # External S3 bucket (file-based source)
+    ├── contracts/              # Data contracts organized by layer
+    │   ├── raw/                # Source schemas (document expected structure from sources)
+    │   │   ├── users_raw_schema.yaml
+    │   │   ├── orders_raw_schema.yaml
+    │   │   ├── products_raw_schema.yaml
+    │   │   ├── order_items_raw_schema.yaml
+    │   │   ├── payments_raw_schema.yaml
+    │   │   └── events_raw_schema.yaml
+    │   ├── refined/            # Data quality contracts (enforced schemas)
+    │   │   ├── user_contract.yaml
+    │   │   ├── order_contract.yaml
+    │   │   ├── product_contract.yaml
+    │   │   ├── order_item_contract.yaml
+    │   │   └── analytics_events_contract.yaml
+    │   └── serving/            # Analytics contracts (aggregated schemas)
+    │       ├── customer_analytics_contract.yaml
+    │       ├── sales_dashboard_contract.yaml
+    │       └── product_analytics_contract.yaml
+    ├── datasets/               # Dataset definitions by layer
+    │   ├── raw/                # Bronze layer
+    │   │   ├── users_raw.yaml
+    │   │   ├── orders_raw.yaml
+    │   │   ├── products_raw.yaml
+    │   │   ├── events_raw.yaml
+    │   │   └── payments_raw.yaml
+    │   ├── refined/            # Silver layer
+    │   │   ├── users_refined.yaml
+    │   │   ├── orders_refined.yaml
+    │   │   ├── products_refined.yaml
+    │   │   ├── order_items_refined.yaml
+    │   │   └── events_refined.yaml
+    │   └── serving/            # Gold layer
+    │       ├── customer_analytics.yaml
+    │       ├── sales_dashboard.yaml
+    │       └── product_analytics.yaml
+    └── flows/                  # ETL/ELT pipeline definitions
+        ├── user_etl_pipeline.yaml          # Traditional ETL
+        ├── marketing_elt_pipeline.yaml     # ELT pattern (Extract-Load-Transform)
+        ├── marketing_s3_ingestion.yaml     # S3 to Raw pipeline
+        ├── orders_etl_pipeline.yaml
+        ├── products_etl_pipeline.yaml
+        └── unified_analytics_pipeline.yaml
 ```
 
 ## Platform Configuration

@@ -27,19 +27,19 @@ The system SHALL provide a CLI command `dataspec init` that scaffolds a new data
 
 #### Scenario: Initialize new project
 - **WHEN** a user runs `dataspec init` in an empty directory
-- **THEN** the CLI SHALL create a scaffolded project structure with `platform.yaml`, `sources/`, `datasets/`, `contracts/`, and `flows/` directories
+- **THEN** the CLI SHALL create a scaffolded project structure with `dataspec/platform.yaml`, `dataspec/sources/`, `dataspec/datasets/`, `dataspec/contracts/`, and `dataspec/flows/` directories
 
 #### Scenario: Initialize with project name
 - **WHEN** a user runs `dataspec init --name my-data-platform`
-- **THEN** the CLI SHALL create the project with the specified name in the platform.yaml file
+- **THEN** the CLI SHALL create the project with the specified name in the `dataspec/platform.yaml` file
 
 #### Scenario: Initialize with example resources
 - **WHEN** a user runs `dataspec init --with-examples`
-- **THEN** the CLI SHALL create the project with example source, dataset, contract, and flow definitions
+- **THEN** the CLI SHALL create the project with example source, dataset, contract, and flow definitions inside the `dataspec/` folder
 
 #### Scenario: Initialize in specific directory
 - **WHEN** a user runs `dataspec init --path ./new-platform --name my-platform`
-- **THEN** the CLI SHALL create the scaffolded project in the specified directory
+- **THEN** the CLI SHALL create the scaffolded project with `dataspec/` folder in the specified directory
 
 ### Requirement: Provide version command
 The system SHALL provide a CLI command `dataspec --version` that displays the tool version.

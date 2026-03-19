@@ -1,6 +1,6 @@
 import { Command } from 'commander';
-import { parseWorkspace } from '../parsing/index.js';
-import { validateWorkspace, formatValidationError } from '../validation/index.js';
+import { parseWorkspaceWithStructure } from '../parsing/index.js';
+import { validateWorkspace, formatValidationError, validateWorkspaceStructure } from '../validation/index.js';
 import { logVerbose } from '../utils/index.js';
 
 export const validateCommand = new Command()
@@ -11,13 +11,29 @@ export const validateCommand = new Command()
   .action(async (options) => {
     try {
       logVerbose(`Parsing workspace at: ${options.path}`);
-      const workspace = await parseWorkspace(options.path);
+      const { workspace, structure } = await parseWorkspaceWithStructure(options.path);
+
+      // First, validate workspace structure (dataspec/ folder requirement)
+      const structureResult = validateWorkspaceStructure(structure, options.path);
+      
+      if (!structureResult.valid) {
+        // Structure validation failed
+        for (const error of structureResult.errors) {
+          console.error(error);
+        }
+        process.exit(2);
+      }
+
+      // Show warnings for legacy structure
+      for (const warning of structureResult.warnings) {
+        console.warn(`Warning: ${warning}`);
+      }
 
       // If no workspace configuration (e.g., platform.yaml) is found, emit a clear CLI error.
       if (!workspace || (workspace as any).platform == null) {
         console.error(
-          `Error: No workspace configuration (platform.yaml) found at '${options.path}'.\n` +
-          "Run 'dataspec init' in that directory to create a new workspace."
+          `Error: No workspace configuration (platform.yaml) found at '${options.path}/dataspec'.\n` +
+          "Run 'dataspec init' to create a new workspace."
         );
         process.exit(2);
       }

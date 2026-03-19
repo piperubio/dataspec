@@ -4,7 +4,7 @@
  * @param dirPath - Path to the workspace root directory
  * @returns Promise resolving to parsed workspace with all resources
  */
-export { parseWorkspace } from './workspace.js';
+export { parseWorkspace, parseWorkspaceWithStructure } from './workspace.js';
 
 /**
  * Scans a workspace directory for DPAC resource files.
@@ -12,7 +12,7 @@ export { parseWorkspace } from './workspace.js';
  * @param dirPath - Path to scan
  * @returns Object with paths to all discovered resources
  */
-export { scanWorkspace } from './scanner.js';
+export { scanWorkspace, scanWorkspaceWithStructure } from './scanner.js';
 
 /**
  * Parses YAML content while preserving line number information.
@@ -23,7 +23,7 @@ export { parseYamlWithLineNumbers, validateYamlSyntax } from './yaml.js';
 /**
  * Workspace and resource types
  */
-export type { Workspace, ParsedSource, ParsedDataset, ParsedContract, ParsedFlow, ParsedPlatform } from './workspace.js';
+export type { Workspace, ParsedSource, ParsedDataset, ParsedContract, ParsedFlow, ParsedPlatform, WorkspaceStructureInfo, ParseResult } from './workspace.js';
 
 /**
  * Options for YAML parsing

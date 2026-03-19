@@ -61,7 +61,7 @@ export function createMockSource(overrides?: Partial<ParsedSource>): ParsedSourc
       { name: 'users', type: 'table' },
       { name: 'orders', type: 'table' },
     ],
-    file: 'sources/test.yaml',
+    file: 'dataspec/sources/test.yaml',
     line: 1,
     ...overrides,
   };
@@ -78,7 +78,7 @@ export function createMockContract(overrides?: Partial<ParsedContract>): ParsedC
       { name: 'email', type: 'string' },
       { name: 'created_at', type: 'timestamp' },
     ],
-    file: 'contracts/test.yaml',
+    file: 'dataspec/contracts/test.yaml',
     line: 1,
     ...overrides,
   };
@@ -98,7 +98,7 @@ export function createMockDataset(overrides?: Partial<ParsedDataset>): ParsedDat
       name: 'test-contract',
       version: '1.0.0',
     },
-    file: 'datasets/test.yaml',
+    file: 'dataspec/datasets/test.yaml',
     line: 1,
     ...overrides,
   };
@@ -126,7 +126,7 @@ export function createMockFlow(overrides?: Partial<ParsedFlow>): ParsedFlow {
         target: 'serving-users',
       },
     ],
-    file: 'flows/test.yaml',
+    file: 'dataspec/flows/test.yaml',
     line: 1,
     ...overrides,
   };
@@ -173,7 +173,7 @@ export function createMockETLFlow(
         target: servingDataset,
       },
     ],
-    file: `flows/${sourceName}-pipeline.yaml`,
+    file: `dataspec/flows/${sourceName}-pipeline.yaml`,
     line: 1,
     ...overrides,
   };

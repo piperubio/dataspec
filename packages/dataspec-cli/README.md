@@ -127,31 +127,39 @@ dataspec show contract user_contract --format json
 
 ## Workspace Structure
 
-A DataSpec workspace follows this structure:
+A DataSpec workspace follows this structure with all resources inside the `dataspec/` folder:
 
 ```
 my-platform/
-├── platform.yaml           # Platform configuration
-├── sources/                # Data sources
-│   └── production_db.yaml
-├── datasets/               # Datasets by layer
-│   ├── raw/
-│   │   └── users_raw.yaml
-│   ├── refined/
-│   │   └── users_refined.yaml
-│   └── serving/
-│       └── users_analytics.yaml
-├── contracts/              # Data contracts by layer
-│   ├── raw/
-│   ├── refined/
-│   └── serving/
-└── flows/                  # Data pipelines
-    └── users_etl.yaml
+└── dataspec/                # Container folder for all dataspec resources
+    ├── platform.yaml        # Platform configuration
+    ├── sources/             # Data sources
+    │   └── production_db.yaml
+    ├── datasets/            # Datasets by layer
+    │   ├── raw/
+    │   │   └── users_raw.yaml
+    │   ├── refined/
+    │   │   └── users_refined.yaml
+    │   └── serving/
+    │       └── users_analytics.yaml
+    ├── contracts/           # Data contracts by layer
+    │   ├── raw/
+    │   ├── refined/
+    │   └── serving/
+    └── flows/               # Data pipelines
+        └── users_etl.yaml
 ```
+
+**Important**: All resources must be inside the `dataspec/` folder. The CLI will report an error if resources are found outside this folder.
 
 ## Validation
 
 The CLI performs comprehensive validation:
+
+### Workspace Structure
+- Validates that `dataspec/` folder exists
+- Detects legacy structure (resources at root level) and reports errors
+- Provides clear migration guidance for existing projects
 
 ### Graph Integrity
 - Identifies orphaned datasets (not produced or consumed)
@@ -209,6 +217,26 @@ The CLI is designed for CI/CD pipelines:
 Exit codes enable pipeline control:
 - Exit code 1 on validation failures
 - JSON output for programmatic processing
+
+## Migration for Existing Projects
+
+If you have an existing DataSpec project with resources at the root level, migrate to the new structure:
+
+1. Create the `dataspec/` folder:
+   ```bash
+   mkdir dataspec
+   ```
+
+2. Move all resources into `dataspec/`:
+   ```bash
+   mv platform.yaml dataspec/
+   mv sources datasets contracts flows dataspec/
+   ```
+
+3. Validate the new structure:
+   ```bash
+   dataspec validate
+   ```
 
 ## License
 
