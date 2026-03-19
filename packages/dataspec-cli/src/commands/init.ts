@@ -1,5 +1,5 @@
 import { Command } from 'commander';
-import { mkdir, writeFile, readdir } from 'node:fs/promises';
+import { mkdir, writeFile, access } from 'node:fs/promises';
 import { join } from 'node:path';
 
 interface InitOptions {
@@ -24,12 +24,11 @@ export const initCommand = new Command()
       const projectName = options.name || 'my-data-platform';
       const dataspecPath = join(projectPath, DATASPEC_DIR);
 
-      if (!options.force) {
-        const entries = await readdir(projectPath).catch(() => []);
-        if (entries.length > 0) {
-          console.error(`Error: Directory '${projectPath}' is not empty. Use --force to overwrite.`);
-          process.exit(2);
-        }
+      // Check if dataspec folder already exists
+      const dataspecExists = await access(dataspecPath).then(() => true).catch(() => false);
+      if (dataspecExists && !options.force) {
+        console.error(`Error: Directory '${DATASPEC_DIR}' already exists at '${projectPath}'. Use --force to overwrite.`);
+        process.exit(2);
       }
 
       // Create dataspec container folder
