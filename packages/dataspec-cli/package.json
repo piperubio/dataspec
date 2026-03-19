@@ -1,6 +1,6 @@
 {
   "name": "@dataspec/dataspec-cli",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "DataSpec CLI - Declarative Data Platform Architecture Command-Line Interface",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
