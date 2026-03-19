@@ -1,4 +1,14 @@
 /**
+ * Error codes for validation errors
+ */
+export const ErrorCodes = {
+  DUPLICATE_SOURCE_NAME: 'DUPLICATE_SOURCE_NAME',
+  DUPLICATE_DATASET_NAME: 'DUPLICATE_DATASET_NAME',
+  DUPLICATE_CONTRACT_NAME: 'DUPLICATE_CONTRACT_NAME',
+  DUPLICATE_FLOW_NAME: 'DUPLICATE_FLOW_NAME',
+} as const;
+
+/**
  * Severity level for validation messages
  */
 export type ValidationSeverity = 'error' | 'warning';

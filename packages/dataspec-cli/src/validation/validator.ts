@@ -1,7 +1,7 @@
 import { Workspace } from '../parsing/index.js';
 import { detectCycles, getDownstream, DependencyGraph } from '../graph/index.js';
 import { buildDependencyGraph } from '../graph/builder.js';
-import { ValidationError, ValidationResult, createError, createSuccessResult, createFailureResult } from './error.js';
+import { ValidationError, ValidationResult, createError, createSuccessResult, createFailureResult, ErrorCodes } from './error.js';
 
 export class Validator {
   private workspace: Workspace;
@@ -15,6 +15,7 @@ export class Validator {
   }
 
   validate(): ValidationResult {
+    this.validateUniqueResourceNames();
     this.validateCrossResourceReferences();
     this.validateStepTypeCoherence();
     this.validateGraphIntegrity();
@@ -26,6 +27,68 @@ export class Validator {
     }
 
     return createSuccessResult(this.warnings);
+  }
+
+  private validateUniqueResourceNames(): void {
+    // Validate source name uniqueness
+    const seenSources = new Map<string, { file: string; line: number }>();
+    for (const source of this.workspace.sources) {
+      if (seenSources.has(source.name)) {
+        this.errors.push(createError(
+          `Duplicate source name '${source.name}'`,
+          { file: source.file, line: source.line },
+          'error',
+          ErrorCodes.DUPLICATE_SOURCE_NAME
+        ));
+      } else {
+        seenSources.set(source.name, { file: source.file, line: source.line });
+      }
+    }
+
+    // Validate dataset name uniqueness
+    const seenDatasets = new Map<string, { file: string; line: number }>();
+    for (const dataset of this.workspace.datasets) {
+      if (seenDatasets.has(dataset.name)) {
+        this.errors.push(createError(
+          `Duplicate dataset name '${dataset.name}'`,
+          { file: dataset.file, line: dataset.line },
+          'error',
+          ErrorCodes.DUPLICATE_DATASET_NAME
+        ));
+      } else {
+        seenDatasets.set(dataset.name, { file: dataset.file, line: dataset.line });
+      }
+    }
+
+    // Validate contract name uniqueness
+    const seenContracts = new Map<string, { file: string; line: number }>();
+    for (const contract of this.workspace.contracts) {
+      if (seenContracts.has(contract.name)) {
+        this.errors.push(createError(
+          `Duplicate contract name '${contract.name}'`,
+          { file: contract.file, line: contract.line },
+          'error',
+          ErrorCodes.DUPLICATE_CONTRACT_NAME
+        ));
+      } else {
+        seenContracts.set(contract.name, { file: contract.file, line: contract.line });
+      }
+    }
+
+    // Validate flow name uniqueness
+    const seenFlows = new Map<string, { file: string; line: number }>();
+    for (const flow of this.workspace.flows) {
+      if (seenFlows.has(flow.name)) {
+        this.errors.push(createError(
+          `Duplicate flow name '${flow.name}'`,
+          { file: flow.file, line: flow.line },
+          'error',
+          ErrorCodes.DUPLICATE_FLOW_NAME
+        ));
+      } else {
+        seenFlows.set(flow.name, { file: flow.file, line: flow.line });
+      }
+    }
   }
 
   private validateCrossResourceReferences(): void {
