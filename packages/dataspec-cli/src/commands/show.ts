@@ -100,7 +100,6 @@ function showDataset(workspace: Workspace, name: string, options: { format: stri
 
   const output: Record<string, unknown> = {
     name: dataset.name,
-    layer: dataset.layer,
     storage: dataset.storage,
     file: dataset.file,
   };
@@ -124,7 +123,6 @@ function showDataset(workspace: Workspace, name: string, options: { format: stri
     console.log(JSON.stringify(output, null, 2));
   } else {
     console.log(`Dataset: ${dataset.name}`);
-    console.log(`  Layer: ${dataset.layer}`);
     console.log(`  Storage: ${dataset.storage.format} @ ${dataset.storage.location}`);
     if (dataset.contract) {
       console.log(`  Contract: ${dataset.contract.name} (${dataset.contract.version})`);

@@ -2,7 +2,6 @@
 # Raw ingestion of order data from production database
 
 name: orders_raw
-layer: raw
 storage:
   backend: s3-data-lake
   format: parquet

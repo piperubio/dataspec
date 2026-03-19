@@ -36,12 +36,8 @@ export const initCommand = new Command()
 
       // Create subdirectories inside dataspec/
       await mkdir(join(dataspecPath, 'sources'), { recursive: true });
-      await mkdir(join(dataspecPath, 'datasets', 'raw'), { recursive: true });
-      await mkdir(join(dataspecPath, 'datasets', 'refined'), { recursive: true });
-      await mkdir(join(dataspecPath, 'datasets', 'serving'), { recursive: true });
-      await mkdir(join(dataspecPath, 'contracts', 'raw'), { recursive: true });
-      await mkdir(join(dataspecPath, 'contracts', 'refined'), { recursive: true });
-      await mkdir(join(dataspecPath, 'contracts', 'serving'), { recursive: true });
+      await mkdir(join(dataspecPath, 'datasets'), { recursive: true });
+      await mkdir(join(dataspecPath, 'contracts'), { recursive: true });
       await mkdir(join(dataspecPath, 'flows'), { recursive: true });
 
       const platformYaml = `name: ${projectName}
@@ -101,17 +97,16 @@ fields:
       not_null: true
 `;
 
-  await writeFile(join(dataspecPath, 'contracts', 'refined', 'user_contract.yaml'), contractYaml);
+  await writeFile(join(dataspecPath, 'contracts', 'user_contract.yaml'), contractYaml);
 
   const datasetYaml = `name: users_raw
-layer: raw
 storage:
   backend: data-lake
   format: parquet
   location: s3://bucket/raw/users/
 `;
 
-  await writeFile(join(dataspecPath, 'datasets', 'raw', 'users_raw.yaml'), datasetYaml);
+  await writeFile(join(dataspecPath, 'datasets', 'users_raw.yaml'), datasetYaml);
 
   const flowYaml = `name: example_flow
 steps:

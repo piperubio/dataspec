@@ -6,27 +6,6 @@
 import type { Metadata, WithMetadata } from './common';
 
 /**
- * Dataset layer in the medallion architecture.
- * Represents the quality/stage of data.
- * - raw: Unprocessed source data (landing/bronze layer)
- * - refined: Cleaned and transformed data (silver layer)
- * - serving: Aggregated data ready for consumption (gold layer)
- */
-export const DatasetLayer = {
-  /** Raw, unprocessed data (bronze) */
-  RAW: 'raw',
-  /** Cleaned and validated data (silver) */
-  REFINED: 'refined',
-  /** Business-ready aggregated data (gold) */
-  SERVING: 'serving',
-} as const;
-
-/**
- * Dataset layer values.
- */
-export type DatasetLayer = typeof DatasetLayer[keyof typeof DatasetLayer];
-
-/**
  * Reference to a contract definition by name and version.
  * Used to link datasets to their validation contracts.
  */
@@ -59,8 +38,6 @@ export interface StorageConfig {
 export interface Dataset extends WithMetadata {
   /** Unique name for this dataset */
   name: string;
-  /** Layer in the data architecture (raw, refined, serving) */
-  layer: DatasetLayer;
   /** Storage configuration referencing a backend */
   storage: StorageConfig;
   /** Optional reference to a validation contract */
@@ -74,8 +51,6 @@ export interface Dataset extends WithMetadata {
 export interface DatasetYamlSchema {
   /** Dataset name */
   name: string;
-  /** Layer in the data architecture */
-  layer: string;
   /** Storage configuration */
   storage: {
     /** Backend reference */

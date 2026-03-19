@@ -2,7 +2,6 @@
 # Aggregated customer metrics and KPIs
 
 name: customer_analytics
-layer: serving
 storage:
   backend: clickhouse-analytics
   format: native

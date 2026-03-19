@@ -2,7 +2,6 @@
 # Cleaned and validated order data
 
 name: orders_refined
-layer: refined
 storage:
   backend: s3-data-lake
   format: delta

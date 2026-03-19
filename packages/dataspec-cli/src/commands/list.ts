@@ -7,7 +7,6 @@ export const listCommand = new Command()
   .argument('[resource]', 'Resource type to list (sources, datasets, contracts, flows)')
   .option('-p, --path <dir>', 'Path to the workspace directory', process.cwd())
   .option('-f, --format <format>', 'Output format (text, json)', 'text')
-  .option('-t, --tier <tier>', 'Filter datasets by tier (raw, refined, serving)')
   .action(async (resource: string | undefined, options) => {
     try {
       const workspace = await parseWorkspace(options.path);
@@ -71,15 +70,10 @@ function listSources(workspace: Workspace, options: { format: string }): void {
   }
 }
 
-function listDatasets(workspace: Workspace, options: { format: string; tier?: string }): void {
-  let datasets = workspace.datasets.map((d: { name: string; layer: string }) => ({
+function listDatasets(workspace: Workspace, options: { format: string }): void {
+  const datasets = workspace.datasets.map((d: { name: string }) => ({
     name: d.name,
-    tier: d.layer,
   }));
-
-  if (options.tier) {
-    datasets = datasets.filter((d: { tier: string }) => d.tier === options.tier);
-  }
 
   if (options.format === 'json') {
     console.log(JSON.stringify(datasets, null, 2));
@@ -89,10 +83,10 @@ function listDatasets(workspace: Workspace, options: { format: string; tier?: st
       return;
     }
     console.log('Datasets:');
-    console.log('NAME'.padEnd(30), 'TIER');
+    console.log('NAME'.padEnd(30));
     console.log('-'.repeat(50));
     for (const dataset of datasets) {
-      console.log(dataset.name.padEnd(30), dataset.tier);
+      console.log(dataset.name.padEnd(30));
     }
   }
 }

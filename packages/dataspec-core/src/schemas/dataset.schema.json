@@ -21,15 +21,7 @@
             ],
             "type": "object"
         },
-        "DatasetLayer": {
-            "description": "Dataset layer in the medallion architecture.\nRepresents the quality/stage of data.\n- raw: Unprocessed source data (landing/bronze layer)\n- refined: Cleaned and transformed data (silver layer)\n- serving: Aggregated data ready for consumption (gold layer)\nDataset layer values.",
-            "enum": [
-                "raw",
-                "refined",
-                "serving"
-            ],
-            "type": "string"
-        },
+
         "Metadata": {
             "additionalProperties": false,
             "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
@@ -78,10 +70,7 @@
             "description": "Creation timestamp",
             "type": "string"
         },
-        "layer": {
-            "$ref": "#/definitions/DatasetLayer",
-            "description": "Layer in the data architecture (raw, refined, serving)"
-        },
+
         "metadata": {
             "$ref": "#/definitions/Metadata",
             "description": "Metadata associated with the resource"
@@ -107,7 +96,6 @@
         }
     },
     "required": [
-        "layer",
         "name",
         "storage"
     ],

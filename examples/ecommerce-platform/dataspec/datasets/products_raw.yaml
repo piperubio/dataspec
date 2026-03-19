@@ -2,7 +2,6 @@
 # Raw ingestion of product data from production database
 
 name: products_raw
-layer: raw
 storage:
   backend: s3-data-lake
   format: parquet

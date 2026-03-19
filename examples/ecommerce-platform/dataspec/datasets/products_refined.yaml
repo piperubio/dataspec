@@ -2,7 +2,6 @@
 # Cleaned and validated product data
 
 name: products_refined
-layer: refined
 storage:
   backend: s3-data-lake
   format: delta

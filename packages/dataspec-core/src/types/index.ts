@@ -26,7 +26,6 @@ export type {
 } from './contract';
 
 export type {
-  DatasetLayer,
   ContractReference,
   StorageConfig,
   Dataset,

@@ -60,10 +60,9 @@ fields:
       not_null: true
 `;
 
-    // Dataset definitions for each layer
+    // Dataset definitions for pipeline stages
     const rawDatasetYaml = `
 name: users_raw
-layer: raw
 storage:
   backend: s3-data-lake
   format: parquet
@@ -72,7 +71,6 @@ storage:
 
     const refinedDatasetYaml = `
 name: users_refined
-layer: refined
 storage:
   backend: s3-data-lake
   format: delta
@@ -84,7 +82,6 @@ contract:
 
     const servingDatasetYaml = `
 name: customer_analytics
-layer: serving
 storage:
   backend: clickhouse-analytics
   format: native
@@ -119,10 +116,10 @@ steps:
     // Verify the complete pipeline
     expect(source.name).toBe('production_db');
     expect(contract.name).toBe('user_contract');
-    expect(rawDataset.layer).toBe('raw');
-    expect(refinedDataset.layer).toBe('refined');
+    expect(rawDataset.name).toBe('users_raw');
+    expect(refinedDataset.name).toBe('users_refined');
     expect(refinedDataset.contract?.name).toBe('user_contract');
-    expect(servingDataset.layer).toBe('serving');
+    expect(servingDataset.name).toBe('customer_analytics');
     expect(flow.steps).toHaveLength(3);
     expect(flow.steps[0].type).toBe('extract');
     expect(flow.steps[1].type).toBe('transform');

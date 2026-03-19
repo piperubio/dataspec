@@ -6,7 +6,6 @@
 import { parse } from 'yaml';
 import {
   Dataset,
-  DatasetLayer,
   DatasetYamlSchema,
   StorageConfig,
   ContractReference,
@@ -42,10 +41,6 @@ export function parseDatasetYaml(yamlContent: string): Dataset {
   // Validate required fields exist
   if (!parsed.name) {
     throw new Error('Dataset YAML missing required field: name');
-  }
-
-  if (!parsed.layer) {
-    throw new Error('Dataset YAML missing required field: layer');
   }
 
   if (!parsed.storage) {
@@ -85,18 +80,9 @@ export function parseDatasetYaml(yamlContent: string): Dataset {
     };
   }
 
-  // Validate and cast the layer
-  const validLayers: DatasetLayer[] = ['raw', 'refined', 'serving'];
-  if (!validLayers.includes(parsed.layer as DatasetLayer)) {
-    throw new Error(
-      `Invalid dataset layer: ${parsed.layer}. Must be one of: ${validLayers.join(', ')}`
-    );
-  }
-
   // Build and return the typed Dataset
   const dataset: Dataset = {
     name: parsed.name,
-    layer: parsed.layer as DatasetLayer,
     storage,
   };
 

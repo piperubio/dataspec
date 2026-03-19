@@ -2,7 +2,6 @@
 # Aggregated sales metrics for executive dashboards
 
 name: sales_dashboard
-layer: serving
 storage:
   backend: clickhouse-analytics
   format: native
