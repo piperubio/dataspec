@@ -2,7 +2,6 @@
 # Cleaned and validated user data
 
 name: users_refined
-layer: refined
 storage:
   backend: s3-data-lake
   format: delta

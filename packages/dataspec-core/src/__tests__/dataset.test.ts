@@ -7,10 +7,9 @@ import { describe, it, expect } from 'bun:test';
 import { parseDatasetYaml } from '../parsers/dataset';
 
 describe('parseDatasetYaml', () => {
-  it('should parse a raw layer dataset', () => {
+  it('should parse a basic dataset', () => {
     const yaml = `
 name: users_raw
-layer: raw
 storage:
   backend: s3-data-lake
   format: parquet
@@ -19,15 +18,13 @@ storage:
 
     const result = parseDatasetYaml(yaml);
     expect(result.name).toBe('users_raw');
-    expect(result.layer).toBe('raw');
     expect(result.storage.backend).toBe('s3-data-lake');
     expect(result.storage.format).toBe('parquet');
   });
 
-  it('should parse a refined layer dataset', () => {
+  it('should parse a dataset with delta format', () => {
     const yaml = `
 name: users_refined
-layer: refined
 storage:
   backend: s3-data-lake
   format: delta
@@ -35,13 +32,13 @@ storage:
 `;
 
     const result = parseDatasetYaml(yaml);
-    expect(result.layer).toBe('refined');
+    expect(result.name).toBe('users_refined');
+    expect(result.storage.format).toBe('delta');
   });
 
-  it('should parse a serving layer dataset', () => {
+  it('should parse a dataset with analytics backend', () => {
     const yaml = `
 name: customer_analytics
-layer: serving
 storage:
   backend: clickhouse-analytics
   format: native
@@ -49,13 +46,13 @@ storage:
 `;
 
     const result = parseDatasetYaml(yaml);
-    expect(result.layer).toBe('serving');
+    expect(result.name).toBe('customer_analytics');
+    expect(result.storage.backend).toBe('clickhouse-analytics');
   });
 
   it('should parse a dataset with contract reference', () => {
     const yaml = `
 name: users_refined
-layer: refined
 storage:
   backend: s3-data-lake
   format: parquet
@@ -70,23 +67,9 @@ contract:
     expect(result.contract?.version).toBe('1.0.0');
   });
 
-  it('should throw error for invalid layer value', () => {
-    const yaml = `
-name: test_dataset
-layer: invalid_layer
-storage:
-  backend: s3
-  format: parquet
-  location: s3://bucket/test/
-`;
-
-    expect(() => parseDatasetYaml(yaml)).toThrow('Invalid dataset layer');
-  });
-
   it('should parse dataset with metadata', () => {
     const yaml = `
 name: test_dataset
-layer: raw
 storage:
   backend: s3
   format: parquet
@@ -108,7 +91,6 @@ tags:
   it('should throw error for missing required fields', () => {
     const yaml = `
 name: test_dataset
-layer: raw
 `;
 
     expect(() => parseDatasetYaml(yaml)).toThrow('storage');

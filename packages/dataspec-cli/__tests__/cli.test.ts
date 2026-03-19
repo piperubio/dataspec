@@ -14,7 +14,7 @@ async function createTestWorkspace(basePath: string): Promise<void> {
   const dataspecPath = join(basePath, 'dataspec');
   await mkdir(dataspecPath, { recursive: true });
   await mkdir(join(dataspecPath, 'sources'), { recursive: true });
-  await mkdir(join(dataspecPath, 'datasets', 'raw'), { recursive: true });
+  await mkdir(join(dataspecPath, 'datasets'), { recursive: true });
   await mkdir(join(dataspecPath, 'flows'), { recursive: true });
 
   await writeFile(join(dataspecPath, 'platform.yaml'), `name: test-platform
@@ -33,8 +33,7 @@ entities:
     description: Users table
 `);
 
-  await writeFile(join(dataspecPath, 'datasets', 'raw', 'users_raw.yaml'), `name: users_raw
-layer: raw
+  await writeFile(join(dataspecPath, 'datasets', 'users_raw.yaml'), `name: users_raw
 storage:
   backend: data-lake
   format: parquet
@@ -101,11 +100,10 @@ it('should show validation errors in invalid workspace', async () => {
       expect(output).toContain('database');
     });
 
-    it('should list datasets filtered by tier', async () => {
-      const result = await $`bun ${CLI_PATH} list datasets --path ${testWorkspace} --tier raw`;
+    it('should list datasets', async () => {
+      const result = await $`bun ${CLI_PATH} list datasets --path ${testWorkspace}`;
       const output = result.stdout.toString();
       expect(output).toContain('users_raw');
-      expect(output).toContain('raw');
     });
 
     it('should output JSON when requested', async () => {
@@ -121,7 +119,6 @@ it('should show validation errors in invalid workspace', async () => {
       const result = await $`bun ${CLI_PATH} show dataset users_raw --path ${testWorkspace}`;
       const output = result.stdout.toString();
       expect(output).toContain('Dataset: users_raw');
-      expect(output).toContain('Layer: raw');
     });
 
     it('should show source details', async () => {
@@ -140,7 +137,6 @@ it('should show validation errors in invalid workspace', async () => {
       const result = await $`bun ${CLI_PATH} show dataset users_raw --path ${testWorkspace} --format json`;
       const json = JSON.parse(result.stdout.toString());
       expect(json.name).toBe('users_raw');
-      expect(json.layer).toBe('raw');
     });
 
     it('should show with dependencies', async () => {
@@ -176,13 +172,34 @@ describe('dataspec init', () => {
       }
     });
 
-    it('should fail in non-empty directory without --force', async () => {
+    it('should fail if dataspec folder already exists', async () => {
       const tempDir = await mkdtemp(join(tmpdir(), 'dataspec-test-'));
       
       try {
-        await writeFile(join(tempDir, 'existing.txt'), 'test');
+        // Create an existing dataspec folder
+        const fs = await import('node:fs/promises');
+        await fs.mkdir(join(tempDir, 'dataspec'));
+        
         const result = await $`bun ${CLI_PATH} init --path ${tempDir}`.nothrow();
         expect(result.exitCode).toBe(2);
+      } finally {
+        await rm(tempDir, { recursive: true, force: true });
+      }
+    });
+
+    it('should succeed in non-empty directory if dataspec folder does not exist', async () => {
+      const tempDir = await mkdtemp(join(tmpdir(), 'dataspec-test-'));
+      
+      try {
+        // Create a file in the directory (but no dataspec folder)
+        await writeFile(join(tempDir, 'existing.txt'), 'test');
+        const result = await $`bun ${CLI_PATH} init --path ${tempDir}`;
+        expect(result.exitCode).toBe(0);
+        
+        // Verify dataspec folder was created
+        const fs = await import('node:fs/promises');
+        const stat = await fs.stat(join(tempDir, 'dataspec'));
+        expect(stat.isDirectory()).toBe(true);
       } finally {
         await rm(tempDir, { recursive: true, force: true });
       }

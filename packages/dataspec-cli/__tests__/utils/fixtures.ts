@@ -88,7 +88,6 @@ export function createMockContract(overrides?: Partial<ParsedContract>): ParsedC
 export function createMockDataset(overrides?: Partial<ParsedDataset>): ParsedDataset {
   return {
     name: 'test-dataset',
-    layer: 'raw',
     storage: {
       backend: 's3',
       format: 'parquet',
@@ -228,17 +227,16 @@ export function generateDatasetYaml(dataset: Partial<ParsedDataset> = {}): strin
   const d = createMockDataset(dataset);
   let yaml = `
 name: ${d.name}
-layer: ${d.layer}
 storage:
   backend: ${d.storage.backend}
   format: ${d.storage.format}
   location: ${d.storage.location}
 `.trim();
-  
+
   if (d.contract) {
     yaml += `\ncontract:\n  name: ${d.contract.name}\n  version: ${d.contract.version}`;
   }
-  
+
   return yaml;
 }
 

@@ -92,13 +92,12 @@ Arguments:
 Options:
 - `-p, --path <dir>` - Path to the workspace directory
 - `-f, --format <format>` - Output format: `text` or `json`
-- `-t, --tier <tier>` - Filter datasets by tier (raw, refined, serving)
 
 Examples:
 ```bash
 dataspec list                    # Show summary of all resources
 dataspec list sources           # List all sources
-dataspec list datasets --tier raw  # List only raw datasets
+dataspec list datasets          # List all datasets
 ```
 
 ### `dataspec show`
@@ -135,17 +134,13 @@ my-platform/
     ├── platform.yaml        # Platform configuration
     ├── sources/             # Data sources
     │   └── production_db.yaml
-    ├── datasets/            # Datasets by layer
-    │   ├── raw/
-    │   │   └── users_raw.yaml
-    │   ├── refined/
-    │   │   └── users_refined.yaml
-    │   └── serving/
-    │       └── users_analytics.yaml
-    ├── contracts/           # Data contracts by layer
-    │   ├── raw/
-    │   ├── refined/
-    │   └── serving/
+    ├── datasets/            # Dataset definitions
+    │   ├── users_raw.yaml
+    │   ├── users_refined.yaml
+    │   └── users_analytics.yaml
+    ├── contracts/           # Data contracts
+    │   ├── user_contract.yaml
+    │   └── order_contract.yaml
     └── flows/               # Data pipelines
         └── users_etl.yaml
 ```

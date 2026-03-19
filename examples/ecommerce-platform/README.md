@@ -6,7 +6,6 @@ A comprehensive example demonstrating the DataSpec (Declarative Platform Archite
 
 This example showcases a complete data platform architecture for a global e-commerce company, demonstrating best practices for:
 
-- **Data Layering**: Raw (Bronze) → Refined (Silver) → Serving (Gold)
 - **Data Contracts**: Schema validation and data quality enforcement
 - **ETL Pipelines**: Extract, Transform, Load workflows
 - **Multi-source Integration**: Production DB, APIs, Analytics DB, External services
@@ -25,38 +24,16 @@ This example showcases a complete data platform architecture for a global e-comm
          │                │               │             │
          ▼                ▼               ▼             ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                    RAW LAYER (Bronze)                       │
+│                      DATASETS                               │
 ├─────────────────────────────────────────────────────────────┤
 │  users_raw │ orders_raw │ products_raw │ events_raw │ etc.  │
 │  (Parquet) │ (Parquet)  │  (Parquet)   │ (Parquet)  │       │
-│  Schema:   │   Schema:  │   Schema:    │  Schema:   │       │
-│ users_raw_ │ orders_raw_│ products_raw_│ events_raw_│       │
-│  schema    │  schema    │  schema      │  schema    │       │
-└────────┬────────┴───────┬───────┴───────┬───────┴─────┬─────┘
-         │                │               │             │
-         ▼                ▼               ▼             ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  REFINED LAYER (Silver)                     │
-├─────────────────────────────────────────────────────────────┤
-│ users_refined │ orders_refined │ products_refined │ etc.    │
-│    (Delta)    │    (Delta)     │     (Delta)      │         │
-│               │                │                  │         │
-│ Contract:     │ Contract:      │ Contract:        │         │
-│ refined/user_ │ refined/order_ │ refined/product_ │         │
-│  contract     │  contract      │  contract        │         │
-└────────┬────────┴───────┬───────┴───────┬───────┴─────┬─────┘
-         │                │               │             │
-         ▼                ▼               ▼             ▼
-┌─────────────────────────────────────────────────────────────┐
-│                  SERVING LAYER (Gold)                       │
-├─────────────────────────────────────────────────────────────┤
-│  customer_analytics │ sales_dashboard │ product_analytics   │
-│    (ClickHouse)     │  (ClickHouse)   │   (ClickHouse)      │
-│                     │                 │                     │
-│ Contract:           │ Contract:       │ Contract:           │
-│ serving/customer_   │ serving/sales_  │ serving/product_    │
-│  analytics_contract │  dashboard_contract                 │
-│                     │                 │  _contract         │
+│            │            │              │            │       │
+│  users_refined  │ orders_refined  │ products_refined       │
+│    (Delta)      │    (Delta)      │     (Delta)            │
+│                 │                 │                        │
+│  customer_analytics  │ sales_dashboard  │ product_analytics │
+│    (ClickHouse)      │  (ClickHouse)    │   (ClickHouse)    │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -72,45 +49,41 @@ examples/ecommerce-platform/
     │   ├── analytics_db.yaml   # ClickHouse analytics database
     │   ├── external_apis.yaml # Third-party integrations
     │   └── external_s3_bucket.yaml # External S3 bucket (file-based source)
-    ├── contracts/              # Data contracts organized by layer
-    │   ├── raw/                # Source schemas (document expected structure from sources)
-    │   │   ├── users_raw_schema.yaml
-    │   │   ├── orders_raw_schema.yaml
-    │   │   ├── products_raw_schema.yaml
-    │   │   ├── order_items_raw_schema.yaml
-    │   │   ├── payments_raw_schema.yaml
-    │   │   └── events_raw_schema.yaml
-    │   ├── refined/            # Data quality contracts (enforced schemas)
-    │   │   ├── user_contract.yaml
-    │   │   ├── order_contract.yaml
-    │   │   ├── product_contract.yaml
-    │   │   ├── order_item_contract.yaml
-    │   │   └── analytics_events_contract.yaml
-    │   └── serving/            # Analytics contracts (aggregated schemas)
-    │       ├── customer_analytics_contract.yaml
-    │       ├── sales_dashboard_contract.yaml
-    │       └── product_analytics_contract.yaml
-    ├── datasets/               # Dataset definitions by layer
-    │   ├── raw/                # Bronze layer
-    │   │   ├── users_raw.yaml
-    │   │   ├── orders_raw.yaml
-    │   │   ├── products_raw.yaml
-    │   │   ├── events_raw.yaml
-    │   │   └── payments_raw.yaml
-    │   ├── refined/            # Silver layer
-    │   │   ├── users_refined.yaml
-    │   │   ├── orders_refined.yaml
-    │   │   ├── products_refined.yaml
-    │   │   ├── order_items_refined.yaml
-    │   │   └── events_refined.yaml
-    │   └── serving/            # Gold layer
-    │       ├── customer_analytics.yaml
-    │       ├── sales_dashboard.yaml
-    │       └── product_analytics.yaml
+    ├── contracts/              # Data contracts
+    │   ├── users_raw_schema.yaml
+    │   ├── orders_raw_schema.yaml
+    │   ├── products_raw_schema.yaml
+    │   ├── order_items_raw_schema.yaml
+    │   ├── payments_raw_schema.yaml
+    │   ├── events_raw_schema.yaml
+    │   ├── user_contract.yaml
+    │   ├── order_contract.yaml
+    │   ├── product_contract.yaml
+    │   ├── order_item_contract.yaml
+    │   ├── analytics_events_contract.yaml
+    │   ├── customer_analytics_contract.yaml
+    │   ├── sales_dashboard_contract.yaml
+    │   └── product_analytics_contract.yaml
+    ├── datasets/               # Dataset definitions
+    │   ├── users_raw.yaml
+    │   ├── orders_raw.yaml
+    │   ├── products_raw.yaml
+    │   ├── events_raw.yaml
+    │   ├── payments_raw.yaml
+    │   ├── marketing_campaigns_raw.yaml
+    │   ├── order_items_raw.yaml
+    │   ├── users_refined.yaml
+    │   ├── orders_refined.yaml
+    │   ├── products_refined.yaml
+    │   ├── order_items_refined.yaml
+    │   ├── events_refined.yaml
+    │   ├── customer_analytics.yaml
+    │   ├── sales_dashboard.yaml
+    │   └── product_analytics.yaml
     └── flows/                  # ETL/ELT pipeline definitions
         ├── user_etl_pipeline.yaml          # Traditional ETL
         ├── marketing_elt_pipeline.yaml     # ELT pattern (Extract-Load-Transform)
-        ├── marketing_s3_ingestion.yaml     # S3 to Raw pipeline
+        ├── marketing_s3_ingestion.yaml     # S3 ingestion pipeline
         ├── orders_etl_pipeline.yaml
         ├── products_etl_pipeline.yaml
         └── unified_analytics_pipeline.yaml
@@ -122,7 +95,7 @@ examples/ecommerce-platform/
 
 | Name | Type | Purpose |
 |------|------|---------|
-| `s3-data-lake` | S3 | Data lake for raw and refined layers |
+| `s3-data-lake` | S3 | Data lake storage |
 | `postgresql-warehouse` | PostgreSQL | Traditional warehouse storage |
 | `clickhouse-analytics` | ClickHouse | High-performance analytics queries |
 
@@ -177,26 +150,28 @@ Contracts define the expected schema and enforce data quality:
 - **Constraints**: unique, not_null, foreign key references
 - **PII Tagging**: Sensitive data identification
 
-## Data Layers
+## Datasets
 
-### Raw Layer (Bronze)
+Datasets represent data at various stages of the pipeline:
+
+**Ingested Data**
 - **Format**: Parquet, JSON
 - **Storage**: S3 Data Lake
 - **Purpose**: Exact copy of source data
 - **Retention**: 30-90 days
-- **Datasets**: users_raw, orders_raw, products_raw, events_raw, payments_raw
+- **Datasets**: users_raw, orders_raw, products_raw, events_raw, payments_raw, marketing_campaigns_raw, order_items_raw
 
-### Refined Layer (Silver)
+**Processed Data**
 - **Format**: Delta Lake
 - **Storage**: S3 Data Lake
 - **Purpose**: Cleaned, validated, deduplicated data
 - **Contracts**: Enforced schema validation
 - **Datasets**: users_refined, orders_refined, products_refined, order_items_refined, events_refined
 
-### Serving Layer (Gold)
+**Analytics Data**
 - **Format**: Native (ClickHouse)
 - **Storage**: ClickHouse Analytics
-- **Purpose**: Business-ready aggregations
+- **Purpose**: Aggregated, business-ready data
 - **Use Cases**: Dashboards, ML features, reporting
 - **Datasets**: customer_analytics, sales_dashboard, product_analytics
 
@@ -232,7 +207,7 @@ products_refined → product_analytics
 ```
 [production_db + payment_api + analytics_db + external_apis] → 
 [Multiple extracts] → [Joins & transformations] → 
-[All serving layer datasets]
+[All analytics datasets]
 ```
 - Comprehensive pipeline joining all sources
 - Creates unified customer, order, and product views
@@ -274,22 +249,22 @@ This example demonstrates both traditional ETL and modern ELT patterns:
 Transform data **before** loading to the data warehouse.
 
 ```
-Source → Extract → Transform → Load → Refined Layer
+Source → Extract → Transform → Load → Refined Dataset
 ```
 
 **Use when:**
-- Data quality is critical and bad data should not land in raw
+- Data quality is critical and bad data should not be stored
 - Transformations are simple and fast
-- Storage in raw layer is expensive
+- Storage is expensive
 - Compliance requires filtering PII before storage
 
 **Example:** `user_etl_pipeline.yaml`
 
 ### ELT (Extract-Load-Transform)
-Load data **as-is** to raw layer, then transform to refined.
+Load data **as-is**, then transform.
 
 ```
-Source → Extract → Load (Raw) → Transform → Load (Refined)
+Source → Extract → Load → Transform → Load (Refined)
 ```
 
 **Use when:**
@@ -297,7 +272,7 @@ Source → Extract → Load (Raw) → Transform → Load (Refined)
 - Complex transformations that might fail
 - Need to preserve original data for debugging
 - Storage is cheap and compute is elastic
-- Want to reprocess raw data with new logic
+- Want to reprocess data with new logic
 
 **Example:** `marketing_elt_pipeline.yaml`
 
@@ -309,19 +284,18 @@ Source → Extract → Load (Raw) → Transform → Load (Refined)
 | Debugging Failed Transforms | Hard | Easy |
 | Reprocessing Capability | Limited | Full |
 | Storage Cost | Lower | Higher |
-| Data Freshness to Raw | Delayed | Immediate |
+| Data Freshness | Delayed | Immediate |
 | Schema Evolution | Rigid | Flexible |
 
 ## Best Practices Demonstrated
 
-1. **Medallion Architecture**: Clear separation of raw, refined, and serving layers
-2. **Data Contracts**: Schema enforcement at the refined layer
-3. **Incremental Processing**: Hourly refresh cycles for most datasets
-4. **PII Handling**: Proper tagging and handling of sensitive data
-5. **High-Volume Handling**: Separate handling for event streams
-6. **Multi-Engine Support**: dbt for SQL, Spark for large-scale joins
-7. **External Integration**: Clean separation of external APIs
-8. **Metadata Richness**: Comprehensive ownership, tags, and descriptions
+1. **Data Contracts**: Schema enforcement through contracts
+2. **Incremental Processing**: Hourly refresh cycles for most datasets
+3. **PII Handling**: Proper tagging and handling of sensitive data
+4. **High-Volume Handling**: Separate handling for event streams
+5. **Multi-Engine Support**: dbt for SQL, Spark for large-scale joins
+6. **External Integration**: Clean separation of external APIs
+7. **Metadata Richness**: Comprehensive ownership, tags, and descriptions
 
 ## Usage
 

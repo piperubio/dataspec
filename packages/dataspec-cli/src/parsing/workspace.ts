@@ -15,7 +15,6 @@ export interface ParsedSource {
 
 export interface ParsedDataset {
   name: string;
-  layer: string;
   storage: {
     backend: string;
     format: string;

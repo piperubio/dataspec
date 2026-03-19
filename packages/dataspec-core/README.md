@@ -67,11 +67,10 @@ const contract = parseContractYaml(contractYaml);
 // Parse dataset definitions
 const datasetYaml = `
 name: users_raw
-layer: raw
 storage:
   backend: s3-data-lake
   format: parquet
-  location: s3://bucket/raw/users/
+  location: s3://bucket/users/
 `;
 
 const dataset = parseDatasetYaml(datasetYaml);
@@ -151,15 +150,14 @@ fields:
 
 ### Datasets
 
-Logical data units organized in layers (raw, refined, serving):
+Logical data units representing data at various stages:
 
 ```yaml
 name: users_refined
-layer: refined
 storage:
   backend: s3-data-lake
   format: delta
-  location: s3://bucket/refined/users/
+  location: s3://bucket/users/
 contract:
   name: user_contract
   version: "1.0.0"
@@ -186,22 +184,12 @@ steps:
     target: customer_analytics
 ```
 
-## Layered Dataset Architecture
-
-dataspec follows the medallion architecture pattern with three layers:
-
-- **Raw** (Bronze): Unprocessed source data, exactly as ingested from sources
-- **Refined** (Silver): Cleaned, validated, and normalized data with contracts applied
-- **Serving** (Gold): Aggregated, business-ready data optimized for analytics
-
-Data flows from Raw → Refined → Serving through transformation pipelines.
-
 ## Contract-First Approach
 
 dataspec uses a contract-first approach where data schemas are explicitly defined and versioned:
 
 1. Define contracts with field types and constraints
-2. Reference contracts from datasets in the refined layer
+2. Reference contracts from datasets
 3. Use semantic versioning to track contract evolution
 4. Breaking changes require new contract versions
 

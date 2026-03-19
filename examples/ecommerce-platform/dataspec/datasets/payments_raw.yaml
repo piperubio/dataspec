@@ -2,7 +2,6 @@
 # Raw ingestion of payment data from payment API
 
 name: payments_raw
-layer: raw
 storage:
   backend: s3-data-lake
   format: json
