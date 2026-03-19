@@ -83,7 +83,7 @@ The system SHALL format CLI errors consistently with file paths, line numbers, a
 - **THEN** the error message SHALL indicate the invalid argument and suggest correct usage
 
 #### Scenario: File not found error
-- **WHEN** the CLI is run in a directory without dataspec configuration files
+- **WHEN** the CLI is run in a directory without DataSpec configuration files
 - **THEN** the error message SHALL indicate that no platform configuration was found and suggest running `dataspec init`
 
 ### Requirement: Exit codes for CI integration
@@ -162,3 +162,4 @@ The system SHALL provide a CLI command `dataspec show <resource> <name>` that di
 #### Scenario: Show with JSON output
 - **WHEN** a user runs `dataspec show dataset users_raw --format json`
 - **THEN** the CLI SHALL output the resource details in JSON format
+

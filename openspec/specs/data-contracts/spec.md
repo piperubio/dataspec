@@ -51,3 +51,4 @@ The system SHALL support optional descriptive metadata for contracts including d
 #### Scenario: Contract with metadata
 - **WHEN** a contract declaration includes a `description` field and/or `deprecated` flag
 - **THEN** the system SHALL store this metadata as part of the contract definition
+

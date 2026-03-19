@@ -49,3 +49,4 @@ The system SHALL support optional descriptive metadata for sources including des
 #### Scenario: Source with metadata
 - **WHEN** a source declaration includes a `description` field and/or `tags` list
 - **THEN** the system SHALL store this metadata as part of the source definition
+

@@ -51,3 +51,4 @@ The system SHALL support optional descriptive metadata for flows including descr
 #### Scenario: Flow with metadata
 - **WHEN** a flow declaration includes a `description` field, `schedule` field, and/or `tags` list
 - **THEN** the system SHALL store this metadata as part of the flow definition
+

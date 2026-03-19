@@ -44,3 +44,4 @@ The system SHALL enforce that all analytics engine names within the platform con
 #### Scenario: Duplicate engine name
 - **WHEN** a platform.yaml file defines two analytics engines with the same name
 - **THEN** the system SHALL treat this as an invalid configuration
+

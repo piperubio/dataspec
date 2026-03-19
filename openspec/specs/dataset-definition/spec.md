@@ -44,3 +44,4 @@ The system SHALL support optional descriptive metadata for datasets including de
 #### Scenario: Dataset with metadata
 - **WHEN** a dataset declaration includes a `description` field and/or `tags` list
 - **THEN** the system SHALL store this metadata as part of the dataset definition
+
