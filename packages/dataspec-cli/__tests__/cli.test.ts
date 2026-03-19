@@ -347,7 +347,7 @@ steps:
       // Verify the CLI can be invoked in a way compatible with npx
       const result = await $`bun ${CLI_PATH} --version`;
       expect(result.exitCode).toBe(0);
-      expect(result.stdout.toString()).toContain('0.1.0');
+      expect(result.stdout.toString()).toContain('0.2.0');
     });
   });
 });
