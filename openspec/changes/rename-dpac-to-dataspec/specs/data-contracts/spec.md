@@ -1,8 +1,7 @@
 # data-contracts Specification
 
-## Purpose
-TBD - created by archiving change dataspec-core. Update Purpose after archive.
-## Requirements
+## MODIFIED Requirements
+
 ### Requirement: Declare data contracts with schemas
 The system SHALL support declaring versioned data contracts that define schemas with field definitions, data types, and constraints. This is the structural definition only — breaking change detection logic belongs in dataspec-cli.
 

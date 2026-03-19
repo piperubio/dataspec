@@ -1,5 +1,5 @@
 # E-commerce Data Platform Example
-# This example demonstrates a complete DPAC platform specification
+# This example demonstrates a complete DataSpec platform specification
 # for an e-commerce company with orders, customers, and products data.
 
 platform:

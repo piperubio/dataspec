@@ -1,8 +1,7 @@
 # flow-definition Specification
 
-## Purpose
-TBD - created by archiving change dataspec-core. Update Purpose after archive.
-## Requirements
+## MODIFIED Requirements
+
 ### Requirement: Declare data flows
 The system SHALL support declaring data flows that define how datasets are produced from sources through a sequence of typed steps.
 

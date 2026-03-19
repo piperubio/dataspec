@@ -1,8 +1,7 @@
 # dataset-definition Specification
 
-## Purpose
-TBD - created by archiving change dataspec-core. Update Purpose after archive.
-## Requirements
+## MODIFIED Requirements
+
 ### Requirement: Declare logical datasets
 The system SHALL support declaring logical data units with unique names, layer assignments, and storage configurations.
 

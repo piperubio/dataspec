@@ -27,27 +27,27 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-bun-
       
-      - name: Install and build dpac-core
+      - name: Install and build dataspec-core
         run: |
-          cd packages/dpac-core
+          cd packages/dataspec-core
           bun install
           bun run build
       
-      - name: Install and build dpac-cli
+      - name: Install and build dataspec-cli
         run: |
-          cd packages/dpac-cli
+          cd packages/dataspec-cli
           bun install
           bun run build
       
       - name: Run tests
         run: |
-          cd packages/dpac-core && bun test
-          cd ../dpac-cli && bun test
+          cd packages/dataspec-core && bun test
+          cd ../dataspec-cli && bun test
       
       - name: Run linting
         run: |
-          cd packages/dpac-core && bun run lint || true
-          cd ../dpac-cli && bun run lint || true
+          cd packages/dataspec-core && bun run lint || true
+          cd ../dataspec-cli && bun run lint || true
 
   validate-cli:
     runs-on: ubuntu-latest
@@ -62,24 +62,24 @@ jobs:
         with:
           bun-version: latest
       
-      - name: Install and build dpac-core
+      - name: Install and build dataspec-core
         run: |
-          cd packages/dpac-core
+          cd packages/dataspec-core
           bun install
           bun run build
       
-      - name: Install and build dpac-cli
+      - name: Install and build dataspec-cli
         run: |
-          cd packages/dpac-cli
+          cd packages/dataspec-cli
           bun install
           bun run build
       
       - name: Test CLI against example workspace
         run: |
-          cd packages/dpac-cli
+          cd packages/dataspec-cli
           bun run build
           set +e
-          ./bin/dpac validate --path ../../examples/ecommerce-platform
+          ./bin/dataspec validate --path ../../examples/ecommerce-platform
           status=$?
           set -e
           if [ "$status" -gt 1 ]; then
@@ -89,8 +89,8 @@ jobs:
       
       - name: Test CLI commands
         run: |
-          cd packages/dpac-cli
-          ./bin/dpac --version
-          ./bin/dpac --help
-          ./bin/dpac list --help
-          ./bin/dpac validate --help
+          cd packages/dataspec-cli
+          ./bin/dataspec --version
+          ./bin/dataspec --help
+          ./bin/dataspec list --help
+          ./bin/dataspec validate --help

@@ -1,0 +1,34 @@
+{
+  "name": "@dataspec/dataspec-cli",
+  "version": "0.1.0",
+  "description": "DataSpec CLI - Declarative Data Platform Architecture Command-Line Interface",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "dataspec": "./bin/dataspec"
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "bun test",
+    "lint": "tsc --noEmit",
+    "prepublishOnly": "tsc"
+  },
+  "keywords": [
+    "dataspec",
+    "data-platform",
+    "data-engineering",
+    "cli",
+    "validation"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "@dataspec/dataspec-core": "file:../dataspec-core",
+    "commander": "^12.0.0",
+    "yaml": "^2.3.4"
+  }
+}

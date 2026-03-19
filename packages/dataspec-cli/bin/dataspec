@@ -1,0 +1,37 @@
+#!/usr/bin/env bun
+/**
+ * dataspec CLI Entry Point
+ * Command-line interface for the DataSpec (Declarative Data Platform Architecture)
+ */
+
+import { Command } from 'commander';
+import { validateCommand } from '../dist/commands/validate.js';
+import { initCommand } from '../dist/commands/init.js';
+import { listCommand } from '../dist/commands/list.js';
+import { showCommand } from '../dist/commands/show.js';
+import { setVerbose } from '../dist/utils/logger.js';
+
+const program = new Command();
+
+// Global options - must be defined BEFORE adding commands
+program
+  .name('dataspec')
+  .description('dataspec CLI - DataSpec (Declarative Data Platform Architecture) Command-Line Interface')
+  .version('0.1.0')
+  .option('-v, --verbose', 'Enable verbose output')
+  .hook('preAction', (thisCommand) => {
+    // Set verbose mode before each command runs
+    const opts = thisCommand.opts();
+    if (opts.verbose) {
+      setVerbose(true);
+    }
+  });
+
+// Register commands
+program.addCommand(validateCommand);
+program.addCommand(initCommand);
+program.addCommand(listCommand);
+program.addCommand(showCommand);
+
+// Parse and execute
+program.parse(process.argv);

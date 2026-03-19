@@ -1,8 +1,7 @@
 # platform-definition Specification
 
-## Purpose
-TBD - created by archiving change dataspec-core. Update Purpose after archive.
-## Requirements
+## MODIFIED Requirements
+
 ### Requirement: Define global platform architecture
 The system SHALL provide a mechanism to declare the global data platform architecture including storage backends, analytics engines, and platform-level configurations in a single YAML file.
 

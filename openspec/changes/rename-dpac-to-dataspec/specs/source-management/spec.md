@@ -1,8 +1,7 @@
 # source-management Specification
 
-## Purpose
-TBD - created by archiving change dataspec-core. Update Purpose after archive.
-## Requirements
+## MODIFIED Requirements
+
 ### Requirement: Declare external data sources
 The system SHALL support declaring external data producers (databases, APIs, file systems, SaaS applications) with their type and available entities. Connection details and credentials are NOT included — dataspec-core is definitions-only.
 

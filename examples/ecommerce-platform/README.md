@@ -1,6 +1,6 @@
 # E-commerce Data Platform Example
 
-A comprehensive example demonstrating the DPAC (Declarative Platform Architecture Components) specification for a modern e-commerce data platform.
+A comprehensive example demonstrating the DataSpec (Declarative Platform Architecture Components) specification for a modern e-commerce data platform.
 
 ## Overview
 
@@ -327,7 +327,7 @@ Source → Extract → Load (Raw) → Transform → Load (Refined)
 
 This example can be used to:
 
-1. **Understand DPAC**: Learn the structure and concepts
+1. **Understand DataSpec**: Learn the structure and concepts
 2. **Validate Parsers**: Test YAML parsing implementations
 3. **Create Templates**: Use as a starting point for new platforms
 4. **Document Architecture**: Reference for data platform design
