@@ -67,13 +67,6 @@ export interface Workspace {
 
 export interface WorkspaceStructureInfo {
   hasDataspecFolder: boolean;
-  legacyResources: {
-    platformYaml: string | null;
-    sources: string[];
-    datasets: string[];
-    contracts: string[];
-    flows: string[];
-  };
 }
 
 export interface ParseResult {
@@ -101,7 +94,6 @@ export async function parseWorkspaceWithStructure(dirPath: string): Promise<Pars
 
   const structure: WorkspaceStructureInfo = {
     hasDataspecFolder: scanResult.hasDataspecFolder,
-    legacyResources: scanResult.legacyResources,
   };
 
   if (resources.platformYaml) {

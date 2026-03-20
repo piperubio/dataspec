@@ -238,23 +238,6 @@ describe('dataspec init', () => {
       }
     });
 
-    it('should fail when resources are at root level (legacy structure)', async () => {
-      const legacyDir = await mkdtemp(join(tmpdir(), 'dataspec-legacy-'));
-      
-      try {
-        // Create both dataspec folder AND legacy resources at root
-        await mkdir(join(legacyDir, 'dataspec'), { recursive: true });
-        await mkdir(join(legacyDir, 'sources'), { recursive: true });
-        await writeFile(join(legacyDir, 'platform.yaml'), 'name: test');
-        
-        const result = await $`bun ${CLI_PATH} validate --path ${legacyDir}`.nothrow();
-        expect(result.exitCode).toBe(2);
-        expect(result.stderr.toString()).toContain("Found resources outside 'dataspec/' folder");
-      } finally {
-        await rm(legacyDir, { recursive: true, force: true });
-      }
-    });
-
     it('should pass when workspace has proper dataspec folder structure', async () => {
       const properDir = await mkdtemp(join(tmpdir(), 'dataspec-proper-'));
       
