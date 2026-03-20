@@ -4,20 +4,19 @@
 TBD - created by archiving change dataspec-core. Update Purpose after archive.
 ## Requirements
 ### Requirement: Declare logical datasets
-The system SHALL support declaring logical data units with unique names, layer assignments, and storage configurations.
 
-#### Scenario: Dataset declaration with layer
-- **WHEN** a dataset YAML file contains a dataset definition with name `users_raw`, layer `raw`, and storage configuration
-- **THEN** the system SHALL validate that the layer value is one of: raw, refined, serving
+The system SHALL support declaring logical data units with unique names and storage configurations.
 
-### Requirement: Layer assignment validation
-The system SHALL validate that every dataset is assigned to exactly one layer: raw, refined, or serving.
+#### Scenario: Dataset declaration with contract
+- **WHEN** a dataset declaration includes name `users_raw`, storage configuration, and optional contract reference
+- **THEN** the system SHALL store the dataset definition without requiring or validating a layer property
 
-#### Scenario: Invalid layer value
-- **WHEN** a dataset declaration contains a layer value other than raw, refined, or serving
-- **THEN** the system SHALL treat this as an invalid configuration
+#### Scenario: Dataset declaration with basic fields
+- **WHEN** a dataset declaration contains only `name` and `storage` fields
+- **THEN** the system SHALL accept it as a valid dataset definition
 
 ### Requirement: Storage backend configuration
+
 The system SHALL support configuring storage backends per dataset, including type, format, and location metadata.
 
 #### Scenario: S3 storage configuration
@@ -25,6 +24,7 @@ The system SHALL support configuring storage backends per dataset, including typ
 - **THEN** the system SHALL store the storage configuration as part of the dataset definition
 
 ### Requirement: Dataset name uniqueness
+
 The system SHALL enforce that all dataset names within the workspace are unique.
 
 #### Scenario: Duplicate dataset name
@@ -32,6 +32,7 @@ The system SHALL enforce that all dataset names within the workspace are unique.
 - **THEN** the system SHALL treat this as an invalid configuration
 
 ### Requirement: Contract association
+
 The system SHALL support optional association of a contract with a dataset to specify the expected schema.
 
 #### Scenario: Dataset with contract reference
@@ -39,6 +40,7 @@ The system SHALL support optional association of a contract with a dataset to sp
 - **THEN** the system SHALL store the contract reference as part of the dataset definition
 
 ### Requirement: Dataset metadata
+
 The system SHALL support optional descriptive metadata for datasets including description and tags.
 
 #### Scenario: Dataset with metadata

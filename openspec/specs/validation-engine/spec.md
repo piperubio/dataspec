@@ -95,7 +95,7 @@ The system SHALL detect breaking changes by building and traversing the cross-re
 - **THEN** the validation engine SHALL report a breaking change error indicating the constraint tightening
 
 ### Requirement: Validation report with severity levels
-The system SHALL produce a validation report categorizing issues as errors or warnings with file paths and line numbers.
+The system SHALL produce a validation report categorizing issues as errors or warnings with file paths and line numbers, including resource name uniqueness errors.
 
 #### Scenario: Validation report with errors
 - **WHEN** the validation engine completes analysis of a workspace with validation errors
@@ -112,4 +112,8 @@ The system SHALL produce a validation report categorizing issues as errors or wa
 #### Scenario: Validation report with no issues
 - **WHEN** the validation engine completes analysis of a workspace with no validation issues
 - **THEN** the report SHALL indicate successful validation with no errors or warnings
+
+#### Scenario: Validation report with duplicate resource names
+- **WHEN** the validation engine encounters duplicate resource names in the workspace
+- **THEN** the report SHALL include errors with codes `DUPLICATE_SOURCE_NAME`, `DUPLICATE_DATASET_NAME`, `DUPLICATE_CONTRACT_NAME`, or `DUPLICATE_FLOW_NAME` as appropriate, with file paths and line numbers for each duplicate occurrence
 

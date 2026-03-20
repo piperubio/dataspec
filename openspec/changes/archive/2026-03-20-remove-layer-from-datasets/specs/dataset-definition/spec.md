@@ -6,14 +6,6 @@
 
 **Migration:** Remove `layer` field from all dataset YAML files. If layer information is needed, add it to `tags` array (e.g., `tags: [raw]`) or use naming conventions.
 
-### Requirement: Declare logical datasets
-
-The system SHALL support declaring logical data units with unique names and storage configurations, WITHOUT requiring layer assignments.
-
-#### Scenario: Dataset declaration without layer
-- **WHEN** a dataset YAML file contains a dataset definition with name `users_raw` and storage configuration
-- **THEN** the system SHALL accept the dataset as valid without requiring a layer field
-
 ## MODIFIED Requirements
 
 ### Requirement: Declare logical datasets

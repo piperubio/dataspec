@@ -2,6 +2,24 @@
 
 The `layer` property forces all projects into the medallion architecture pattern (raw/refined/serving), but not all data platforms follow this convention. This rigid requirement limits flexibility for teams with different organizational patterns. Layers can be expressed via tags or metadata, making them optional rather than mandatory.
 
+## Requirements
+
+### Requirement: Remove layer property from datasets
+
+The system SHALL remove the mandatory `layer` property from dataset definitions.
+
+#### Scenario: Dataset without layer field
+- **WHEN** a dataset YAML file defines a dataset without a `layer` field
+- **THEN** the system SHALL accept it as a valid configuration
+
+### Requirement: Remove layer validation
+
+The system SHALL remove validation that enforces layer assignments.
+
+#### Scenario: Validation without layer check
+- **WHEN** the system validates a workspace configuration
+- **THEN** it SHALL NOT check for the presence of a `layer` field in datasets
+
 ## What Changes
 
 - **BREAKING**: Remove `layer` property from dataset definitions
@@ -21,7 +39,7 @@ None - this is a removal change.
 
 ### Modified Capabilities
 
-- `dataset-definition`: Requirements for layer assignment validation will be removed. The spec will change from mandating layers to making them optional via tags.
+- `dataset-definition`: Layer assignment validation SHALL be removed. The spec MUST change from mandating layers to making them optional via tags.
 
 ## Impact
 
