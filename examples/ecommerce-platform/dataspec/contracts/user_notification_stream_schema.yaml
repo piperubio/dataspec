@@ -1,0 +1,60 @@
+# Contract: User Notification Stream Schema
+# Defines the expected schema for WebSocket user notifications
+
+name: user_notification_stream_schema
+version: '1.0.0'
+fields:
+  - name: notification_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique notification identifier
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Target user identifier
+
+  - name: type
+    type: string
+    constraints:
+      not_null: true
+    description: Notification type
+
+  - name: title
+    type: string
+    constraints:
+      not_null: true
+    description: Notification title
+
+  - name: message
+    type: string
+    constraints:
+      not_null: true
+    description: Notification message
+
+  - name: priority
+    type: string
+    description: Notification priority
+
+  - name: action_url
+    type: string
+    description: URL for action
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Notification timestamp
+
+metadata:
+  description: Schema for WebSocket user notification stream
+  owner: realtime-team
+  layer: raw
+  source: websocket_notifications
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - websocket

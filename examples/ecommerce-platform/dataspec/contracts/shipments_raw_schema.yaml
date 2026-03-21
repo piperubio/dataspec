@@ -1,0 +1,49 @@
+# Contract: Shipments Raw Schema
+# Defines the expected schema from external shipping API
+
+name: shipments_raw_schema
+version: '1.0.0'
+fields:
+  - name: tracking_number
+    type: string
+    constraints:
+      not_null: true
+    description: Shipment tracking number
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+    description: Current shipment status
+
+  - name: carrier
+    type: string
+    constraints:
+      not_null: true
+    description: Shipping carrier name
+
+  - name: estimated_delivery
+    type: timestamp
+    description: Estimated delivery date
+
+  - name: actual_delivery
+    type: timestamp
+    description: Actual delivery date
+
+  - name: origin_address
+    type: json
+    description: Origin address details
+
+  - name: destination_address
+    type: json
+    description: Destination address details
+
+metadata:
+  description: Source schema for shipment tracking data from external shipping API
+  owner: integrations-team
+  layer: raw
+  source: external_apis
+  tags:
+    - raw
+    - source-schema
+    - shipping

@@ -1,0 +1,49 @@
+# Contract: Shipping Rates Raw Schema
+# Defines the expected schema from external shipping rates API
+
+name: shipping_rates_raw_schema
+version: '1.0.0'
+fields:
+  - name: rate_id
+    type: string
+    constraints:
+      not_null: true
+    description: Rate identifier
+
+  - name: carrier
+    type: string
+    constraints:
+      not_null: true
+    description: Carrier name
+
+  - name: service_type
+    type: string
+    constraints:
+      not_null: true
+    description: Service type (standard, express, etc.)
+
+  - name: price
+    type: decimal
+    constraints:
+      not_null: true
+    description: Shipping price
+
+  - name: currency
+    type: string
+    constraints:
+      not_null: true
+    description: Price currency
+
+  - name: estimated_days
+    type: integer
+    description: Estimated delivery days
+
+metadata:
+  description: Source schema for shipping rates from external shipping API
+  owner: integrations-team
+  layer: raw
+  source: external_apis
+  tags:
+    - raw
+    - source-schema
+    - shipping

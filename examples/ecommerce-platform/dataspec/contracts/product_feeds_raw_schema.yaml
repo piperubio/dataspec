@@ -1,0 +1,53 @@
+# Contract: Product Feeds Raw Schema
+# Defines the expected schema from external product feeds in S3
+
+name: product_feeds_raw_schema
+version: '1.0.0'
+fields:
+  - name: feed_id
+    type: string
+    constraints:
+      not_null: true
+    description: Feed identifier
+
+  - name: supplier_id
+    type: string
+    constraints:
+      not_null: true
+    description: Supplier identifier
+
+  - name: product_id
+    type: string
+    constraints:
+      not_null: true
+    description: Product ID from supplier
+
+  - name: name
+    type: string
+    constraints:
+      not_null: true
+    description: Product name
+
+  - name: price
+    type: decimal
+    description: Product price
+
+  - name: attributes
+    type: json
+    description: Product attributes
+
+  - name: ingested_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Feed ingestion timestamp
+
+metadata:
+  description: Source schema for product feeds from external S3 bucket
+  owner: data-engineering-team
+  layer: raw
+  source: external_s3_bucket
+  tags:
+    - raw
+    - source-schema
+    - products

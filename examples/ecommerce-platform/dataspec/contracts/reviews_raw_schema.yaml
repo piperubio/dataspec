@@ -1,0 +1,65 @@
+# Contract: Reviews Raw Schema
+# Defines the expected schema from the production reviews table
+
+name: reviews_raw_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Primary key
+
+  - name: product_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Product being reviewed
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User who wrote the review
+
+  - name: rating
+    type: integer
+    constraints:
+      not_null: true
+    description: Rating (1-5)
+
+  - name: title
+    type: string
+    description: Review title
+
+  - name: review
+    type: string
+    description: Review text
+
+  - name: verified_purchase
+    type: boolean
+    description: Whether from verified purchase
+
+  - name: helpful_count
+    type: integer
+    description: Number of helpful votes
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Review creation timestamp
+
+  - name: updated_at
+    type: timestamp
+    description: Last update timestamp
+
+metadata:
+  description: Source schema for reviews table from production database
+  owner: data-engineering-team
+  layer: raw
+  source: production_db
+  tags:
+    - raw
+    - source-schema
+    - reviews

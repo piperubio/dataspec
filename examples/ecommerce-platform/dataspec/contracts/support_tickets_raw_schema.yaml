@@ -1,0 +1,57 @@
+# Contract: Support Tickets Raw Schema
+# Defines the expected schema from external support API
+
+name: support_tickets_raw_schema
+version: '1.0.0'
+fields:
+  - name: ticket_id
+    type: string
+    constraints:
+      not_null: true
+    description: Ticket identifier
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User ID who created ticket
+
+  - name: subject
+    type: string
+    constraints:
+      not_null: true
+    description: Ticket subject
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+    description: Ticket status (open, closed, etc.)
+
+  - name: priority
+    type: string
+    description: Ticket priority level
+
+  - name: category
+    type: string
+    description: Ticket category
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Ticket creation timestamp
+
+  - name: resolved_at
+    type: timestamp
+    description: Resolution timestamp
+
+metadata:
+  description: Source schema for support tickets from external support API
+  owner: integrations-team
+  layer: raw
+  source: external_apis
+  tags:
+    - raw
+    - source-schema
+    - support

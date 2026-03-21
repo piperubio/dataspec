@@ -1,0 +1,52 @@
+# Contract: Order Update Stream Schema
+# Defines the expected schema for WebSocket order updates
+
+name: order_update_stream_schema
+version: '1.0.0'
+fields:
+  - name: event_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique event identifier
+
+  - name: order_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Order identifier
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+    description: Current order status
+
+  - name: previous_status
+    type: string
+    description: Previous order status
+
+  - name: updated_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Update timestamp
+
+  - name: user_id
+    type: uuid
+    description: User who owns the order
+
+  - name: metadata
+    type: json
+    description: Additional update metadata
+
+metadata:
+  description: Schema for WebSocket order update stream
+  owner: realtime-team
+  layer: raw
+  source: websocket_notifications
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - websocket

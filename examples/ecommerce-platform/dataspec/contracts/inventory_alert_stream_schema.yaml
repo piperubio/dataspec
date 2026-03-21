@@ -1,0 +1,54 @@
+# Contract: Inventory Alert Stream Schema
+# Defines the expected schema for WebSocket inventory alerts
+
+name: inventory_alert_stream_schema
+version: '1.0.0'
+fields:
+  - name: alert_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique alert identifier
+
+  - name: product_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Product identifier
+
+  - name: warehouse_id
+    type: uuid
+    description: Warehouse identifier
+
+  - name: alert_type
+    type: string
+    constraints:
+      not_null: true
+    description: Alert type (low_stock, out_of_stock, restocked)
+
+  - name: current_quantity
+    type: integer
+    constraints:
+      not_null: true
+    description: Current quantity
+
+  - name: threshold
+    type: integer
+    description: Threshold that triggered alert
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Alert timestamp
+
+metadata:
+  description: Schema for WebSocket inventory alert stream
+  owner: realtime-team
+  layer: raw
+  source: websocket_notifications
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - websocket

@@ -1,0 +1,52 @@
+# Contract: User Response Schema
+# Defines the expected response schema for gRPC GetUser endpoint
+
+name: user_response_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User identifier
+
+  - name: email
+    type: string
+    constraints:
+      not_null: true
+    description: User email address
+
+  - name: first_name
+    type: string
+    description: User first name
+
+  - name: last_name
+    type: string
+    description: User last name
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+    description: User account status
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Account creation timestamp
+
+  - name: updated_at
+    type: timestamp
+    description: Last update timestamp
+
+metadata:
+  description: Response schema for gRPC user service GetUser endpoint
+  owner: user-platform-team
+  layer: raw
+  source: grpc_user_service
+  tags:
+    - raw
+    - source-schema
+    - grpc
+    - users

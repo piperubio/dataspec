@@ -1,0 +1,49 @@
+# Contract: Delivery Estimates Raw Schema
+# Defines the expected schema from external delivery estimates API
+
+name: delivery_estimates_raw_schema
+version: '1.0.0'
+fields:
+  - name: estimate_id
+    type: string
+    constraints:
+      not_null: true
+    description: Estimate identifier
+
+  - name: carrier
+    type: string
+    constraints:
+      not_null: true
+    description: Carrier name
+
+  - name: from_zip
+    type: string
+    constraints:
+      not_null: true
+    description: Origin zip code
+
+  - name: to_zip
+    type: string
+    constraints:
+      not_null: true
+    description: Destination zip code
+
+  - name: estimated_date
+    type: date
+    constraints:
+      not_null: true
+    description: Estimated delivery date
+
+  - name: confidence_level
+    type: decimal
+    description: Confidence level for estimate
+
+metadata:
+  description: Source schema for delivery estimates from external shipping API
+  owner: integrations-team
+  layer: raw
+  source: external_apis
+  tags:
+    - raw
+    - source-schema
+    - shipping

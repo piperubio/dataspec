@@ -1,0 +1,58 @@
+# Contract: Order Events Stream Schema
+# Defines the expected schema for Kafka order events stream
+
+name: order_events_stream_schema
+version: '1.0.0'
+fields:
+  - name: event_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique event identifier
+
+  - name: order_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Order identifier
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User identifier
+
+  - name: event_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of event (created, updated, completed, cancelled)
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Event timestamp
+
+  - name: previous_status
+    type: string
+    description: Previous order status
+
+  - name: new_status
+    type: string
+    description: New order status
+
+  - name: metadata
+    type: json
+    description: Additional event metadata
+
+metadata:
+  description: Schema for Kafka order events stream
+  owner: streaming-team
+  layer: raw
+  source: kafka_events
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - kafka

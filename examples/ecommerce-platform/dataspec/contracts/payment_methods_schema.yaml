@@ -1,0 +1,51 @@
+# Contract: Payment Methods Schema
+# Defines the expected schema from payment methods API
+
+name: payment_methods_schema
+version: '1.0.0'
+fields:
+  - name: method_id
+    type: string
+    constraints:
+      not_null: true
+    description: Payment method identifier
+
+  - name: type
+    type: string
+    constraints:
+      not_null: true
+    description: Payment type (card, bank_transfer, etc.)
+
+  - name: provider
+    type: string
+    constraints:
+      not_null: true
+    description: Payment provider
+
+  - name: display_name
+    type: string
+    description: Display name for method
+
+  - name: enabled
+    type: boolean
+    constraints:
+      not_null: true
+    description: Whether method is enabled
+
+  - name: fees
+    type: json
+    description: Fee structure
+
+  - name: metadata
+    type: json
+    description: Additional configuration
+
+metadata:
+  description: Source schema for payment methods from payment API
+  owner: payments-team
+  layer: raw
+  source: payment_api
+  tags:
+    - raw
+    - source-schema
+    - payments

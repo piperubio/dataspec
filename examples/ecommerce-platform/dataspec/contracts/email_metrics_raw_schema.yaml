@@ -1,0 +1,53 @@
+# Contract: Email Metrics Raw Schema
+# Defines the expected schema from external email metrics API
+
+name: email_metrics_raw_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: string
+    constraints:
+      not_null: true
+    description: Metric record ID
+
+  - name: campaign_id
+    type: string
+    constraints:
+      not_null: true
+    description: Email campaign ID
+
+  - name: sent_count
+    type: integer
+    description: Number of emails sent
+
+  - name: open_count
+    type: integer
+    description: Number of emails opened
+
+  - name: click_count
+    type: integer
+    description: Number of link clicks
+
+  - name: bounce_count
+    type: integer
+    description: Number of bounced emails
+
+  - name: unsubscribe_count
+    type: integer
+    description: Number of unsubscribes
+
+  - name: recorded_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Metrics timestamp
+
+metadata:
+  description: Source schema for email campaign metrics from external marketing API
+  owner: integrations-team
+  layer: raw
+  source: external_apis
+  tags:
+    - raw
+    - source-schema
+    - marketing

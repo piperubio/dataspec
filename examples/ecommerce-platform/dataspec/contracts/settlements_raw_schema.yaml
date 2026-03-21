@@ -1,0 +1,53 @@
+# Contract: Settlements Raw Schema
+# Defines the expected schema from payment settlements API
+
+name: settlements_raw_schema
+version: '1.0.0'
+fields:
+  - name: settlement_id
+    type: string
+    constraints:
+      not_null: true
+    description: Settlement identifier
+
+  - name: batch_id
+    type: string
+    description: Batch identifier
+
+  - name: total_amount
+    type: decimal
+    constraints:
+      not_null: true
+    description: Total settlement amount
+
+  - name: currency
+    type: string
+    constraints:
+      not_null: true
+    description: Settlement currency
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+    description: Settlement status
+
+  - name: transaction_count
+    type: integer
+    description: Number of transactions in settlement
+
+  - name: settled_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Settlement timestamp
+
+metadata:
+  description: Source schema for settlements from payment API
+  owner: payments-team
+  layer: raw
+  source: payment_api
+  tags:
+    - raw
+    - source-schema
+    - payments

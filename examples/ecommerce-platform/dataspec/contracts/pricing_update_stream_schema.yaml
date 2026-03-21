@@ -1,0 +1,58 @@
+# Contract: Pricing Update Stream Schema
+# Defines the expected schema for WebSocket pricing updates
+
+name: pricing_update_stream_schema
+version: '1.0.0'
+fields:
+  - name: update_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique update identifier
+
+  - name: product_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Product identifier
+
+  - name: old_price
+    type: decimal
+    description: Previous price
+
+  - name: new_price
+    type: decimal
+    constraints:
+      not_null: true
+    description: New price
+
+  - name: currency
+    type: string
+    constraints:
+      not_null: true
+    description: Price currency
+
+  - name: discount_percentage
+    type: decimal
+    description: Discount percentage if applicable
+
+  - name: reason
+    type: string
+    description: Reason for price change
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Update timestamp
+
+metadata:
+  description: Schema for WebSocket pricing update stream
+  owner: realtime-team
+  layer: raw
+  source: websocket_notifications
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - websocket
