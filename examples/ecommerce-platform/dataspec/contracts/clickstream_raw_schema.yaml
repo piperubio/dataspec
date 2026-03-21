@@ -1,0 +1,57 @@
+# Contract: Clickstream Raw Schema
+# Defines the expected schema from clickstream data in S3
+
+name: clickstream_raw_schema
+version: '1.0.0'
+fields:
+  - name: event_id
+    type: string
+    constraints:
+      not_null: true
+    description: Unique event identifier
+
+  - name: user_id
+    type: uuid
+    description: User ID (may be null for anonymous)
+
+  - name: session_id
+    type: string
+    constraints:
+      not_null: true
+    description: Session identifier
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Event timestamp
+
+  - name: url
+    type: string
+    constraints:
+      not_null: true
+    description: Page URL
+
+  - name: event_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of event (page_view, click, etc.)
+
+  - name: referrer
+    type: string
+    description: Referring URL
+
+  - name: device_info
+    type: json
+    description: Device information
+
+metadata:
+  description: Source schema for clickstream data from external S3 bucket
+  owner: data-engineering-team
+  layer: raw
+  source: external_s3_bucket
+  tags:
+    - raw
+    - source-schema
+    - clickstream

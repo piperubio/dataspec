@@ -1,0 +1,45 @@
+# Contract: Experiments Raw Schema
+# Defines the expected schema from the analytics experiments table
+
+name: experiments_raw_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Primary key
+
+  - name: experiment_name
+    type: string
+    constraints:
+      not_null: true
+    description: Name of the experiment
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User ID in the experiment
+
+  - name: variant
+    type: string
+    constraints:
+      not_null: true
+    description: Assigned variant
+
+  - name: assigned_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: When variant was assigned
+
+metadata:
+  description: Source schema for A/B test experiments from analytics database
+  owner: analytics-team
+  layer: raw
+  source: analytics_db
+  tags:
+    - raw
+    - source-schema
+    - experiments

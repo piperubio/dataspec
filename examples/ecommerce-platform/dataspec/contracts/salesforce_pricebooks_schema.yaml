@@ -1,0 +1,52 @@
+# Contract: Salesforce Pricebooks Schema
+# Defines the expected schema from Salesforce Pricebook2 objects
+
+name: salesforce_pricebooks_schema
+version: '1.0.0'
+fields:
+  - name: pricebook_id
+    type: string
+    constraints:
+      not_null: true
+    description: Salesforce Pricebook ID
+
+  - name: name
+    type: string
+    constraints:
+      not_null: true
+    description: Pricebook name
+
+  - name: is_standard
+    type: boolean
+    constraints:
+      not_null: true
+    description: Whether this is the standard pricebook
+
+  - name: is_active
+    type: boolean
+    description: Whether pricebook is active
+
+  - name: description
+    type: string
+    description: Pricebook description
+
+  - name: created_date
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Creation date in Salesforce
+
+  - name: last_modified_date
+    type: timestamp
+    description: Last modification date
+
+metadata:
+  description: Source schema for Salesforce Pricebook2 objects
+  owner: sales-ops-team
+  layer: raw
+  source: salesforce_crm
+  tags:
+    - raw
+    - source-schema
+    - salesforce
+    - crm

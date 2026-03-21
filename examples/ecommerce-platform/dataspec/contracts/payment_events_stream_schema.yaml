@@ -1,0 +1,58 @@
+# Contract: Payment Events Stream Schema
+# Defines the expected schema for Kafka payment events stream
+
+name: payment_events_stream_schema
+version: '1.0.0'
+fields:
+  - name: event_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique event identifier
+
+  - name: payment_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Payment identifier
+
+  - name: order_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Associated order identifier
+
+  - name: event_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of event (initiated, completed, failed, refunded)
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Event timestamp
+
+  - name: amount
+    type: decimal
+    description: Payment amount
+
+  - name: currency
+    type: string
+    description: Payment currency
+
+  - name: metadata
+    type: json
+    description: Additional event metadata
+
+metadata:
+  description: Schema for Kafka payment events stream
+  owner: streaming-team
+  layer: raw
+  source: kafka_events
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - kafka

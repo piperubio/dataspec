@@ -1,0 +1,54 @@
+# Contract: Analytics Stream Schema
+# Defines the expected schema for WebSocket analytics feed
+
+name: analytics_stream_schema
+version: '1.0.0'
+fields:
+  - name: metric_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique metric identifier
+
+  - name: metric_name
+    type: string
+    constraints:
+      not_null: true
+    description: Metric name
+
+  - name: metric_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of metric (counter, gauge, histogram)
+
+  - name: value
+    type: decimal
+    constraints:
+      not_null: true
+    description: Metric value
+
+  - name: unit
+    type: string
+    description: Unit of measurement
+
+  - name: tags
+    type: json
+    description: Metric tags/labels
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Metric timestamp
+
+metadata:
+  description: Schema for WebSocket analytics stream
+  owner: realtime-team
+  layer: raw
+  source: websocket_notifications
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - websocket

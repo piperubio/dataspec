@@ -1,6 +1,6 @@
 import { buildDependencyGraph } from '../graph/builder.js';
 import { detectCycles, getDownstream, DependencyGraph } from '../graph/index.js';
-import { Workspace } from '../parsing/index.js';
+import { Workspace, ParsedSource } from '../parsing/index.js';
 import {
   ValidationError,
   ValidationResult,
@@ -9,6 +9,12 @@ import {
   createFailureResult,
   ErrorCodes,
 } from './error.js';
+
+const VALID_SOURCE_TYPES = ['database', 'api', 'file_system', 'streaming', 'saas'] as const;
+const API_PROTOCOLS = ['http', 'https', 'grpc'] as const;
+const STREAMING_PROTOCOLS = ['ws', 'wss', 'kafka', 'mqtt', 'amqp'] as const;
+const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] as const;
+const FILE_FORMATS = ['parquet', 'csv', 'json', 'avro', 'fixed-width', 'orc', 'delta'] as const;
 
 export class Validator {
   private workspace: Workspace;
@@ -28,12 +34,515 @@ export class Validator {
     this.validateGraphIntegrity();
     this.validateContractConsistency();
     this.validateBreakingChanges();
+    this.validateSources();
 
     if (this.errors.length > 0) {
       return createFailureResult(this.errors, this.warnings);
     }
 
     return createSuccessResult(this.warnings);
+  }
+
+  private validateSources(): void {
+    for (const source of this.workspace.sources) {
+      this.validateSourceType(source);
+      this.validateSourceFields(source);
+      this.validateSourceEntities(source);
+    }
+  }
+
+  private validateSourceType(source: ParsedSource): void {
+    if (!VALID_SOURCE_TYPES.includes(source.type as any)) {
+      this.errors.push(
+        createError(
+          `Invalid source type '${source.type}'. Must be one of: ${VALID_SOURCE_TYPES.join(', ')}`,
+          { file: source.file, line: source.line },
+          'error',
+          'INVALID_SOURCE_TYPE',
+        ),
+      );
+    }
+  }
+
+  private validateSourceFields(source: ParsedSource): void {
+    const type = source.type;
+
+    if (type === 'api' || type === 'streaming') {
+      if (!(source as any).protocol) {
+        this.errors.push(
+          createError(
+            `${type === 'api' ? 'API' : 'Streaming'} source must declare 'protocol' field`,
+            { file: source.file, line: source.line },
+            'error',
+            'MISSING_SOURCE_PROTOCOL',
+          ),
+        );
+      }
+      if (!(source as any).baseUrl) {
+        this.errors.push(
+          createError(
+            `${type === 'api' ? 'API' : 'Streaming'} source must declare 'baseUrl' field`,
+            { file: source.file, line: source.line },
+            'error',
+            'MISSING_SOURCE_BASEURL',
+          ),
+        );
+      }
+    }
+
+    if (type === 'api' && (source as any).protocol) {
+      const protocol = (source as any).protocol;
+      if (!API_PROTOCOLS.includes(protocol)) {
+        this.errors.push(
+          createError(
+            `Invalid API protocol '${protocol}'. Must be one of: ${API_PROTOCOLS.join(', ')}`,
+            { file: source.file, line: source.line },
+            'error',
+            'INVALID_SOURCE_PROTOCOL',
+          ),
+        );
+      }
+    }
+
+    if (type === 'streaming' && (source as any).protocol) {
+      const protocol = (source as any).protocol;
+      if (!STREAMING_PROTOCOLS.includes(protocol)) {
+        this.errors.push(
+          createError(
+            `Invalid streaming protocol '${protocol}'. Must be one of: ${STREAMING_PROTOCOLS.join(', ')}`,
+            { file: source.file, line: source.line },
+            'error',
+            'INVALID_SOURCE_PROTOCOL',
+          ),
+        );
+      }
+    }
+
+    if (type === 'saas') {
+      if (!(source as any).provider) {
+        this.errors.push(
+          createError(
+            "SaaS source must declare 'provider' field",
+            { file: source.file, line: source.line },
+            'error',
+            'MISSING_SOURCE_PROVIDER',
+          ),
+        );
+      }
+    }
+
+    const forbiddenChecks: Record<string, string[]> = {
+      database: ['protocol', 'baseUrl', 'provider'],
+      file_system: ['protocol', 'baseUrl', 'provider'],
+      saas: ['protocol', 'baseUrl'],
+      api: ['provider'],
+      streaming: ['provider'],
+    };
+
+    const forbidden = forbiddenChecks[type] || [];
+    for (const field of forbidden) {
+      if ((source as any)[field] !== undefined) {
+        this.errors.push(
+          createError(
+            `${this.getTypeDisplayName(type)} source cannot have '${field}' field`,
+            { file: source.file, line: source.line },
+            'error',
+            'FORBIDDEN_FIELD_ON_SOURCE',
+          ),
+        );
+      }
+    }
+  }
+
+  private validateSourceEntities(source: ParsedSource): void {
+    const entities = source.entities || [];
+    for (const entity of entities) {
+      this.validateDeprecatedFields(entity, source);
+      this.validateEntityContract(entity, source);
+
+      switch (source.type) {
+        case 'database':
+          this.validateDatabaseEntity(entity, source);
+          break;
+        case 'api':
+          this.validateApiEntity(entity, source);
+          break;
+        case 'file_system':
+          this.validateFileSystemEntity(entity, source);
+          break;
+        case 'streaming':
+          this.validateStreamingEntity(entity, source);
+          break;
+        case 'saas':
+          this.validateSaasEntity(entity, source);
+          break;
+      }
+    }
+  }
+
+  private validateDeprecatedFields(entity: any, source: ParsedSource): void {
+    const line = entity.line || source.line;
+
+    if (entity.pattern !== undefined) {
+      this.errors.push(
+        createError(
+          "Field 'pattern' is deprecated. Use 'location' instead",
+          { file: source.file, line },
+          'error',
+          'DEPRECATED_FIELD',
+        ),
+      );
+    }
+
+    if (entity.pathParams !== undefined) {
+      this.errors.push(
+        createError(
+          "Field 'pathParams' is deprecated. Use path templates in 'location' instead (e.g., '/users/{id}')",
+          { file: source.file, line },
+          'error',
+          'DEPRECATED_FIELD',
+        ),
+      );
+    }
+
+    if (entity.queryParams !== undefined) {
+      this.errors.push(
+        createError(
+          "Field 'queryParams' is deprecated. Implementation tools should handle query parameters",
+          { file: source.file, line },
+          'error',
+          'DEPRECATED_FIELD',
+        ),
+      );
+    }
+  }
+
+  private validateEntityContract(entity: any, source: ParsedSource): void {
+    const line = entity.line || source.line;
+
+    if (!entity.contract) {
+      this.errors.push(
+        createError(
+          `Source entity '${entity.name}' must declare a contract reference`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_CONTRACT',
+        ),
+      );
+      return;
+    }
+
+    if (!entity.contract.name) {
+      this.errors.push(
+        createError(
+          `Source entity '${entity.name}' contract must have a name`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_CONTRACT',
+        ),
+      );
+    }
+
+    if (!entity.contract.version) {
+      this.errors.push(
+        createError(
+          `Source entity '${entity.name}' contract must have a version`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_CONTRACT',
+        ),
+      );
+    }
+  }
+
+  private validateContractReference(
+    contractRef: { name: string; version: string },
+    entityName: string,
+    file: string,
+    line: number,
+  ): void {
+    const contractExists = this.workspace.contracts.some((c) => c.name === contractRef.name);
+    if (!contractExists) {
+      this.errors.push(
+        createError(
+          `Contract '${contractRef.name}' referenced by source entity '${entityName}' not found`,
+          { file, line },
+          'error',
+          'UNRESOLVED_CONTRACT',
+        ),
+      );
+      return;
+    }
+
+    const contract = this.workspace.contracts.find((c) => c.name === contractRef.name);
+    if (contract && contract.version !== contractRef.version) {
+      this.errors.push(
+        createError(
+          `Contract '${contractRef.name}' version '${contractRef.version}' not found. Available version: ${contract.version}`,
+          { file, line },
+          'error',
+          'UNRESOLVED_CONTRACT_VERSION',
+        ),
+      );
+    }
+  }
+
+  private validateDatabaseEntity(entity: any, source: ParsedSource): void {
+    const line = entity.line || source.line;
+
+    if (!entity.location) {
+      this.errors.push(
+        createError(
+          `Database entity '${entity.name}' must declare 'location' field`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_LOCATION',
+        ),
+      );
+    } else {
+      const locationPattern = /^[a-zA-Z_][a-zA-Z0-9_.]*$/;
+      if (!locationPattern.test(entity.location)) {
+        this.errors.push(
+          createError(
+            `Database location must be a logical identifier (e.g., 'schema.table'), got '${entity.location}'`,
+            { file: source.file, line },
+            'error',
+            'INVALID_LOCATION_FORMAT',
+          ),
+        );
+      }
+    }
+
+    if (entity.contract) {
+      this.validateContractReference(entity.contract, entity.name, source.file, line);
+    }
+
+    const forbiddenFields = ['method', 'format', 'partition_by'];
+    for (const field of forbiddenFields) {
+      if (entity[field] !== undefined) {
+        this.errors.push(
+          createError(
+            `Database entity cannot have '${field}' field`,
+            { file: source.file, line },
+            'error',
+            'FORBIDDEN_FIELD_ON_ENTITY',
+          ),
+        );
+      }
+    }
+  }
+
+  private validateApiEntity(entity: any, source: ParsedSource): void {
+    const line = entity.line || source.line;
+
+    if (!entity.location) {
+      this.errors.push(
+        createError(
+          `API entity '${entity.name}' must declare 'location' field`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_LOCATION',
+        ),
+      );
+    } else if (!entity.location.startsWith('/')) {
+      this.errors.push(
+        createError(
+          `API location must be a URL path starting with '/', got '${entity.location}'`,
+          { file: source.file, line },
+          'error',
+          'INVALID_LOCATION_FORMAT',
+        ),
+      );
+    }
+
+    if (!entity.method) {
+      this.errors.push(
+        createError(
+          `API entity '${entity.name}' must declare 'method' field`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_METHOD',
+        ),
+      );
+    } else {
+      const protocol = (source as any).protocol;
+      if (
+        (protocol === 'http' || protocol === 'https') &&
+        !HTTP_METHODS.includes(entity.method.toUpperCase())
+      ) {
+        this.errors.push(
+          createError(
+            `Invalid HTTP method '${entity.method}'. Must be one of: ${HTTP_METHODS.join(', ')}`,
+            { file: source.file, line },
+            'error',
+            'INVALID_HTTP_METHOD',
+          ),
+        );
+      }
+    }
+
+    if (entity.contract) {
+      this.validateContractReference(entity.contract, entity.name, source.file, line);
+    }
+
+    const forbiddenFields = ['format', 'partition_by'];
+    for (const field of forbiddenFields) {
+      if (entity[field] !== undefined) {
+        this.errors.push(
+          createError(
+            `API entity cannot have '${field}' field`,
+            { file: source.file, line },
+            'error',
+            'FORBIDDEN_FIELD_ON_ENTITY',
+          ),
+        );
+      }
+    }
+  }
+
+  private validateFileSystemEntity(entity: any, source: ParsedSource): void {
+    const line = entity.line || source.line;
+
+    if (!entity.location) {
+      this.errors.push(
+        createError(
+          `File system entity '${entity.name}' must declare 'location' field`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_LOCATION',
+        ),
+      );
+    } else {
+      const validPath =
+        entity.location.startsWith('/') ||
+        entity.location.startsWith('.') ||
+        /^[a-z][a-z0-9]*:\/\//.test(entity.location);
+      if (!validPath) {
+        this.errors.push(
+          createError(
+            `File system location must be a file path or URI, got '${entity.location}'`,
+            { file: source.file, line },
+            'error',
+            'INVALID_LOCATION_FORMAT',
+          ),
+        );
+      }
+    }
+
+    if (!entity.format) {
+      this.errors.push(
+        createError(
+          `File system entity '${entity.name}' must declare 'format' field`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_FORMAT',
+        ),
+      );
+    } else if (!FILE_FORMATS.includes(entity.format)) {
+      this.errors.push(
+        createError(
+          `Invalid format '${entity.format}'. Must be one of: ${FILE_FORMATS.join(', ')}`,
+          { file: source.file, line },
+          'error',
+          'INVALID_FORMAT_VALUE',
+        ),
+      );
+    }
+
+    if (entity.contract) {
+      this.validateContractReference(entity.contract, entity.name, source.file, line);
+    }
+
+    if (entity.partition_by !== undefined && !Array.isArray(entity.partition_by)) {
+      this.errors.push(
+        createError(
+          `File system entity '${entity.name}' partition_by must be an array of strings`,
+          { file: source.file, line },
+          'error',
+          'INVALID_FORMAT_VALUE',
+        ),
+      );
+    }
+
+    const forbiddenFields = ['method'];
+    for (const field of forbiddenFields) {
+      if (entity[field] !== undefined) {
+        this.errors.push(
+          createError(
+            `File system entity cannot have '${field}' field`,
+            { file: source.file, line },
+            'error',
+            'FORBIDDEN_FIELD_ON_ENTITY',
+          ),
+        );
+      }
+    }
+  }
+
+  private validateStreamingEntity(entity: any, source: ParsedSource): void {
+    const line = entity.line || source.line;
+
+    if (!entity.location) {
+      this.errors.push(
+        createError(
+          `Streaming entity '${entity.name}' must declare 'location' field (topic, queue, or channel address)`,
+          { file: source.file, line },
+          'error',
+          'MISSING_ENTITY_LOCATION',
+        ),
+      );
+    }
+
+    if (entity.contract) {
+      this.validateContractReference(entity.contract, entity.name, source.file, line);
+    }
+
+    const forbiddenFields = ['method', 'format', 'partition_by'];
+    for (const field of forbiddenFields) {
+      if (entity[field] !== undefined) {
+        this.errors.push(
+          createError(
+            `Streaming entity cannot have '${field}' field`,
+            { file: source.file, line },
+            'error',
+            'FORBIDDEN_FIELD_ON_ENTITY',
+          ),
+        );
+      }
+    }
+  }
+
+  private validateSaasEntity(entity: any, source: ParsedSource): void {
+    const line = entity.line || source.line;
+
+    if (entity.contract) {
+      this.validateContractReference(entity.contract, entity.name, source.file, line);
+    }
+
+    const forbiddenFields = ['method', 'format', 'partition_by'];
+    for (const field of forbiddenFields) {
+      if (entity[field] !== undefined) {
+        this.errors.push(
+          createError(
+            `SaaS entity cannot have '${field}' field`,
+            { file: source.file, line },
+            'error',
+            'FORBIDDEN_FIELD_ON_ENTITY',
+          ),
+        );
+      }
+    }
+  }
+
+  private getTypeDisplayName(type: string): string {
+    const displayNames: Record<string, string> = {
+      database: 'Database',
+      api: 'API',
+      file_system: 'File system',
+      streaming: 'Streaming',
+      saas: 'SaaS',
+    };
+    return displayNames[type] || type;
   }
 
   private validateUniqueResourceNames(): void {

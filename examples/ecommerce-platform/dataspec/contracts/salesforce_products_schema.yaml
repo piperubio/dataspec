@@ -1,0 +1,54 @@
+# Contract: Salesforce Products Schema
+# Defines the expected schema from Salesforce Product2 objects
+
+name: salesforce_products_schema
+version: '1.0.0'
+fields:
+  - name: product_id
+    type: string
+    constraints:
+      not_null: true
+    description: Salesforce Product ID
+
+  - name: name
+    type: string
+    constraints:
+      not_null: true
+    description: Product name
+
+  - name: product_code
+    type: string
+    description: Product code/SKU
+
+  - name: family
+    type: string
+    description: Product family
+
+  - name: description
+    type: string
+    description: Product description
+
+  - name: is_active
+    type: boolean
+    description: Whether product is active
+
+  - name: created_date
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Creation date in Salesforce
+
+  - name: last_modified_date
+    type: timestamp
+    description: Last modification date
+
+metadata:
+  description: Source schema for Salesforce Product2 objects
+  owner: sales-ops-team
+  layer: raw
+  source: salesforce_crm
+  tags:
+    - raw
+    - source-schema
+    - salesforce
+    - crm

@@ -1,0 +1,38 @@
+# Contract: Batch Users Response Schema
+# Defines the expected response schema for gRPC BatchGetUsers endpoint
+
+name: batch_users_response_schema
+version: '1.0.0'
+fields:
+  - name: users
+    type: json
+    constraints:
+      not_null: true
+    description: Array of user records
+
+  - name: errors
+    type: json
+    description: Array of errors for failed lookups
+
+  - name: total_requested
+    type: integer
+    constraints:
+      not_null: true
+    description: Total number of users requested
+
+  - name: total_found
+    type: integer
+    constraints:
+      not_null: true
+    description: Number of users found
+
+metadata:
+  description: Response schema for gRPC user service BatchGetUsers endpoint
+  owner: user-platform-team
+  layer: raw
+  source: grpc_user_service
+  tags:
+    - raw
+    - source-schema
+    - grpc
+    - users

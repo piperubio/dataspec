@@ -1,0 +1,53 @@
+# Contract: Sessions Raw Schema
+# Defines the expected schema from the analytics sessions table
+
+name: sessions_raw_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Primary key
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User ID for the session
+
+  - name: session_start
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Session start timestamp
+
+  - name: session_end
+    type: timestamp
+    description: Session end timestamp
+
+  - name: page_views
+    type: integer
+    description: Number of page views in session
+
+  - name: device_type
+    type: string
+    description: Device type (mobile, desktop, tablet)
+
+  - name: browser
+    type: string
+    description: Browser name
+
+  - name: ip_address
+    type: string
+    description: Client IP address
+
+metadata:
+  description: Source schema for sessions table from analytics database
+  owner: analytics-team
+  layer: raw
+  source: analytics_db
+  tags:
+    - raw
+    - source-schema
+    - analytics

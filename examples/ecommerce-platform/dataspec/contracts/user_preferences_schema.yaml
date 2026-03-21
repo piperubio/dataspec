@@ -1,0 +1,50 @@
+# Contract: User Preferences Schema
+# Defines the expected response schema for gRPC GetUserPreferences endpoint
+
+name: user_preferences_schema
+version: '1.0.0'
+fields:
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User identifier
+
+  - name: language
+    type: string
+    description: Preferred language
+
+  - name: timezone
+    type: string
+    description: User timezone
+
+  - name: currency
+    type: string
+    description: Preferred currency
+
+  - name: notifications_enabled
+    type: boolean
+    description: Notification preferences
+
+  - name: email_opt_in
+    type: boolean
+    description: Email marketing opt-in
+
+  - name: theme
+    type: string
+    description: UI theme preference
+
+  - name: custom_settings
+    type: json
+    description: Custom user settings
+
+metadata:
+  description: Response schema for gRPC user service GetUserPreferences endpoint
+  owner: user-platform-team
+  layer: raw
+  source: grpc_user_service
+  tags:
+    - raw
+    - source-schema
+    - grpc
+    - users

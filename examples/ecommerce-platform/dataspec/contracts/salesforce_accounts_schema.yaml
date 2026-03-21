@@ -1,0 +1,62 @@
+# Contract: Salesforce Accounts Schema
+# Defines the expected schema from Salesforce Account objects
+
+name: salesforce_accounts_schema
+version: '1.0.0'
+fields:
+  - name: account_id
+    type: string
+    constraints:
+      not_null: true
+    description: Salesforce Account ID
+
+  - name: name
+    type: string
+    constraints:
+      not_null: true
+    description: Account name
+
+  - name: type
+    type: string
+    description: Account type
+
+  - name: industry
+    type: string
+    description: Industry
+
+  - name: billing_address
+    type: json
+    description: Billing address
+
+  - name: shipping_address
+    type: json
+    description: Shipping address
+
+  - name: phone
+    type: string
+    description: Phone number
+
+  - name: website
+    type: string
+    description: Website URL
+
+  - name: created_date
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Creation date in Salesforce
+
+  - name: last_modified_date
+    type: timestamp
+    description: Last modification date
+
+metadata:
+  description: Source schema for Salesforce Account objects
+  owner: sales-ops-team
+  layer: raw
+  source: salesforce_crm
+  tags:
+    - raw
+    - source-schema
+    - salesforce
+    - crm

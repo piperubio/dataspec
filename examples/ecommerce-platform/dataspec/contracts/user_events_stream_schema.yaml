@@ -1,0 +1,48 @@
+# Contract: User Events Stream Schema
+# Defines the expected schema for Kafka user events stream
+
+name: user_events_stream_schema
+version: '1.0.0'
+fields:
+  - name: event_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique event identifier
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User identifier
+
+  - name: event_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of event (click, view, action)
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Event timestamp
+
+  - name: properties
+    type: json
+    description: Event-specific properties
+
+  - name: context
+    type: json
+    description: Event context (device, session, etc.)
+
+metadata:
+  description: Schema for Kafka user events stream
+  owner: streaming-team
+  layer: raw
+  source: kafka_events
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - kafka

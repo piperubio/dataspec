@@ -1,0 +1,61 @@
+# Contract: Ad Spend Raw Schema
+# Defines the expected schema from external advertising API
+
+name: ad_spend_raw_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: string
+    constraints:
+      not_null: true
+    description: Spend record ID
+
+  - name: platform
+    type: string
+    constraints:
+      not_null: true
+    description: Advertising platform (google, meta, etc.)
+
+  - name: campaign_id
+    type: string
+    description: Campaign ID on platform
+
+  - name: ad_group_id
+    type: string
+    description: Ad group ID
+
+  - name: spend_amount
+    type: decimal
+    constraints:
+      not_null: true
+    description: Advertising spend amount
+
+  - name: currency
+    type: string
+    constraints:
+      not_null: true
+    description: Spend currency
+
+  - name: impressions
+    type: integer
+    description: Number of impressions
+
+  - name: clicks
+    type: integer
+    description: Number of clicks
+
+  - name: recorded_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Spend timestamp
+
+metadata:
+  description: Source schema for ad spend data from external advertising API
+  owner: integrations-team
+  layer: raw
+  source: external_apis
+  tags:
+    - raw
+    - source-schema
+    - marketing

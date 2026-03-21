@@ -1,0 +1,46 @@
+# Contract: User Update Schema
+# Defines the expected request schema for gRPC UpdateUser endpoint
+
+name: user_update_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User identifier to update
+
+  - name: email
+    type: string
+    description: New email address
+
+  - name: first_name
+    type: string
+    description: New first name
+
+  - name: last_name
+    type: string
+    description: New last name
+
+  - name: phone
+    type: string
+    description: New phone number
+
+  - name: status
+    type: string
+    description: New account status
+
+  - name: preferences
+    type: json
+    description: Updated preferences
+
+metadata:
+  description: Request schema for gRPC user service UpdateUser endpoint
+  owner: user-platform-team
+  layer: raw
+  source: grpc_user_service
+  tags:
+    - raw
+    - source-schema
+    - grpc
+    - users

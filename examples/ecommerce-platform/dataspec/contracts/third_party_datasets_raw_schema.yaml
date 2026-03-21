@@ -1,0 +1,45 @@
+# Contract: Third Party Datasets Raw Schema
+# Defines the expected schema from third-party datasets in S3
+
+name: third_party_datasets_raw_schema
+version: '1.0.0'
+fields:
+  - name: dataset_id
+    type: string
+    constraints:
+      not_null: true
+    description: Dataset identifier
+
+  - name: source
+    type: string
+    constraints:
+      not_null: true
+    description: Data source provider
+
+  - name: dataset_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of dataset
+
+  - name: data
+    type: json
+    constraints:
+      not_null: true
+    description: Dataset payload
+
+  - name: ingested_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Ingestion timestamp
+
+metadata:
+  description: Source schema for third-party datasets from external S3 bucket
+  owner: data-engineering-team
+  layer: raw
+  source: external_s3_bucket
+  tags:
+    - raw
+    - source-schema
+    - third-party

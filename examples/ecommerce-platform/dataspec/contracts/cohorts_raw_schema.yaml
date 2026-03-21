@@ -1,0 +1,43 @@
+# Contract: Cohorts Raw Schema
+# Defines the expected schema from the analytics cohorts table
+
+name: cohorts_raw_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Primary key
+
+  - name: cohort_name
+    type: string
+    constraints:
+      not_null: true
+    description: Name of the cohort
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User ID in the cohort
+
+  - name: cohort_date
+    type: date
+    constraints:
+      not_null: true
+    description: Cohort start date
+
+  - name: metadata
+    type: json
+    description: Additional cohort metadata
+
+metadata:
+  description: Source schema for user cohorts from analytics database
+  owner: analytics-team
+  layer: raw
+  source: analytics_db
+  tags:
+    - raw
+    - source-schema
+    - cohorts

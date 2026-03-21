@@ -1,0 +1,38 @@
+# Contract: User List Response Schema
+# Defines the expected response schema for gRPC ListUsers endpoint
+
+name: user_list_response_schema
+version: '1.0.0'
+fields:
+  - name: users
+    type: json
+    constraints:
+      not_null: true
+    description: Array of user records
+
+  - name: total_count
+    type: integer
+    constraints:
+      not_null: true
+    description: Total number of users
+
+  - name: page_token
+    type: string
+    description: Pagination token for next page
+
+  - name: has_more
+    type: boolean
+    constraints:
+      not_null: true
+    description: Whether more results exist
+
+metadata:
+  description: Response schema for gRPC user service ListUsers endpoint
+  owner: user-platform-team
+  layer: raw
+  source: grpc_user_service
+  tags:
+    - raw
+    - source-schema
+    - grpc
+    - users

@@ -1,0 +1,53 @@
+# Contract: Customer Satisfaction Raw Schema
+# Defines the expected schema from external support API
+
+name: customer_satisfaction_raw_schema
+version: '1.0.0'
+fields:
+  - name: response_id
+    type: string
+    constraints:
+      not_null: true
+    description: Survey response identifier
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: User ID
+
+  - name: ticket_id
+    type: string
+    description: Associated support ticket
+
+  - name: score
+    type: integer
+    constraints:
+      not_null: true
+    description: Satisfaction score (1-5 or NPS)
+
+  - name: feedback
+    type: string
+    description: Written feedback
+
+  - name: survey_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of survey (CSAT, NPS, etc.)
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Response timestamp
+
+metadata:
+  description: Source schema for customer satisfaction surveys from external support API
+  owner: integrations-team
+  layer: raw
+  source: external_apis
+  tags:
+    - raw
+    - source-schema
+    - support

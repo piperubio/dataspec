@@ -1,0 +1,44 @@
+# Contract: User Request Schema
+# Defines the expected request schema for gRPC CreateUser endpoint
+
+name: user_request_schema
+version: '1.0.0'
+fields:
+  - name: email
+    type: string
+    constraints:
+      not_null: true
+    description: User email address
+
+  - name: first_name
+    type: string
+    description: User first name
+
+  - name: last_name
+    type: string
+    description: User last name
+
+  - name: phone
+    type: string
+    description: User phone number
+
+  - name: password
+    type: string
+    constraints:
+      not_null: true
+    description: Initial password (hashed)
+
+  - name: preferences
+    type: json
+    description: User preferences
+
+metadata:
+  description: Request schema for gRPC user service CreateUser endpoint
+  owner: user-platform-team
+  layer: raw
+  source: grpc_user_service
+  tags:
+    - raw
+    - source-schema
+    - grpc
+    - users

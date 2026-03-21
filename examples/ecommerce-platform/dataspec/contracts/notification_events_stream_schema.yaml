@@ -1,0 +1,58 @@
+# Contract: Notification Events Stream Schema
+# Defines the expected schema for Kafka notification events stream
+
+name: notification_events_stream_schema
+version: '1.0.0'
+fields:
+  - name: event_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique event identifier
+
+  - name: user_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Target user identifier
+
+  - name: notification_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of notification (email, push, sms)
+
+  - name: event_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of event (sent, delivered, opened, failed)
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Event timestamp
+
+  - name: template_id
+    type: string
+    description: Notification template used
+
+  - name: status
+    type: string
+    description: Delivery status
+
+  - name: metadata
+    type: json
+    description: Additional event metadata
+
+metadata:
+  description: Schema for Kafka notification events stream
+  owner: streaming-team
+  layer: raw
+  source: kafka_events
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - kafka

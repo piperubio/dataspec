@@ -1,0 +1,61 @@
+# Contract: Inventory Raw Schema
+# Defines the expected schema from the production inventory table
+
+name: inventory_raw_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Primary key
+
+  - name: product_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Product identifier
+
+  - name: warehouse_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Warehouse identifier
+
+  - name: quantity
+    type: integer
+    constraints:
+      not_null: true
+    description: Available quantity
+
+  - name: reserved_quantity
+    type: integer
+    description: Reserved quantity (for pending orders)
+
+  - name: reorder_threshold
+    type: integer
+    description: Threshold for low stock alert
+
+  - name: last_restocked_at
+    type: timestamp
+    description: Last restock timestamp
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Creation timestamp
+
+  - name: updated_at
+    type: timestamp
+    description: Last update timestamp
+
+metadata:
+  description: Source schema for inventory table from production database
+  owner: data-engineering-team
+  layer: raw
+  source: production_db
+  tags:
+    - raw
+    - source-schema
+    - inventory

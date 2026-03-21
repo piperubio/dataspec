@@ -1,0 +1,98 @@
+# Source: Salesforce SaaS Integration
+# CRM data from Salesforce for customer relationship management
+
+name: salesforce_crm
+type: saas
+provider: salesforce
+entities:
+  - name: accounts
+    contract:
+      name: salesforce_accounts_schema
+      version: '1.0.0'
+    location: Account
+    description: Customer account records from Salesforce
+    metadata:
+      object_type: Account
+      sync_frequency: hourly
+
+  - name: contacts
+    contract:
+      name: salesforce_contacts_schema
+      version: '1.0.0'
+    location: Contact
+    description: Contact persons associated with accounts
+    metadata:
+      object_type: Contact
+      sync_frequency: hourly
+
+  - name: opportunities
+    contract:
+      name: salesforce_opportunities_schema
+      version: '1.0.0'
+    location: Opportunity
+    description: Sales opportunities and pipeline data
+    metadata:
+      object_type: Opportunity
+      sync_frequency: realtime
+
+  - name: leads
+    contract:
+      name: salesforce_leads_schema
+      version: '1.0.0'
+    location: Lead
+    description: Sales leads and prospect information
+    metadata:
+      object_type: Lead
+      sync_frequency: realtime
+
+  - name: cases
+    contract:
+      name: salesforce_cases_schema
+      version: '1.0.0'
+    location: Case
+    description: Customer support cases and ticket history
+    metadata:
+      object_type: Case
+      sync_frequency: realtime
+
+  - name: campaigns_salesforce
+    contract:
+      name: salesforce_campaigns_schema
+      version: '1.0.0'
+    location: Campaign
+    description: Marketing campaigns tracked in Salesforce
+    metadata:
+      object_type: Campaign
+      sync_frequency: daily
+
+  - name: products_salesforce
+    contract:
+      name: salesforce_products_schema
+      version: '1.0.0'
+    location: Product2
+    description: Product catalog synced from e-commerce platform
+    metadata:
+      object_type: Product2
+      sync_frequency: hourly
+
+  - name: pricebooks
+    contract:
+      name: salesforce_pricebooks_schema
+      version: '1.0.0'
+    location: Pricebook2
+    description: Pricing information and price book entries
+    metadata:
+      object_type: Pricebook2
+      sync_frequency: daily
+
+metadata:
+  description: Salesforce CRM integration for sales and customer data
+  owner: sales-ops-team
+  tags:
+    - saas
+    - salesforce
+    - crm
+    - sales
+    - customer-data
+  auth_type: oauth2
+  api_version: '59.0'

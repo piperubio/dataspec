@@ -1,0 +1,60 @@
+# Contract: Salesforce Contacts Schema
+# Defines the expected schema from Salesforce Contact objects
+
+name: salesforce_contacts_schema
+version: '1.0.0'
+fields:
+  - name: contact_id
+    type: string
+    constraints:
+      not_null: true
+    description: Salesforce Contact ID
+
+  - name: account_id
+    type: string
+    constraints:
+      not_null: true
+    description: Associated Account ID
+
+  - name: first_name
+    type: string
+    description: Contact first name
+
+  - name: last_name
+    type: string
+    constraints:
+      not_null: true
+    description: Contact last name
+
+  - name: email
+    type: string
+    description: Contact email
+
+  - name: phone
+    type: string
+    description: Phone number
+
+  - name: title
+    type: string
+    description: Job title
+
+  - name: created_date
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Creation date in Salesforce
+
+  - name: last_modified_date
+    type: timestamp
+    description: Last modification date
+
+metadata:
+  description: Source schema for Salesforce Contact objects
+  owner: sales-ops-team
+  layer: raw
+  source: salesforce_crm
+  tags:
+    - raw
+    - source-schema
+    - salesforce
+    - crm

@@ -1,0 +1,64 @@
+# Contract: Salesforce Campaigns Schema
+# Defines the expected schema from Salesforce Campaign objects
+
+name: salesforce_campaigns_schema
+version: '1.0.0'
+fields:
+  - name: campaign_id
+    type: string
+    constraints:
+      not_null: true
+    description: Salesforce Campaign ID
+
+  - name: name
+    type: string
+    constraints:
+      not_null: true
+    description: Campaign name
+
+  - name: type
+    type: string
+    description: Campaign type
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+    description: Campaign status
+
+  - name: start_date
+    type: date
+    description: Campaign start date
+
+  - name: end_date
+    type: date
+    description: Campaign end date
+
+  - name: budget
+    type: decimal
+    description: Campaign budget
+
+  - name: expected_revenue
+    type: decimal
+    description: Expected revenue
+
+  - name: created_date
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Creation date in Salesforce
+
+  - name: last_modified_date
+    type: timestamp
+    description: Last modification date
+
+metadata:
+  description: Source schema for Salesforce Campaign objects
+  owner: sales-ops-team
+  layer: raw
+  source: salesforce_crm
+  tags:
+    - raw
+    - source-schema
+    - salesforce
+    - crm

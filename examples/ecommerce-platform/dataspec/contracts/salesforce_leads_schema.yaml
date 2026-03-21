@@ -1,0 +1,64 @@
+# Contract: Salesforce Leads Schema
+# Defines the expected schema from Salesforce Lead objects
+
+name: salesforce_leads_schema
+version: '1.0.0'
+fields:
+  - name: lead_id
+    type: string
+    constraints:
+      not_null: true
+    description: Salesforce Lead ID
+
+  - name: first_name
+    type: string
+    description: Lead first name
+
+  - name: last_name
+    type: string
+    constraints:
+      not_null: true
+    description: Lead last name
+
+  - name: email
+    type: string
+    description: Lead email
+
+  - name: phone
+    type: string
+    description: Phone number
+
+  - name: company
+    type: string
+    description: Company name
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+    description: Lead status
+
+  - name: source
+    type: string
+    description: Lead source
+
+  - name: created_date
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Creation date in Salesforce
+
+  - name: last_modified_date
+    type: timestamp
+    description: Last modification date
+
+metadata:
+  description: Source schema for Salesforce Lead objects
+  owner: sales-ops-team
+  layer: raw
+  source: salesforce_crm
+  tags:
+    - raw
+    - source-schema
+    - salesforce
+    - crm

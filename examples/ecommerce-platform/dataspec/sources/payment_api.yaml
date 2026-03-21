@@ -3,70 +3,65 @@
 
 name: payment_api
 type: api
+protocol: https
+baseUrl: api.payment-provider.com/v1
 entities:
   - name: transactions
-    description: Payment transactions endpoint - returns all payment transactions
-    entityType: endpoint
+    location: /transactions/{transaction_id}
     method: GET
-    pathParams:
-      - transaction_id
-    queryParams:
-      - start_date
-      - end_date
-      - status
-      - payment_method
+    contract:
+      name: payments_raw_schema
+      version: '1.0.0'
+    description: Payment transactions endpoint - returns all payment transactions
     metadata:
       rate_limit: 1000
       pagination: cursor
 
   - name: refunds
-    description: Refund transactions endpoint - returns processed refunds
-    entityType: endpoint
+    location: /refunds/{refund_id}
     method: GET
-    pathParams:
-      - refund_id
-    queryParams:
-      - start_date
-      - end_date
-      - status
-      - original_transaction_id
+    contract:
+      name: refunds_raw_schema
+      version: '1.0.0'
+    description: Refund transactions endpoint - returns processed refunds
     metadata:
       rate_limit: 500
       pagination: offset
 
   - name: payment_methods
-    description: Available payment methods and configurations
-    entityType: endpoint
+    location: /payment-methods
     method: GET
+    contract:
+      name: payment_methods_schema
+      version: '1.0.0'
+    description: Available payment methods and configurations
     metadata:
       cache_duration: 3600
 
   - name: chargebacks
-    description: Chargeback and dispute records
-    entityType: endpoint
+    location: /chargebacks
     method: GET
-    queryParams:
-      - start_date
-      - end_date
-      - status
+    contract:
+      name: chargebacks_raw_schema
+      version: '1.0.0'
+    description: Chargeback and dispute records
     metadata:
       rate_limit: 100
       pagination: cursor
 
   - name: settlements
-    description: Daily settlement batches
-    entityType: endpoint
+    location: /settlements
     method: GET
-    queryParams:
-      - date
-      - currency
+    contract:
+      name: settlements_raw_schema
+      version: '1.0.0'
+    description: Daily settlement batches
     metadata:
       rate_limit: 200
 
 metadata:
   description: External payment processor API - Stripe/PayPal integration
   owner: payments-team
-  base_url: https://api.payment-provider.com/v1
   auth_type: oauth2
   tags:
     - external

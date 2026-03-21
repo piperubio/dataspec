@@ -1,0 +1,68 @@
+# Source: WebSocket Real-time Stream
+# WebSocket connections for real-time client notifications and live updates
+
+name: websocket_notifications
+type: streaming
+protocol: wss
+baseUrl: ws.example.com
+entities:
+  - name: live_order_updates
+    location: /ws/orders
+    contract:
+      name: order_update_stream_schema
+      version: '1.0.0'
+    description: Real-time order status updates pushed to connected clients
+    metadata:
+      reconnect_policy: exponential_backoff
+      heartbeat_interval_ms: 30000
+
+  - name: live_inventory_alerts
+    location: /ws/inventory/alerts
+    contract:
+      name: inventory_alert_stream_schema
+      version: '1.0.0'
+    description: Low stock and inventory change notifications
+    metadata:
+      reconnect_policy: exponential_backoff
+      heartbeat_interval_ms: 30000
+
+  - name: live_user_notifications
+    location: /ws/notifications
+    contract:
+      name: user_notification_stream_schema
+      version: '1.0.0'
+    description: Push notifications for user-specific events
+    metadata:
+      reconnect_policy: exponential_backoff
+      heartbeat_interval_ms: 30000
+
+  - name: live_pricing_updates
+    location: /ws/pricing
+    contract:
+      name: pricing_update_stream_schema
+      version: '1.0.0'
+    description: Real-time price changes and promotional updates
+    metadata:
+      reconnect_policy: exponential_backoff
+      heartbeat_interval_ms: 10000
+
+  - name: live_analytics_feed
+    location: /ws/analytics
+    contract:
+      name: analytics_stream_schema
+      version: '1.0.0'
+    description: Real-time analytics metrics for live dashboards
+    metadata:
+      reconnect_policy: exponential_backoff
+      heartbeat_interval_ms: 5000
+
+metadata:
+  description: WebSocket server for real-time client push notifications
+  owner: realtime-team
+  tags:
+    - streaming
+    - websocket
+    - real-time
+    - push
+    - notifications
+  connection_type: persistent

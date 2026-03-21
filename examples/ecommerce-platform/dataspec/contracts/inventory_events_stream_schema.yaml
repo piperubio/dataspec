@@ -1,0 +1,58 @@
+# Contract: Inventory Events Stream Schema
+# Defines the expected schema for Kafka inventory events stream
+
+name: inventory_events_stream_schema
+version: '1.0.0'
+fields:
+  - name: event_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Unique event identifier
+
+  - name: product_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Product identifier
+
+  - name: warehouse_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Warehouse identifier
+
+  - name: event_type
+    type: string
+    constraints:
+      not_null: true
+    description: Type of event (stock_change, low_stock, out_of_stock)
+
+  - name: timestamp
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Event timestamp
+
+  - name: quantity_change
+    type: integer
+    description: Change in quantity (positive or negative)
+
+  - name: previous_quantity
+    type: integer
+    description: Quantity before change
+
+  - name: new_quantity
+    type: integer
+    description: Quantity after change
+
+metadata:
+  description: Schema for Kafka inventory events stream
+  owner: streaming-team
+  layer: raw
+  source: kafka_events
+  tags:
+    - raw
+    - source-schema
+    - streaming
+    - kafka

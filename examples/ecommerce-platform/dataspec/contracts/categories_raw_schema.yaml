@@ -1,0 +1,53 @@
+# Contract: Categories Raw Schema
+# Defines the expected schema from the production categories table
+
+name: categories_raw_schema
+version: '1.0.0'
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Primary key
+
+  - name: name
+    type: string
+    constraints:
+      not_null: true
+    description: Category name
+
+  - name: parent_id
+    type: uuid
+    description: Parent category ID (null for top-level)
+
+  - name: slug
+    type: string
+    description: URL-friendly slug
+
+  - name: description
+    type: string
+    description: Category description
+
+  - name: sort_order
+    type: integer
+    description: Display order
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Creation timestamp
+
+  - name: updated_at
+    type: timestamp
+    description: Last update timestamp
+
+metadata:
+  description: Source schema for categories table from production database
+  owner: data-engineering-team
+  layer: raw
+  source: production_db
+  tags:
+    - raw
+    - source-schema
+    - products
