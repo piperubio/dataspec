@@ -11,7 +11,7 @@ entities:
     method: GET
     contract:
       name: payments_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Payment transactions endpoint - returns all payment transactions
     metadata:
       rate_limit: 1000
@@ -22,7 +22,7 @@ entities:
     method: GET
     contract:
       name: refunds_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Refund transactions endpoint - returns processed refunds
     metadata:
       rate_limit: 500
@@ -33,7 +33,7 @@ entities:
     method: GET
     contract:
       name: payment_methods_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Available payment methods and configurations
     metadata:
       cache_duration: 3600
@@ -43,7 +43,7 @@ entities:
     method: GET
     contract:
       name: chargebacks_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Chargeback and dispute records
     metadata:
       rate_limit: 100
@@ -54,7 +54,7 @@ entities:
     method: GET
     contract:
       name: settlements_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Daily settlement batches
     metadata:
       rate_limit: 200

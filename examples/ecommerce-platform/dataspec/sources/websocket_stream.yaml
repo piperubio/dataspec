@@ -10,7 +10,7 @@ entities:
     location: /ws/orders
     contract:
       name: order_update_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Real-time order status updates pushed to connected clients
     metadata:
       reconnect_policy: exponential_backoff
@@ -20,7 +20,7 @@ entities:
     location: /ws/inventory/alerts
     contract:
       name: inventory_alert_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Low stock and inventory change notifications
     metadata:
       reconnect_policy: exponential_backoff
@@ -30,7 +30,7 @@ entities:
     location: /ws/notifications
     contract:
       name: user_notification_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Push notifications for user-specific events
     metadata:
       reconnect_policy: exponential_backoff
@@ -40,7 +40,7 @@ entities:
     location: /ws/pricing
     contract:
       name: pricing_update_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Real-time price changes and promotional updates
     metadata:
       reconnect_policy: exponential_backoff
@@ -50,7 +50,7 @@ entities:
     location: /ws/analytics
     contract:
       name: analytics_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Real-time analytics metrics for live dashboards
     metadata:
       reconnect_policy: exponential_backoff

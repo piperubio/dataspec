@@ -203,9 +203,4 @@ export interface SourceSaas extends SourceBase {
 /**
  * Discriminated union of all source types.
  */
-export type Source =
-  | SourceDatabase
-  | SourceApi
-  | SourceFileSystem
-  | SourceStreaming
-  | SourceSaas;
+export type Source = SourceDatabase | SourceApi | SourceFileSystem | SourceStreaming | SourceSaas;

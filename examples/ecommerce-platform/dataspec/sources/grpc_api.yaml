@@ -11,7 +11,7 @@ entities:
     method: GetUser
     contract:
       name: user_response_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Retrieve user by ID
     metadata:
       auth_required: true
@@ -21,7 +21,7 @@ entities:
     method: ListUsers
     contract:
       name: user_list_response_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: List users with pagination
     metadata:
       auth_required: true
@@ -31,7 +31,7 @@ entities:
     method: CreateUser
     contract:
       name: user_request_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Create a new user
     metadata:
       auth_required: true
@@ -42,7 +42,7 @@ entities:
     method: UpdateUser
     contract:
       name: user_update_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Update existing user
     metadata:
       auth_required: true
@@ -52,7 +52,7 @@ entities:
     method: DeleteUser
     contract:
       name: user_delete_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Soft delete a user
     metadata:
       auth_required: true
@@ -63,7 +63,7 @@ entities:
     method: GetUserPreferences
     contract:
       name: user_preferences_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Retrieve user preferences
     metadata:
       auth_required: true
@@ -73,7 +73,7 @@ entities:
     method: BatchGetUsers
     contract:
       name: batch_users_response_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Retrieve multiple users by IDs
     metadata:
       auth_required: true

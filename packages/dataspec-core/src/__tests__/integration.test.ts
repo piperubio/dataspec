@@ -134,15 +134,22 @@ steps:
 
   it('should support all source types', () => {
     const sources = [
-      { type: 'database' as const, name: 'postgres_db', yaml: `
+      {
+        type: 'database' as const,
+        name: 'postgres_db',
+        yaml: `
 name: postgres_db
 type: database
 entities:
   - name: users
     location: public.users
     contract: { name: users_schema, version: "1.0.0" }
-` },
-      { type: 'api' as const, name: 'rest_api', yaml: `
+`,
+      },
+      {
+        type: 'api' as const,
+        name: 'rest_api',
+        yaml: `
 name: rest_api
 type: api
 protocol: https
@@ -152,8 +159,12 @@ entities:
     location: /users
     method: GET
     contract: { name: users_schema, version: "1.0.0" }
-` },
-      { type: 'file_system' as const, name: 'local_files', yaml: `
+`,
+      },
+      {
+        type: 'file_system' as const,
+        name: 'local_files',
+        yaml: `
 name: local_files
 type: file_system
 entities:
@@ -161,8 +172,12 @@ entities:
     location: /data/*.csv
     format: csv
     contract: { name: files_schema, version: "1.0.0" }
-` },
-      { type: 'streaming' as const, name: 'kafka_stream', yaml: `
+`,
+      },
+      {
+        type: 'streaming' as const,
+        name: 'kafka_stream',
+        yaml: `
 name: kafka_stream
 type: streaming
 protocol: kafka
@@ -171,15 +186,20 @@ entities:
   - name: events
     location: user-events
     contract: { name: events_schema, version: "1.0.0" }
-` },
-      { type: 'saas' as const, name: 'salesforce', yaml: `
+`,
+      },
+      {
+        type: 'saas' as const,
+        name: 'salesforce',
+        yaml: `
 name: salesforce
 type: saas
 provider: salesforce
 entities:
   - name: leads
     contract: { name: leads_schema, version: "1.0.0" }
-` },
+`,
+      },
     ];
 
     for (const { type, name, yaml } of sources) {

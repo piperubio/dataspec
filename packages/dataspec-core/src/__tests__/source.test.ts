@@ -268,7 +268,9 @@ entities:
       name: users_schema
       version: "1.0.0"
 `;
-    expect(() => parseSourceYaml(yaml)).toThrow('"partition_by" is not allowed for database entities');
+    expect(() => parseSourceYaml(yaml)).toThrow(
+      '"partition_by" is not allowed for database entities',
+    );
   });
 });
 
@@ -1048,7 +1050,9 @@ entities:
       name: events_schema
       version: "1.0.0"
 `;
-    expect(() => parseSourceYaml(yaml)).toThrow('"partition_by" is not allowed for streaming entities');
+    expect(() => parseSourceYaml(yaml)).toThrow(
+      '"partition_by" is not allowed for streaming entities',
+    );
   });
 });
 
@@ -1534,7 +1538,9 @@ entities:
       name: users_schema
       version: "1.0.0"
 `;
-    expect(() => parseSourceYaml(yaml)).toThrow('"partition_by" is not allowed for database entities');
+    expect(() => parseSourceYaml(yaml)).toThrow(
+      '"partition_by" is not allowed for database entities',
+    );
   });
 
   it('should reject forbidden fields cross-type: partition_by on api entity', () => {
@@ -1571,7 +1577,9 @@ entities:
       name: events_schema
       version: "1.0.0"
 `;
-    expect(() => parseSourceYaml(yaml)).toThrow('"partition_by" is not allowed for streaming entities');
+    expect(() => parseSourceYaml(yaml)).toThrow(
+      '"partition_by" is not allowed for streaming entities',
+    );
   });
 
   it('should reject forbidden fields cross-type: partition_by on saas entity', () => {

@@ -8,7 +8,7 @@ entities:
     location: analytics.events
     contract:
       name: events_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Clickstream and user behavior events
     metadata:
       primary_key: event_id
@@ -19,7 +19,7 @@ entities:
     location: analytics.sessions
     contract:
       name: sessions_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: User session aggregations
     metadata:
       primary_key: session_id
@@ -30,7 +30,7 @@ entities:
     location: analytics.experiments
     contract:
       name: experiments_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: A/B test experiment assignments
     metadata:
       primary_key: experiment_id
@@ -40,7 +40,7 @@ entities:
     location: analytics.attribution
     contract:
       name: attribution_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Marketing attribution data
     metadata:
       primary_key: attribution_id
@@ -50,7 +50,7 @@ entities:
     location: analytics.cohorts
     contract:
       name: cohorts_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: User cohort analysis tables
     metadata:
       primary_key: cohort_id

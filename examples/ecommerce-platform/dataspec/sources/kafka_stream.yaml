@@ -10,7 +10,7 @@ entities:
     location: user-events
     contract:
       name: user_events_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Real-time user activity events (clicks, views, actions)
     metadata:
       partitions: 12
@@ -21,7 +21,7 @@ entities:
     location: order-events
     contract:
       name: order_events_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Order lifecycle events (created, updated, completed, cancelled)
     metadata:
       partitions: 24
@@ -32,7 +32,7 @@ entities:
     location: payment-events
     contract:
       name: payment_events_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Payment processing events (initiated, completed, failed, refunded)
     metadata:
       partitions: 12
@@ -43,7 +43,7 @@ entities:
     location: inventory-events
     contract:
       name: inventory_events_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Inventory level changes and stock updates
     metadata:
       partitions: 6
@@ -54,7 +54,7 @@ entities:
     location: notification-events
     contract:
       name: notification_events_stream_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Email, push, and SMS notification delivery events
     metadata:
       partitions: 6
@@ -65,7 +65,7 @@ entities:
     location: analytics-events
     contract:
       name: events_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Aggregated analytics events for real-time dashboards
     metadata:
       partitions: 24

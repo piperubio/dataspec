@@ -44,6 +44,7 @@
 ## 4. Strict Entity Validation by Type
 
 ### Database Entities
+
 - [x] 4.1 Validate `location` required
 - [x] 4.2 Validate `contract` required
 - [x] 4.3 Validate `location` format: `^[a-zA-Z_][a-zA-Z0-9_.]*$` (no `/`, `://`, `?`)
@@ -52,6 +53,7 @@
 - [x] 4.6 Validate `partition_by` NOT allowed
 
 ### API Entities
+
 - [x] 4.7 Validate `location` required
 - [x] 4.8 Validate `contract` required
 - [x] 4.9 Validate `method` required
@@ -62,6 +64,7 @@
 - [x] 4.14 Validate `partition_by` NOT allowed
 
 ### File System Entities
+
 - [x] 4.15 Validate `location` required
 - [x] 4.16 Validate `contract` required
 - [x] 4.17 Validate `format` required
@@ -71,6 +74,7 @@
 - [x] 4.21 Validate `method` NOT allowed
 
 ### Streaming Entities
+
 - [x] 4.22 Validate `contract` required
 - [x] 4.23 Validate `location` required (topic/queue/channel address)
 - [x] 4.24 Validate `method` NOT allowed (strict: streaming uses continuous flow)
@@ -78,6 +82,7 @@
 - [x] 4.26 Validate `partition_by` NOT allowed
 
 ### SaaS Entities
+
 - [x] 4.27 Validate `contract` required
 - [x] 4.28 Validate `location` optional
 - [x] 4.29 Validate `method` NOT allowed
@@ -119,16 +124,19 @@
 ## 8. Tests
 
 ### Unit Tests - Types
+
 - [x] 8.1 Test SourceType enum values
 - [x] 8.2 Test discriminated union for SourceEntity
 
 ### Unit Tests - Database
+
 - [x] 8.3 Test valid database source parsing
 - [x] 8.4 Test database location validation (valid: `public.users`, `analytics.orders`)
 - [x] 8.5 Test database location rejection (invalid: `/api/users`, `s3://bucket`)
 - [x] 8.6 Test database entity forbidden fields (`method`, `format`, `partition_by`)
 
 ### Unit Tests - API
+
 - [x] 8.7 Test valid API source parsing (http, https, grpc)
 - [x] 8.8 Test API source requires `protocol` and `baseUrl`
 - [x] 8.9 Test API location validation (valid: `/api/v1/users`)
@@ -138,6 +146,7 @@
 - [x] 8.13 Test API entity forbidden fields (`format`, `partition_by`)
 
 ### Unit Tests - File System
+
 - [x] 8.14 Test valid file_system source parsing
 - [x] 8.15 Test file_system location validation (valid: `/data/*.csv`, `s3://bucket/path`)
 - [x] 8.16 Test file_system location rejection (invalid: `public.users`)
@@ -146,23 +155,27 @@
 - [x] 8.19 Test file_system entity forbidden fields (`method`)
 
 ### Unit Tests - Streaming
+
 - [x] 8.20 Test valid streaming source parsing (ws, wss, kafka, mqtt, amqp)
 - [x] 8.21 Test streaming source requires `protocol` and `baseUrl`
 - [x] 8.22 Test streaming entity requires `location` (topic/channel address)
 - [x] 8.23 Test streaming entity forbidden fields (`method`, `format`, `partition_by`)
 
 ### Unit Tests - SaaS
+
 - [x] 8.24 Test valid saas source parsing
 - [x] 8.25 Test saas source requires `provider`
 - [x] 8.26 Test saas entity optional `location`
 - [x] 8.27 Test saas entity forbidden fields (`method`, `format`, `partition_by`)
 
 ### Unit Tests - Deprecated Fields
+
 - [x] 8.28 Test `pattern` field rejection
 - [x] 8.29 Test `pathParams` field rejection
 - [x] 8.30 Test `queryParams` field rejection
 
 ### Integration Tests
+
 - [x] 8.31 Test complete database source definition
 - [x] 8.32 Test complete API source definition (http, https, grpc)
 - [x] 8.33 Test complete file_system source definition

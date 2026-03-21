@@ -10,7 +10,7 @@ entities:
     format: csv
     contract:
       name: marketing_campaigns_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Marketing campaign data exported as CSV files
 
   - name: application_logs
@@ -18,7 +18,7 @@ entities:
     format: json
     contract:
       name: application_logs_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Application log files in JSON format
 
   - name: legacy_data_exports
@@ -26,7 +26,7 @@ entities:
     format: parquet
     contract:
       name: legacy_exports_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Historical data exports from legacy system
 
   - name: third_party_datasets
@@ -34,7 +34,7 @@ entities:
     format: parquet
     contract:
       name: third_party_datasets_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: Third-party datasets and enrichments
 
   - name: clickstream_s3
@@ -42,7 +42,7 @@ entities:
     format: json
     contract:
       name: clickstream_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     partition_by:
       - year
       - month
@@ -56,7 +56,7 @@ entities:
     format: avro
     contract:
       name: product_feeds_raw_schema
-      version: "1.0.0"
+      version: '1.0.0'
     description: External product catalog feeds from suppliers
 
 metadata:

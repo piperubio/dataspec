@@ -25,14 +25,20 @@ const DEPRECATED_FIELDS = ['pattern', 'pathParams', 'queryParams'];
 
 function parseContractReference(contract: unknown, entityName: string): ContractReference {
   if (!contract || typeof contract !== 'object') {
-    throw new Error(`Invalid SourceEntity "${entityName}": "contract" is required and must be an object with name and version`);
+    throw new Error(
+      `Invalid SourceEntity "${entityName}": "contract" is required and must be an object with name and version`,
+    );
   }
   const contractObj = contract as Record<string, unknown>;
   if (!contractObj.name || typeof contractObj.name !== 'string') {
-    throw new Error(`Invalid SourceEntity "${entityName}": contract "name" is required and must be a string`);
+    throw new Error(
+      `Invalid SourceEntity "${entityName}": contract "name" is required and must be a string`,
+    );
   }
   if (!contractObj.version || typeof contractObj.version !== 'string') {
-    throw new Error(`Invalid SourceEntity "${entityName}": contract "version" is required and must be a string`);
+    throw new Error(
+      `Invalid SourceEntity "${entityName}": contract "version" is required and must be a string`,
+    );
   }
   return {
     name: contractObj.name,
@@ -58,17 +64,29 @@ function parseDatabaseEntity(entityObj: Record<string, unknown>): SourceEntityDa
   if (!entityObj.location || typeof entityObj.location !== 'string') {
     throw new Error(`Invalid SourceEntity "${name}": "location" is required for database entities`);
   }
-  if (entityObj.location.includes('/') || entityObj.location.includes('://') || entityObj.location.includes('?')) {
-    throw new Error(`Invalid SourceEntity "${name}": database "location" must be a logical identifier (no '/', '://', or '?')`);
+  if (
+    entityObj.location.includes('/') ||
+    entityObj.location.includes('://') ||
+    entityObj.location.includes('?')
+  ) {
+    throw new Error(
+      `Invalid SourceEntity "${name}": database "location" must be a logical identifier (no '/', '://', or '?')`,
+    );
   }
   if ('method' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "method" is not allowed for database entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "method" is not allowed for database entities`,
+    );
   }
   if ('format' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "format" is not allowed for database entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "format" is not allowed for database entities`,
+    );
   }
   if ('partition_by' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "partition_by" is not allowed for database entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "partition_by" is not allowed for database entities`,
+    );
   }
   return {
     name,
@@ -96,7 +114,9 @@ function parseApiEntity(entityObj: Record<string, unknown>): SourceEntityApi {
     throw new Error(`Invalid SourceEntity "${name}": "format" is not allowed for API entities`);
   }
   if ('partition_by' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "partition_by" is not allowed for API entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "partition_by" is not allowed for API entities`,
+    );
   }
   return {
     name,
@@ -113,21 +133,37 @@ function parseApiEntity(entityObj: Record<string, unknown>): SourceEntityApi {
 function parseFileSystemEntity(entityObj: Record<string, unknown>): SourceEntityFileSystem {
   const name = entityObj.name as string;
   if (!entityObj.location || typeof entityObj.location !== 'string') {
-    throw new Error(`Invalid SourceEntity "${name}": "location" is required for file_system entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "location" is required for file_system entities`,
+    );
   }
   const location = entityObj.location;
-  const validLocation = location.startsWith('/') || location.startsWith('.') || location.startsWith('s3://') || location.startsWith('gs://') || location.startsWith('abfs://') || location.startsWith('hdfs://');
+  const validLocation =
+    location.startsWith('/') ||
+    location.startsWith('.') ||
+    location.startsWith('s3://') ||
+    location.startsWith('gs://') ||
+    location.startsWith('abfs://') ||
+    location.startsWith('hdfs://');
   if (!validLocation) {
-    throw new Error(`Invalid SourceEntity "${name}": file_system "location" must start with '/', '.', or a storage URI (s3://, gs://, etc.)`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": file_system "location" must start with '/', '.', or a storage URI (s3://, gs://, etc.)`,
+    );
   }
   if (!entityObj.format || typeof entityObj.format !== 'string') {
-    throw new Error(`Invalid SourceEntity "${name}": "format" is required for file_system entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "format" is required for file_system entities`,
+    );
   }
   if (!VALID_FORMATS.includes(entityObj.format)) {
-    throw new Error(`Invalid SourceEntity "${name}": "format" must be one of: ${VALID_FORMATS.join(', ')}`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "format" must be one of: ${VALID_FORMATS.join(', ')}`,
+    );
   }
   if ('method' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "method" is not allowed for file_system entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "method" is not allowed for file_system entities`,
+    );
   }
   let partitionBy: string[] | undefined;
   if (entityObj.partition_by !== undefined) {
@@ -152,16 +188,24 @@ function parseFileSystemEntity(entityObj: Record<string, unknown>): SourceEntity
 function parseStreamingEntity(entityObj: Record<string, unknown>): SourceEntityStreaming {
   const name = entityObj.name as string;
   if (!entityObj.location || typeof entityObj.location !== 'string') {
-    throw new Error(`Invalid SourceEntity "${name}": "location" is required for streaming entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "location" is required for streaming entities`,
+    );
   }
   if ('method' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "method" is not allowed for streaming entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "method" is not allowed for streaming entities`,
+    );
   }
   if ('format' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "format" is not allowed for streaming entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "format" is not allowed for streaming entities`,
+    );
   }
   if ('partition_by' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "partition_by" is not allowed for streaming entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "partition_by" is not allowed for streaming entities`,
+    );
   }
   return {
     name,
@@ -183,7 +227,9 @@ function parseSaasEntity(entityObj: Record<string, unknown>): SourceEntitySaas {
     throw new Error(`Invalid SourceEntity "${name}": "format" is not allowed for saas entities`);
   }
   if ('partition_by' in entityObj) {
-    throw new Error(`Invalid SourceEntity "${name}": "partition_by" is not allowed for saas entities`);
+    throw new Error(
+      `Invalid SourceEntity "${name}": "partition_by" is not allowed for saas entities`,
+    );
   }
   return {
     name,
@@ -197,7 +243,9 @@ function parseSaasEntity(entityObj: Record<string, unknown>): SourceEntitySaas {
 }
 
 function parseMetadata(metadata: unknown): Record<string, unknown> | undefined {
-  if (!metadata || typeof metadata !== 'object') {return undefined;}
+  if (!metadata || typeof metadata !== 'object') {
+    return undefined;
+  }
   const meta = metadata as Record<string, unknown>;
   return {
     description: meta.description as string | undefined,
@@ -225,7 +273,9 @@ export function parseSourceYaml(yamlContent: string): Source {
   }
 
   if (!VALID_SOURCE_TYPES.includes(type as SourceType)) {
-    throw new Error(`Invalid Source type: "${type}". Must be one of: ${VALID_SOURCE_TYPES.join(', ')}`);
+    throw new Error(
+      `Invalid Source type: "${type}". Must be one of: ${VALID_SOURCE_TYPES.join(', ')}`,
+    );
   }
 
   if (!entities || !Array.isArray(entities)) {
@@ -270,7 +320,9 @@ export function parseSourceYaml(yamlContent: string): Source {
         type: 'database',
         entities: parsedEntities as SourceEntityDatabase[],
       };
-      if (meta) {source.metadata = meta;}
+      if (meta) {
+        source.metadata = meta;
+      }
       return source;
     }
     case 'api': {
@@ -279,7 +331,9 @@ export function parseSourceYaml(yamlContent: string): Source {
         throw new Error('Invalid Source: "protocol" is required for api sources');
       }
       if (!VALID_API_PROTOCOLS.includes(parsedObj.protocol)) {
-        throw new Error(`Invalid Source: "protocol" must be one of: ${VALID_API_PROTOCOLS.join(', ')} for api sources`);
+        throw new Error(
+          `Invalid Source: "protocol" must be one of: ${VALID_API_PROTOCOLS.join(', ')} for api sources`,
+        );
       }
       if (!parsedObj.baseUrl || typeof parsedObj.baseUrl !== 'string') {
         throw new Error('Invalid Source: "baseUrl" is required for api sources');
@@ -291,7 +345,9 @@ export function parseSourceYaml(yamlContent: string): Source {
         baseUrl: parsedObj.baseUrl,
         entities: parsedEntities as SourceEntityApi[],
       };
-      if (meta) {source.metadata = meta;}
+      if (meta) {
+        source.metadata = meta;
+      }
       return source;
     }
     case 'file_system': {
@@ -300,7 +356,9 @@ export function parseSourceYaml(yamlContent: string): Source {
         type: 'file_system',
         entities: parsedEntities as SourceEntityFileSystem[],
       };
-      if (meta) {source.metadata = meta;}
+      if (meta) {
+        source.metadata = meta;
+      }
       return source;
     }
     case 'streaming': {
@@ -309,7 +367,9 @@ export function parseSourceYaml(yamlContent: string): Source {
         throw new Error('Invalid Source: "protocol" is required for streaming sources');
       }
       if (!VALID_STREAMING_PROTOCOLS.includes(parsedObj.protocol)) {
-        throw new Error(`Invalid Source: "protocol" must be one of: ${VALID_STREAMING_PROTOCOLS.join(', ')} for streaming sources`);
+        throw new Error(
+          `Invalid Source: "protocol" must be one of: ${VALID_STREAMING_PROTOCOLS.join(', ')} for streaming sources`,
+        );
       }
       if (!parsedObj.baseUrl || typeof parsedObj.baseUrl !== 'string') {
         throw new Error('Invalid Source: "baseUrl" is required for streaming sources');
@@ -321,7 +381,9 @@ export function parseSourceYaml(yamlContent: string): Source {
         baseUrl: parsedObj.baseUrl,
         entities: parsedEntities as SourceEntityStreaming[],
       };
-      if (meta) {source.metadata = meta;}
+      if (meta) {
+        source.metadata = meta;
+      }
       return source;
     }
     case 'saas': {
@@ -335,7 +397,9 @@ export function parseSourceYaml(yamlContent: string): Source {
         provider: parsedObj.provider,
         entities: parsedEntities as SourceEntitySaas[],
       };
-      if (meta) {source.metadata = meta;}
+      if (meta) {
+        source.metadata = meta;
+      }
       return source;
     }
     default:

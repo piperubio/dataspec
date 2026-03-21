@@ -255,7 +255,12 @@ export class Validator {
     }
   }
 
-  private validateContractReference(contractRef: { name: string; version: string }, entityName: string, file: string, line: number): void {
+  private validateContractReference(
+    contractRef: { name: string; version: string },
+    entityName: string,
+    file: string,
+    line: number,
+  ): void {
     const contractExists = this.workspace.contracts.some((c) => c.name === contractRef.name);
     if (!contractExists) {
       this.errors.push(
@@ -361,7 +366,10 @@ export class Validator {
       );
     } else {
       const protocol = (source as any).protocol;
-      if ((protocol === 'http' || protocol === 'https') && !HTTP_METHODS.includes(entity.method.toUpperCase())) {
+      if (
+        (protocol === 'http' || protocol === 'https') &&
+        !HTTP_METHODS.includes(entity.method.toUpperCase())
+      ) {
         this.errors.push(
           createError(
             `Invalid HTTP method '${entity.method}'. Must be one of: ${HTTP_METHODS.join(', ')}`,
@@ -405,9 +413,10 @@ export class Validator {
         ),
       );
     } else {
-      const validPath = entity.location.startsWith('/') || 
-                        entity.location.startsWith('.') ||
-                        /^[a-z][a-z0-9]*:\/\//.test(entity.location);
+      const validPath =
+        entity.location.startsWith('/') ||
+        entity.location.startsWith('.') ||
+        /^[a-z][a-z0-9]*:\/\//.test(entity.location);
       if (!validPath) {
         this.errors.push(
           createError(
