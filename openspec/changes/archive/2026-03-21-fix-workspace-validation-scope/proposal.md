@@ -11,9 +11,11 @@ The dataspec CLI `validate` command is incorrectly scanning and validating resou
 ## Capabilities
 
 ### New Capabilities
+
 - `workspace-boundary-validation`: Properly constrain validation scope to the dataspec workspace folder only
 
 ### Modified Capabilities
+
 <!-- No existing spec-level requirement changes - this is a bug fix in implementation -->
 
 ## Impact

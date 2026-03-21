@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: users_raw_schema
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Raw user data ingested from production database

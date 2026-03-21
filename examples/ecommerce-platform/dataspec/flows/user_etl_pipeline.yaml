@@ -8,38 +8,38 @@ steps:
     source: production_db
     entity: users
     output: raw_users
-    
+
   # Step 2: Transform raw users to refined format
   - type: transform
     inputs:
       - raw_users
     engine: dbt-transforms
     output: transformed_users
-    
+
   # Step 3: Load to raw layer
   - type: load
     input: raw_users
     target: users_raw
-    
+
   # Step 4: Transform for refined layer with data quality checks
   - type: transform
     inputs:
       - raw_users
     engine: dbt-transforms
     output: refined_users
-    
+
   # Step 5: Load to refined layer
   - type: load
     input: refined_users
     target: users_refined
-    
+
   # Step 6: Transform for customer analytics (serving layer)
   - type: transform
     inputs:
       - refined_users
     engine: dbt-transforms
     output: customer_metrics
-    
+
   # Step 7: Load to serving layer
   - type: load
     input: customer_metrics
@@ -47,7 +47,7 @@ steps:
 
 metadata:
   description: Complete ETL pipeline for user data from production to serving layer
-  version: "1.0.0"
+  version: '1.0.0'
   labels:
     - etl
     - users

@@ -13,6 +13,7 @@ Currently, dataspec manages dataset, source, and flow definitions as YAML files 
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Enable dataspec to connect to a DataHub instance via its GraphQL API
 - Provide CLI commands to sync datasets, sources, and lineages to DataHub on-demand
 - Map dataspec concepts (datasets, sources, flows) to DataHub entity models
@@ -20,6 +21,7 @@ Currently, dataspec manages dataset, source, and flow definitions as YAML files 
 - Store DataHub connection configuration in `platform.yaml`
 
 **Non-Goals:**
+
 - Bidirectional sync (pulling metadata FROM DataHub into dataspec)
 - Automatic sync on file changes (manual sync only via CLI)
 - DataHub deployment or installation support
@@ -34,6 +36,7 @@ Currently, dataspec manages dataset, source, and flow definitions as YAML files 
 **Rationale**: The official DataHub SDKs are tightly coupled and have shown API compatibility issues across versions. DataHub's GraphQL API is stable and well-documented. A minimal GraphQL client with typed operations is sufficient for our needs and avoids unnecessary dependencies.
 
 **Alternatives considered**:
+
 - `@datahub/data-models`: Official SDK - rejected due to coupling and version stability concerns
 - REST API fallback: DataHub's REST API is secondary to GraphQL and less feature-complete
 
@@ -43,13 +46,14 @@ Currently, dataspec manages dataset, source, and flow definitions as YAML files 
 
 ```yaml
 datahub:
-  gms_url: "https://datahub.company.com/api/gms"
-  token: "${DATAHUB_TOKEN}"  # Supports env var reference
+  gms_url: 'https://datahub.company.com/api/gms'
+  token: '${DATAHUB_TOKEN}' # Supports env var reference
 ```
 
 **Rationale**: Following existing dataspec patterns where platform-wide configurations live in `platform.yaml`. Keeps all platform configuration in one place.
 
 **Alternatives considered**:
+
 - Separate `datahub.yaml`:files configuration across files, goes against existing patterns
 - CLI flags only: No persistent configuration, bad UX for repeated sync operations
 
@@ -58,11 +62,13 @@ datahub:
 **Decision**: Map each `transform` step to a dataset-to-dataset lineage edge in DataHub.
 
 **Rationale**: In DataHub, dataset lineage is represented as edges between dataset entities. A dataspec flow with extract→transform→load creates:
+
 - Extract: raw dataset (no lineage edge, it's a source)
 - Transform: connects raw dataset → refined dataset (lineage edge)
 - Load: connects refined dataset → serving dataset (lineage edge)
 
 **Alternatives considered**:
+
 - Map each step: Would create spurious lineage edges for extract/load which are data movement, not transformation
 - Map only flow-level: Loses granularity within multi-step flows
 
@@ -73,6 +79,7 @@ datahub:
 **Rationale**: Follows existing CLI patterns (e.g., `git remote`, `docker container`). Each resource type has its own sync operation for flexibility.
 
 **Alternatives considered**:
+
 - Single `sync` command with flags: Less flexible, harder to extend
 - `dataspec push datahub`: "Push" semantics assume directionality, less clear
 
@@ -92,10 +99,10 @@ datahub:
 ## Open Questions
 
 1. Should we support DataHub's aspect system for extended metadata (ownership, tags, description)?
-This aspects would be defined in the dataspec metadata and synced as part of the dataset entity definition.
+   This aspects would be defined in the dataspec metadata and synced as part of the dataset entity definition.
 
 2. Do we need to handle DataHub's soft-delete behavior (deleted entities marked as removed)?
-  For simplicity, we will not implement delete operations in the initial version. Syncing will only create/update entities. Deletion can be considered in a future enhancement.
+   For simplicity, we will not implement delete operations in the initial version. Syncing will only create/update entities. Deletion can be considered in a future enhancement.
 
 3. Should the sync operation be idempotent (re-sync updates existing entities)?
-  YES!
+   YES!

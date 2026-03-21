@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: sales_dashboard_contract
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Aggregated sales metrics for real-time dashboards and reporting

@@ -1,158 +1,140 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "additionalProperties": false,
-    "definitions": {
-        "ExtractStep": {
-            "additionalProperties": false,
-            "description": "Extract step - reads data from a source.\nThis is the first step in an ETL pipeline.",
-            "properties": {
-                "entity": {
-                    "description": "Entity name within the source",
-                    "type": "string"
-                },
-                "output": {
-                    "description": "Output variable name to reference this data in subsequent steps",
-                    "type": "string"
-                },
-                "source": {
-                    "description": "Reference to the source resource (e.g., 'my_database.users')",
-                    "type": "string"
-                },
-                "type": {
-                    "const": "extract",
-                    "description": "Discriminant type",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "entity",
-                "output",
-                "source",
-                "type"
-            ],
-            "type": "object"
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "ExtractStep": {
+      "additionalProperties": false,
+      "description": "Extract step - reads data from a source.\nThis is the first step in an ETL pipeline.",
+      "properties": {
+        "entity": {
+          "description": "Entity name within the source",
+          "type": "string"
         },
-        "FlowMetadata": {
-            "additionalProperties": false,
-            "description": "Metadata for a Flow resource.",
-            "properties": {
-                "definedAt": {
-                    "description": "Location where the flow was defined",
-                    "type": "string"
-                },
-                "description": {
-                    "description": "Human-readable description of the flow",
-                    "type": "string"
-                },
-                "labels": {
-                    "description": "Labels for categorization and filtering",
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "version": {
-                    "description": "Version of the flow",
-                    "type": "string"
-                }
-            },
-            "type": "object"
+        "output": {
+          "description": "Output variable name to reference this data in subsequent steps",
+          "type": "string"
         },
-        "FlowStep": {
-            "anyOf": [
-                {
-                    "$ref": "#/definitions/ExtractStep"
-                },
-                {
-                    "$ref": "#/definitions/TransformStep"
-                },
-                {
-                    "$ref": "#/definitions/LoadStep"
-                }
-            ],
-            "description": "Union type for all flow step types.\nUses discriminated union pattern with 'type' property."
+        "source": {
+          "description": "Reference to the source resource (e.g., 'my_database.users')",
+          "type": "string"
         },
-        "LoadStep": {
-            "additionalProperties": false,
-            "description": "Load step - writes data to the serving layer.\nThis is the final step in an ETL pipeline.",
-            "properties": {
-                "input": {
-                    "description": "Input variable name from a previous step",
-                    "type": "string"
-                },
-                "target": {
-                    "description": "Reference to the target dataset (e.g., 'warehouse.customers')",
-                    "type": "string"
-                },
-                "type": {
-                    "const": "load",
-                    "description": "Discriminant type",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "input",
-                "target",
-                "type"
-            ],
-            "type": "object"
-        },
-        "TransformStep": {
-            "additionalProperties": false,
-            "description": "Transform step - applies transformations to data.\nThis is the middle step in an ETL pipeline.",
-            "properties": {
-                "engine": {
-                    "description": "Reference to the transformation engine by name",
-                    "type": "string"
-                },
-                "inputs": {
-                    "description": "Input variable names from previous steps",
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "output": {
-                    "description": "Output variable name to reference transformed data in subsequent steps",
-                    "type": "string"
-                },
-                "type": {
-                    "const": "transform",
-                    "description": "Discriminant type",
-                    "type": "string"
-                }
-            },
-            "required": [
-                "engine",
-                "inputs",
-                "output",
-                "type"
-            ],
-            "type": "object"
+        "type": {
+          "const": "extract",
+          "description": "Discriminant type",
+          "type": "string"
         }
+      },
+      "required": ["entity", "output", "source", "type"],
+      "type": "object"
     },
-    "description": "Flow resource - defines a data pipeline with ordered steps.\nFlows orchestrate the movement and transformation of data\nfrom sources through transformations to serving layer datasets.",
-    "properties": {
-        "metadata": {
-            "$ref": "#/definitions/FlowMetadata",
-            "description": "Optional metadata for the flow"
+    "FlowMetadata": {
+      "additionalProperties": false,
+      "description": "Metadata for a Flow resource.",
+      "properties": {
+        "definedAt": {
+          "description": "Location where the flow was defined",
+          "type": "string"
         },
-        "name": {
-            "description": "Unique name for the flow",
+        "description": {
+          "description": "Human-readable description of the flow",
+          "type": "string"
+        },
+        "labels": {
+          "description": "Labels for categorization and filtering",
+          "items": {
             "type": "string"
+          },
+          "type": "array"
         },
-        "steps": {
-            "description": "Ordered list of pipeline steps (extract → transform → load)",
-            "items": {
-                "$ref": "#/definitions/FlowStep"
-            },
-            "type": "array"
+        "version": {
+          "description": "Version of the flow",
+          "type": "string"
         }
+      },
+      "type": "object"
     },
-    "required": [
-        "name",
-        "steps"
-    ],
-    "type": "object"
+    "FlowStep": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ExtractStep"
+        },
+        {
+          "$ref": "#/definitions/TransformStep"
+        },
+        {
+          "$ref": "#/definitions/LoadStep"
+        }
+      ],
+      "description": "Union type for all flow step types.\nUses discriminated union pattern with 'type' property."
+    },
+    "LoadStep": {
+      "additionalProperties": false,
+      "description": "Load step - writes data to the serving layer.\nThis is the final step in an ETL pipeline.",
+      "properties": {
+        "input": {
+          "description": "Input variable name from a previous step",
+          "type": "string"
+        },
+        "target": {
+          "description": "Reference to the target dataset (e.g., 'warehouse.customers')",
+          "type": "string"
+        },
+        "type": {
+          "const": "load",
+          "description": "Discriminant type",
+          "type": "string"
+        }
+      },
+      "required": ["input", "target", "type"],
+      "type": "object"
+    },
+    "TransformStep": {
+      "additionalProperties": false,
+      "description": "Transform step - applies transformations to data.\nThis is the middle step in an ETL pipeline.",
+      "properties": {
+        "engine": {
+          "description": "Reference to the transformation engine by name",
+          "type": "string"
+        },
+        "inputs": {
+          "description": "Input variable names from previous steps",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
+        "output": {
+          "description": "Output variable name to reference transformed data in subsequent steps",
+          "type": "string"
+        },
+        "type": {
+          "const": "transform",
+          "description": "Discriminant type",
+          "type": "string"
+        }
+      },
+      "required": ["engine", "inputs", "output", "type"],
+      "type": "object"
+    }
+  },
+  "description": "Flow resource - defines a data pipeline with ordered steps.\nFlows orchestrate the movement and transformation of data\nfrom sources through transformations to serving layer datasets.",
+  "properties": {
+    "metadata": {
+      "$ref": "#/definitions/FlowMetadata",
+      "description": "Optional metadata for the flow"
+    },
+    "name": {
+      "description": "Unique name for the flow",
+      "type": "string"
+    },
+    "steps": {
+      "description": "Ordered list of pipeline steps (extract → transform → load)",
+      "items": {
+        "$ref": "#/definitions/FlowStep"
+      },
+      "type": "array"
+    }
+  },
+  "required": ["name", "steps"],
+  "type": "object"
 }
-

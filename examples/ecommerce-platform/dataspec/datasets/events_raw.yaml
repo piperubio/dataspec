@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: events_raw_schema
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Raw clickstream and analytics events ingested from analytics database

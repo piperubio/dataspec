@@ -1,5 +1,5 @@
 /**
-* Dataset resource types for dataspec (Declarative Data Platform Architecture)
+ * Dataset resource types for dataspec (Declarative Data Platform Architecture)
  * @module types/dataset
  */
 

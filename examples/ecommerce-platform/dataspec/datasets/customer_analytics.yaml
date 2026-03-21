@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: customer_analytics_contract
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Aggregated customer analytics with lifetime value, purchase frequency, and segmentation

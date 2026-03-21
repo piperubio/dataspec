@@ -1,10 +1,5 @@
 import { Workspace } from '../parsing/index.js';
-import {
-  DependencyGraph,
-  createGraph,
-  addNode,
-  addEdge,
-} from './types.js';
+import { DependencyGraph, createGraph, addNode, addEdge } from './types.js';
 
 /**
  * Builds a dependency graph from a parsed workspace.

@@ -10,7 +10,7 @@ entities:
     metadata:
       primary_key: user_id
       estimated_rows: 5000000
-      
+
   - name: orders
     description: Order transactions including status and totals
     entityType: table
@@ -19,7 +19,7 @@ entities:
       foreign_keys:
         - user_id: users.user_id
       estimated_rows: 25000000
-      
+
   - name: order_items
     description: Individual items within orders with quantities and prices
     entityType: table
@@ -29,7 +29,7 @@ entities:
         - order_id: orders.order_id
         - product_id: products.product_id
       estimated_rows: 75000000
-      
+
   - name: products
     description: Product catalog with pricing and inventory
     entityType: table
@@ -38,14 +38,14 @@ entities:
       foreign_keys:
         - category_id: categories.category_id
       estimated_rows: 500000
-      
+
   - name: categories
     description: Product categories hierarchy
     entityType: table
     metadata:
       primary_key: category_id
       estimated_rows: 500
-      
+
   - name: inventory
     description: Real-time inventory tracking by product and warehouse
     entityType: table
@@ -54,7 +54,7 @@ entities:
       foreign_keys:
         - product_id: products.product_id
       estimated_rows: 1000000
-      
+
   - name: reviews
     description: Customer product reviews and ratings
     entityType: table
@@ -69,7 +69,7 @@ metadata:
   description: Primary production PostgreSQL database containing all transactional data
   owner: data-engineering-team
   refresh_frequency: realtime
-  sla: "99.99%"
+  sla: '99.99%'
   tags:
     - production
     - transactional

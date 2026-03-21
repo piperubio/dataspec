@@ -1,8 +1,5 @@
-import type {
-  PlatformConfig,
-  StorageBackend,
-  AnalyticsEngine,
-} from '@dataspec/dataspec-core';
+import type { PlatformConfig, StorageBackend, AnalyticsEngine } from '@dataspec/dataspec-core';
+
 import type {
   Workspace,
   ParsedSource,
@@ -150,7 +147,7 @@ export function createMockETLFlow(
   rawDataset: string,
   refinedDataset: string,
   servingDataset: string,
-  overrides?: Partial<ParsedFlow>
+  overrides?: Partial<ParsedFlow>,
 ): ParsedFlow {
   return {
     name: `${sourceName}-pipeline`,
@@ -185,9 +182,9 @@ export function generatePlatformYaml(platform: Partial<PlatformConfig> = {}): st
 name: ${p.name}
 version: ${p.version}
 storage:
-${p.storage.map(s => `  - name: ${s.name}\n    type: ${s.type}`).join('\n')}
+${p.storage.map((s) => `  - name: ${s.name}\n    type: ${s.type}`).join('\n')}
 engines:
-${p.engines.map(e => `  - name: ${e.name}\n    type: ${e.type}`).join('\n')}
+${p.engines.map((e) => `  - name: ${e.name}\n    type: ${e.type}`).join('\n')}
 defaults:
   storage: ${p.defaults.storage}
   engine: ${p.defaults.engine}
@@ -200,7 +197,7 @@ export function generateSourceYaml(source: Partial<ParsedSource> = {}): string {
 name: ${s.name}
 type: ${s.type}
 entities:
-${s.entities.map(e => `  - name: ${e.name}\n    type: ${e.type}`).join('\n')}
+${s.entities.map((e) => `  - name: ${e.name}\n    type: ${e.type}`).join('\n')}
 `.trim();
 }
 
@@ -210,16 +207,24 @@ export function generateContractYaml(contract: Partial<ParsedContract> = {}): st
 name: ${c.name}
 version: ${c.version}
 fields:
-${c.fields.map(f => {
-  let fieldStr = `  - name: ${f.name}\n    type: ${f.type}`;
-  if (f.constraints) {
-    fieldStr += '\n    constraints:';
-    if (f.constraints.not_null) fieldStr += '\n      not_null: true';
-    if (f.constraints.unique) fieldStr += '\n      unique: true';
-    if (f.constraints.ref) fieldStr += `\n      ref: ${f.constraints.ref}`;
-  }
-  return fieldStr;
-}).join('\n')}
+${c.fields
+  .map((f) => {
+    let fieldStr = `  - name: ${f.name}\n    type: ${f.type}`;
+    if (f.constraints) {
+      fieldStr += '\n    constraints:';
+      if (f.constraints.not_null) {
+        fieldStr += '\n      not_null: true';
+      }
+      if (f.constraints.unique) {
+        fieldStr += '\n      unique: true';
+      }
+      if (f.constraints.ref) {
+        fieldStr += `\n      ref: ${f.constraints.ref}`;
+      }
+    }
+    return fieldStr;
+  })
+  .join('\n')}
 `.trim();
 }
 
@@ -245,26 +250,29 @@ export function generateFlowYaml(flow: Partial<ParsedFlow> = {}): string {
   return `
 name: ${f.name}
 steps:
-${f.steps.map(step => {
-  if (step.type === 'extract') {
-    return `  - type: extract\n    source: ${step.source}\n    entity: ${step.entity}`;
-  } else if (step.type === 'transform') {
-    return `  - type: transform\n    inputs:\n${step.inputs.map(i => `      - ${i}`).join('\n')}\n    engine: ${step.engine}\n    output: ${step.output}`;
-  } else {
+${f.steps
+  .map((step) => {
+    if (step.type === 'extract') {
+      return `  - type: extract\n    source: ${step.source}\n    entity: ${step.entity}`;
+    } else if (step.type === 'transform') {
+      return `  - type: transform\n    inputs:\n${step.inputs.map((i) => `      - ${i}`).join('\n')}\n    engine: ${step.engine}\n    output: ${step.output}`;
+    }
     return `  - type: load\n    input: ${step.input}\n    target: ${step.target}`;
-  }
-}).join('\n')}
+  })
+  .join('\n')}
 `.trim();
 }
 
 // Assertion Helpers
 export function expectValidationError(
   result: { errors: Array<{ message: string; code?: string }> },
-  code: string
+  code: string,
 ): void {
-  const found = result.errors.some(e => e.code === code);
+  const found = result.errors.some((e) => e.code === code);
   if (!found) {
-    throw new Error(`Expected validation error with code '${code}' but not found. Errors: ${JSON.stringify(result.errors)}`);
+    throw new Error(
+      `Expected validation error with code '${code}' but not found. Errors: ${JSON.stringify(result.errors)}`,
+    );
   }
 }
 
@@ -276,10 +284,12 @@ export function expectNoValidationErrors(result: { errors: Array<unknown> }): vo
 
 export function expectValidationWarning(
   result: { warnings: Array<{ message: string; code?: string }> },
-  code: string
+  code: string,
 ): void {
-  const found = result.warnings.some(w => w.code === code);
+  const found = result.warnings.some((w) => w.code === code);
   if (!found) {
-    throw new Error(`Expected validation warning with code '${code}' but not found. Warnings: ${JSON.stringify(result.warnings)}`);
+    throw new Error(
+      `Expected validation warning with code '${code}' but not found. Warnings: ${JSON.stringify(result.warnings)}`,
+    );
   }
 }

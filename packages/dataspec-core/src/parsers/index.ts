@@ -1,5 +1,5 @@
 /**
-* Parsers for dataspec YAML resources.
+ * Parsers for dataspec YAML resources.
  * @module parsers
  */
 

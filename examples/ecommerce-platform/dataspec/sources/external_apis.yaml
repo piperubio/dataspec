@@ -19,14 +19,14 @@ entities:
     metadata:
       provider: fedex-ups-dhl
       rate_limit: 5000
-      
+
   - name: shipping_rates
     description: Real-time shipping rate calculations
     entityType: endpoint
     method: POST
     metadata:
       cache_duration: 1800
-      
+
   - name: delivery_estimates
     description: Estimated delivery dates
     entityType: endpoint
@@ -37,7 +37,7 @@ entities:
       - service_type
     metadata:
       cache_duration: 3600
-      
+
   # Marketing Platform API
   - name: campaigns
     description: Marketing campaign metadata
@@ -51,7 +51,7 @@ entities:
     metadata:
       provider: hubspot/marketo
       rate_limit: 1000
-      
+
   - name: email_metrics
     description: Email campaign performance metrics
     entityType: endpoint
@@ -62,7 +62,7 @@ entities:
       - date_range
     metadata:
       rate_limit: 500
-      
+
   - name: ad_spend
     description: Advertising spend by platform and campaign
     entityType: endpoint
@@ -75,7 +75,7 @@ entities:
     metadata:
       provider: google-ads-meta
       rate_limit: 300
-      
+
   # Customer Support API
   - name: support_tickets
     description: Customer support ticket data
@@ -89,7 +89,7 @@ entities:
     metadata:
       provider: zendesk
       rate_limit: 700
-      
+
   - name: customer_satisfaction
     description: CSAT and NPS survey responses
     entityType: endpoint

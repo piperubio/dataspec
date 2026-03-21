@@ -11,11 +11,13 @@ The DataSpec core validates data platform configurations but does not generate c
 ## Capabilities
 
 ### New Capabilities
+
 - `documentation-generation`: Generate Markdown documentation with Mermaid lineage graphs, dataset catalog tables, and contract reference docs. GitHub-renderable.
 - `cli-tooling` (advanced): `dataspec inspect` — model inspection command (inspect overview, specific dataset, specific flow, lineage)
 
 ### Modified Capabilities
-- *(none — this is a pure enhancement change)*
+
+- _(none — this is a pure enhancement change)_
 
 ## Impact
 

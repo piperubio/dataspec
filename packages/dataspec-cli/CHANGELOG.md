@@ -15,6 +15,7 @@ All notable changes to this project will be documented in this file.
 ## [0.1.0] - 2026-03-13
 
 ### Added
+
 - Initial release of DataSpec CLI
 - `dataspec init` command for scaffolding new projects
 - `dataspec validate` command for workspace validation

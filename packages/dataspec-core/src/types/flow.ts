@@ -19,7 +19,7 @@ export const StepType = {
 /**
  * Step type values.
  */
-export type StepType = typeof StepType[keyof typeof StepType];
+export type StepType = (typeof StepType)[keyof typeof StepType];
 
 /**
  * Metadata for a Flow resource.

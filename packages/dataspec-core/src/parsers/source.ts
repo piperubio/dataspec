@@ -1,13 +1,14 @@
 import { parse } from 'yaml';
+
 import type { Source, SourceEntity, SourceType } from '../types/source';
 
 /**
  * Parses a YAML content string into a typed Source object
- * 
+ *
  * @param yamlContent - The YAML string to parse
  * @returns A typed Source object
  * @throws Error if YAML parsing fails or required fields are missing
- * 
+ *
  * @example
  * ```typescript
  * const yaml = `

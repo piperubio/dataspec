@@ -1,0 +1,23 @@
+{
+  "name": "dataspec-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "test": "bun test",
+    "test:core": "bun --filter @dataspec/dataspec-core test",
+    "test:cli": "bun --filter @dataspec/dataspec-cli test",
+    "typecheck": "bun run --filter '*' typecheck",
+    "build": "bun --filter @dataspec/dataspec-cli build",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check"
+  },
+  "devDependencies": {
+    "oxfmt": "^0.41.0",
+    "oxlint": "^1.56.0",
+    "typescript": "^5.3.0"
+  }
+}

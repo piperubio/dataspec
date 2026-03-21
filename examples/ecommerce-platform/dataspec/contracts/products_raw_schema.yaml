@@ -2,71 +2,71 @@
 # Defines the expected schema from the production products table
 
 name: products_raw_schema
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: product_id
     type: uuid
     constraints:
       not_null: true
     description: Product primary key
-    
+
   - name: sku
     type: string
     constraints:
       not_null: true
       unique: true
     description: Stock keeping unit
-    
+
   - name: name
     type: string
     constraints:
       not_null: true
     description: Product name
-    
+
   - name: description
     type: string
     description: Product description
-    
+
   - name: category_id
     type: uuid
     constraints:
       not_null: true
     description: Reference to categories
-    
+
   - name: price
     type: decimal
     constraints:
       not_null: true
     description: Current price
-    
+
   - name: cost_price
     type: decimal
     description: Cost price for margin calculation
-    
+
   - name: weight_kg
     type: decimal
     description: Product weight in kilograms
-    
+
   - name: dimensions
     type: json
     description: JSON with length, width, height
-    
+
   - name: is_active
     type: boolean
     constraints:
       not_null: true
     description: Whether product is active
-    
+
   - name: stock_quantity
     type: integer
     description: Current stock quantity
-    
+
   - name: created_at
     type: timestamp
     constraints:
       not_null: true
     description: When product was created
-    
+
   - name: updated_at
     type: timestamp
     description: Last update

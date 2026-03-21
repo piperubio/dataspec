@@ -2,64 +2,64 @@
 # Defines the expected schema from the payment API
 
 name: payments_raw_schema
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: payment_id
     type: uuid
     constraints:
       not_null: true
     description: Payment transaction ID
-    
+
   - name: order_id
     type: uuid
     constraints:
       not_null: true
     description: Reference to order
-    
+
   - name: user_id
     type: uuid
     description: User who made payment
-    
+
   - name: amount
     type: decimal
     constraints:
       not_null: true
     description: Payment amount
-    
+
   - name: currency
     type: string
     constraints:
       not_null: true
     description: Currency code
-    
+
   - name: status
     type: string
     constraints:
       not_null: true
     description: Payment status (pending, completed, failed, refunded)
-    
+
   - name: payment_method
     type: string
     description: Payment method type (card, paypal, bank_transfer)
-    
+
   - name: gateway_transaction_id
     type: string
     description: Transaction ID from payment gateway
-    
+
   - name: gateway_response
     type: json
     description: Full gateway response JSON
-    
+
   - name: processed_at
     type: timestamp
     description: When payment was processed
-    
+
   - name: created_at
     type: timestamp
     constraints:
       not_null: true
     description: When payment record was created
-    
+
   - name: metadata
     type: json
     description: Additional payment metadata

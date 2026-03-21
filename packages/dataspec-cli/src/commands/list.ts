@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+
 import { parseWorkspace, type Workspace } from '../parsing/index.js';
 
 export const listCommand = new Command()
@@ -13,12 +14,18 @@ export const listCommand = new Command()
 
       if (!resource) {
         if (options.format === 'json') {
-          console.log(JSON.stringify({
-            sources: workspace.sources.length,
-            datasets: workspace.datasets.length,
-            contracts: workspace.contracts.length,
-            flows: workspace.flows.length,
-          }, null, 2));
+          console.log(
+            JSON.stringify(
+              {
+                sources: workspace.sources.length,
+                datasets: workspace.datasets.length,
+                contracts: workspace.contracts.length,
+                flows: workspace.flows.length,
+              },
+              null,
+              2,
+            ),
+          );
         } else {
           console.log('Workspace Summary:');
           console.log(`  Sources: ${workspace.sources.length}`);
@@ -92,11 +99,13 @@ function listDatasets(workspace: Workspace, options: { format: string }): void {
 }
 
 function listContracts(workspace: Workspace, options: { format: string }): void {
-  const contracts = workspace.contracts.map((c: { name: string; version: string; fields: unknown[] }) => ({
-    name: c.name,
-    version: c.version,
-    fields: c.fields.length,
-  }));
+  const contracts = workspace.contracts.map(
+    (c: { name: string; version: string; fields: unknown[] }) => ({
+      name: c.name,
+      version: c.version,
+      fields: c.fields.length,
+    }),
+  );
 
   if (options.format === 'json') {
     console.log(JSON.stringify(contracts, null, 2));

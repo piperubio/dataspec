@@ -11,6 +11,7 @@ The validation engine serves as the correctness layer that operates on the dpac-
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Build a validation engine that checks graph integrity (cycles, orphans), cross-resource references, contract consistency, and step type coherence
 - Detect breaking changes via workspace-wide dependency graph analysis (NOT Git history comparison)
 - Provide a CLI with `validate`, `init`, `--version`, and `--help` commands
@@ -18,6 +19,7 @@ The validation engine serves as the correctness layer that operates on the dpac-
 - Design for CI/CD integration (exit codes, machine-readable output)
 
 **Non-Goals:**
+
 - Git-based breaking change detection (using diff against history)
 - Real-time validation feedback (LSP server is a separate change)
 - Documentation generation or `dpac inspect` (moved to dpac-docs change)
@@ -28,14 +30,17 @@ The validation engine serves as the correctness layer that operates on the dpac-
 ## Decisions
 
 ### Decision: Workspace-level breaking change detection via dependency graph analysis
+
 **Rationale**: Breaking changes should be detected by analyzing the current state of the workspace, not by comparing against Git history. The workspace contains all resources (contracts, datasets, flows) and their relationships. If a contract removes a field that a downstream flow consumes, the incompatibility is immediately detectable by traversing the dependency graph — no historical comparison needed.
 
 **Breaking change taxonomy** (following Buf's established model):
+
 - **Breaking**: Field removal when downstream consumers reference it, type narrowing that violates downstream expectations, nullable→non-nullable when consumers don't handle it, constraint tightening that invalidates existing flow assumptions
 - **Additive**: New optional fields not yet consumed, type widening, constraint relaxation
 - **Compatible**: Documentation, comments, formatting changes
 
 **Detection mechanism**: The validation engine builds a dependency graph where:
+
 - Contracts are nodes with field definitions
 - Datasets reference contracts (Dataset → Contract edge)
 - Flow steps reference datasets and contracts (Flow → Dataset/Contract edges)
@@ -45,13 +50,16 @@ The engine traverses this graph to validate that all references can be satisfied
 **Libraries**: `yaml` (eemeli) for parsing with line number preservation.
 
 **Alternatives considered**:
+
 - **Git-based breaking change detection** (`simple-git` + structural diff against history): **Rejected** — adds runtime dependency on Git, conflates versioning with validation, doesn't work for fresh workspaces or shallow clones. The workspace graph already contains all information needed to detect incompatibilities.
 - **Schema registry integration**: **Rejected for V1** — adds external dependency, complicates setup. Considered for future enhancement.
 
 ### Decision: CLI architecture with subcommand pattern
+
 **Rationale**: A consistent subcommand pattern (`dpac <command>`) provides clear separation of concerns and extensibility. `validate` and `init` are the core commands for this change.
 
 **Command structure**:
+
 ```
 dpac validate [options]          # Validate workspace
 dpac init [options]              # Scaffold new project
@@ -60,37 +68,45 @@ dpac --help                      # Show help
 ```
 
 **Alternatives considered**:
+
 - **Single-command with flags**: `dpac --validate`, `dpac --init`. **Rejected** — doesn't scale as command set grows, less intuitive
 - **Separate binaries**: `dpac-validate`, `dpac-init`. **Rejected** — fragmentation hurts discoverability
 
 ### Decision: Validation report format with severity levels
+
 **Rationale**: Validation output needs to be both human-readable and machine-parseable. Severity levels (error, warning) enable CI pipelines to fail on errors while allowing warnings. File paths and line numbers enable editors and agents to locate issues.
 
 **Format**:
+
 ```
 <file-path>:<line>:<severity>: <message>
 ```
 
 Example:
+
 ```
 sources/postgres.yaml:12:error: Undefined source reference 'legacy_db' in flow 'extract_users'
 contracts/users.yaml:8:warning: Field 'email' is not referenced by any flow
 ```
 
 **Exit codes**:
+
 - `0`: Validation passed (no errors, warnings allowed)
 - `1`: Validation failed (one or more errors)
 - `2`: CLI error (invalid arguments, file not found)
 
 **Alternatives considered**:
+
 - **JSON output only**: **Rejected** — harder to read in terminal, can be added as `--format json` option later
 - **JUnit XML**: **Rejected** — adds complexity, can be added as output format later
 - **No severity levels**: **Rejected** — all issues would block CI, too rigid
 
 ### Decision: Source validation without connection details
+
 **Rationale**: dpac-core defines sources with only name, type, and entities — no connection details (host, port, credentials). The validation engine SHALL validate source references exist and have valid types, but SHALL NOT validate connection parameters or credentials.
 
 **Alternatives considered**:
+
 - **Include connection validation**: **Rejected** — contradicts dpac-core design where connection details are externalized
 
 ## Risks / Trade-offs
@@ -114,6 +130,7 @@ The engine could grow to validate runtime concerns (actual data quality, connect
 ## Migration Plan
 
 **Phase 1: Graph Integrity & Reference Validation**
+
 - Implement YAML parser with line number extraction
 - Build dependency graph from workspace resources
 - Implement cycle detection in flow dependencies
@@ -122,18 +139,21 @@ The engine could grow to validate runtime concerns (actual data quality, connect
 - CLI: `dpac validate` with basic output
 
 **Phase 2: Contract Validation & Breaking Changes**
+
 - Implement contract schema validation (types, constraints)
 - Implement step type coherence validation
 - Implement breaking change detection via dependency graph analysis
 - CLI: Enhanced error formatting with severity levels
 
 **Phase 3: Polish & CI Integration**
+
 - Performance optimization for large workspaces
 - Exit codes for CI/CD integration
 - JSON output format option (`--format json`)
 - Comprehensive test coverage
 
 **Rollback Strategy**:
+
 - Validation is read-only — no modifications to source files
 - Removing dpac-cli has zero impact on existing platform definitions
 - Validation can be bypassed if needed by not running `dpac validate`

@@ -2,7 +2,7 @@
 # Defines the schema for product data
 
 name: product_contract
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: product_id
     type: uuid
@@ -10,68 +10,68 @@ fields:
       unique: true
       not_null: true
     description: Unique identifier for the product
-    
+
   - name: sku
     type: string
     constraints:
       unique: true
       not_null: true
     description: Stock keeping unit - unique product code
-    
+
   - name: name
     type: string
     constraints:
       not_null: true
     description: Product name
-    
+
   - name: description
     type: string
     description: Product description
-    
+
   - name: price
     type: decimal
     constraints:
       not_null: true
     description: Current product price
-    
+
   - name: compare_at_price
     type: decimal
     description: Original price for comparison (sale pricing)
-    
+
   - name: category_id
     type: uuid
     constraints:
       not_null: true
     description: Reference to product category
-    
+
   - name: brand
     type: string
     description: Product brand
-    
+
   - name: weight_kg
     type: decimal
     description: Product weight in kilograms
-    
+
   - name: is_active
     type: boolean
     constraints:
       not_null: true
     description: Whether product is active and available for sale
-    
+
   - name: created_at
     type: timestamp
     constraints:
       not_null: true
     description: Product creation timestamp
-    
+
   - name: updated_at
     type: timestamp
     description: Last update timestamp
-    
+
   - name: attributes
     type: json
     description: Product attributes stored as JSON (size, color, material, etc.)
-    
+
   - name: tags
     type: string
     description: Comma-separated product tags

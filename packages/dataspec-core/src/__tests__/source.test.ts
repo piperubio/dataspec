@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'bun:test';
+
 import { parseSourceYaml } from '../parsers/source';
 
 describe('parseSourceYaml', () => {

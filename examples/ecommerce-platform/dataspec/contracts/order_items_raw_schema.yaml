@@ -2,52 +2,52 @@
 # Defines the expected schema from the production order_items table
 
 name: order_items_raw_schema
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: item_id
     type: uuid
     constraints:
       not_null: true
     description: Line item primary key
-    
+
   - name: order_id
     type: uuid
     constraints:
       not_null: true
     description: Reference to orders.order_id
-    
+
   - name: product_id
     type: uuid
     constraints:
       not_null: true
     description: Reference to products.product_id
-    
+
   - name: quantity
     type: integer
     constraints:
       not_null: true
     description: Quantity ordered
-    
+
   - name: unit_price
     type: decimal
     constraints:
       not_null: true
     description: Price per unit at time of order
-    
+
   - name: total_price
     type: decimal
     constraints:
       not_null: true
     description: quantity * unit_price
-    
+
   - name: discount_amount
     type: decimal
     description: Line item discount
-    
+
   - name: tax_amount
     type: decimal
     description: Line item tax
-    
+
   - name: created_at
     type: timestamp
     constraints:

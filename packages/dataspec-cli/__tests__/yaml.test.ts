@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'bun:test';
+
 import { parseYamlWithLineNumbers, getLineNumber } from '../src/parsing/yaml';
 
 describe('YAML Parser', () => {

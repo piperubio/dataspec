@@ -1,15 +1,11 @@
 /**
-* Dataset parser for dataspec (Declarative Data Platform Architecture)
+ * Dataset parser for dataspec (Declarative Data Platform Architecture)
  * @module parsers/dataset
  */
 
 import { parse } from 'yaml';
-import {
-  Dataset,
-  DatasetYamlSchema,
-  StorageConfig,
-  ContractReference,
-} from '../types/dataset';
+
+import { Dataset, DatasetYamlSchema, StorageConfig, ContractReference } from '../types/dataset';
 
 /**
  * Parses a YAML content string into a typed Dataset object.

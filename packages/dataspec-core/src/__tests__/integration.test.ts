@@ -4,7 +4,14 @@
  */
 
 import { describe, it, expect } from 'bun:test';
-import { parsePlatformYaml, parseSourceYaml, parseContractYaml, parseDatasetYaml, parseFlowYaml } from '../index';
+
+import {
+  parsePlatformYaml,
+  parseSourceYaml,
+  parseContractYaml,
+  parseDatasetYaml,
+  parseFlowYaml,
+} from '../index';
 
 describe('Integration: Complete E-commerce Platform', () => {
   it('should parse the example platform configuration', () => {
@@ -169,8 +176,8 @@ fields:
 `;
 
     const contract = parseContractYaml(yaml);
-    const types = contract.fields.map(f => f.type);
-    
+    const types = contract.fields.map((f) => f.type);
+
     expect(types).toContain('uuid');
     expect(types).toContain('string');
     expect(types).toContain('integer');

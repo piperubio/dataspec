@@ -23,7 +23,13 @@ npm install @dataspec/dataspec-core
 ### Basic Usage
 
 ```typescript
-import { parsePlatformYaml, parseSourceYaml, parseContractYaml, parseDatasetYaml, parseFlowYaml } from '@dataspec/dataspec-core';
+import {
+  parsePlatformYaml,
+  parseSourceYaml,
+  parseContractYaml,
+  parseDatasetYaml,
+  parseFlowYaml,
+} from '@dataspec/dataspec-core';
 
 // Parse platform configuration
 const platformYaml = `
@@ -111,7 +117,7 @@ storage:
 engines:
   - name: dbt-transforms
     type: dbt
-    version: ">=1.5.0"
+    version: '>=1.5.0'
 defaults:
   storage: s3-data-lake
 ```
@@ -135,7 +141,7 @@ Versioned schema definitions with field constraints:
 
 ```yaml
 name: user_contract
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: user_id
     type: uuid
@@ -160,7 +166,7 @@ storage:
   location: s3://bucket/users/
 contract:
   name: user_contract
-  version: "1.0.0"
+  version: '1.0.0'
 ```
 
 ### Flows

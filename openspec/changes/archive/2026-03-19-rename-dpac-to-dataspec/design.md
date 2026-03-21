@@ -11,6 +11,7 @@ The project currently uses the internal acronym `dpac` (Declarative Data Platfor
 The user has decided to standardize on `dataspec` as the naming convention, aligning internal names with the npm scope `@dataspec`.
 
 **Constraints:**
+
 - This is a breaking change for external users of the npm packages
 - This is a breaking change for CLI users (command name changes)
 - OpenSpec change directories that reference `dpac` in their names should also be renamed
@@ -18,11 +19,13 @@ The user has decided to standardize on `dataspec` as the naming convention, alig
 ## Goals / Non-Goals
 
 **Goals:**
+
 - Rename all `dpac` references to `dataspec` consistently across the entire codebase
 - Update package.json names, directory names, binary names, and all content references
 - Update OpenSpec change directories to match the new naming
 
 **Non-Goals:**
+
 - This is not a feature change — no new capabilities are being added
 - Not updating archived changes (under `openspec/changes/archive/`) — historical records remain as-is
 - Not updating `examples/` directory content unless it contains actual dpac references in source code (not spec content)

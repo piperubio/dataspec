@@ -3,7 +3,7 @@
  * @module types/source
  */
 
-import type { Metadata, WithMetadata } from "./common";
+import type { Metadata, WithMetadata } from './common';
 
 /**
  * Source type for data ingestion.
@@ -23,7 +23,7 @@ export const SourceType = {
 /**
  * Source type values.
  */
-export type SourceType = typeof SourceType[keyof typeof SourceType];
+export type SourceType = (typeof SourceType)[keyof typeof SourceType];
 
 /**
  * Represents an entity (table, collection, endpoint, file pattern) within a source.

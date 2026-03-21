@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: payments_raw_schema
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Raw payment transaction data ingested from external payment API
@@ -21,4 +21,4 @@ metadata:
     - external-api
     - pii
   refresh_frequency: hourly
-  retention_days: 2555  # 7 years for compliance
+  retention_days: 2555 # 7 years for compliance

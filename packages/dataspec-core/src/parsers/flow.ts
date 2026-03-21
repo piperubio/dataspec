@@ -1,4 +1,5 @@
 import { parse } from 'yaml';
+
 import type { Flow, FlowStep, ExtractStep, TransformStep, LoadStep } from '../types/flow';
 
 /**
@@ -129,7 +130,7 @@ export function parseFlowYaml(yamlContent: string): Flow {
 
         default:
           throw new Error(
-            `Invalid FlowStep type: "${stepObj.type}". Must be one of: extract, transform, load`
+            `Invalid FlowStep type: "${stepObj.type}". Must be one of: extract, transform, load`,
           );
       }
     }

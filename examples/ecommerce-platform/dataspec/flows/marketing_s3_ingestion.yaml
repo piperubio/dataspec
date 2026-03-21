@@ -24,7 +24,7 @@ steps:
 metadata:
   description: Daily pipeline to ingest marketing campaign data from external S3 bucket
   owner: marketing-team
-  schedule: "0 3 * * *"
+  schedule: '0 3 * * *'
   tags:
     - etl
     - marketing
@@ -36,6 +36,6 @@ metadata:
     This pipeline extracts CSV files from an external S3 bucket (not our data lake),
     validates the schema matches marketing_campaigns_raw_schema contract,
     and loads the data into our raw layer.
-    
+
     Source: s3://external-bucket/marketing/campaigns/*.csv
     Destination: s3://data-lake/raw/marketing_campaigns/

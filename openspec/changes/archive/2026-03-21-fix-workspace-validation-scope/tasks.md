@@ -27,17 +27,20 @@
 2. **When no `dataspec/` folder exists:** Scan from the specified path directly.
 
 **Key changes:**
+
 - Resources are now only loaded from within the `dataspec/` folder when it exists
 - Removed all legacy resource detection code (119 lines deleted)
 - Sibling folders like `datasets/` are now completely ignored
 - All 88 tests pass
 
 **Files modified:**
+
 - `packages/dataspec-cli/src/parsing/scanner.ts` - Simplified scanning logic
 - `packages/dataspec-cli/src/parsing/workspace.ts` - Removed legacyResources from interface
 - `packages/dataspec-cli/src/validation/structure.ts` - Removed legacy resource validation
 
 **Tests:**
+
 - All 88 tests pass
 - Manual testing confirms sibling folders are ignored
 - Manual testing confirms proper dataspec workspaces validate successfully

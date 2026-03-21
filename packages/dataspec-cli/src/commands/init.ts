@@ -1,6 +1,7 @@
-import { Command } from 'commander';
 import { mkdir, writeFile, access } from 'node:fs/promises';
 import { join } from 'node:path';
+
+import { Command } from 'commander';
 
 interface InitOptions {
   name?: string;
@@ -25,9 +26,13 @@ export const initCommand = new Command()
       const dataspecPath = join(projectPath, DATASPEC_DIR);
 
       // Check if dataspec folder already exists
-      const dataspecExists = await access(dataspecPath).then(() => true).catch(() => false);
+      const dataspecExists = await access(dataspecPath)
+        .then(() => true)
+        .catch(() => false);
       if (dataspecExists && !options.force) {
-        console.error(`Error: Directory '${DATASPEC_DIR}' already exists at '${projectPath}'. Use --force to overwrite.`);
+        console.error(
+          `Error: Directory '${DATASPEC_DIR}' already exists at '${projectPath}'. Use --force to overwrite.`,
+        );
         process.exit(2);
       }
 

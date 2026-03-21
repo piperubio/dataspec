@@ -2,76 +2,76 @@
 # Defines the expected schema from the production orders table
 
 name: orders_raw_schema
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: order_id
     type: uuid
     constraints:
       not_null: true
     description: Order primary key
-    
+
   - name: user_id
     type: uuid
     constraints:
       not_null: true
     description: Reference to users.id
-    
+
   - name: status
     type: string
     constraints:
       not_null: true
     description: Order status (pending, confirmed, shipped, delivered, cancelled)
-    
+
   - name: total_amount
     type: decimal
     constraints:
       not_null: true
     description: Total order amount
-    
+
   - name: currency
     type: string
     constraints:
       not_null: true
     description: Currency code (ISO 4217)
-    
+
   - name: shipping_address
     type: json
     description: JSON with shipping address details
-    
+
   - name: billing_address
     type: json
     description: JSON with billing address details
-    
+
   - name: created_at
     type: timestamp
     constraints:
       not_null: true
     description: Order creation timestamp
-    
+
   - name: updated_at
     type: timestamp
     description: Last order update
-    
+
   - name: shipped_at
     type: timestamp
     description: When order was shipped (null if not shipped)
-    
+
   - name: delivered_at
     type: timestamp
     description: When order was delivered (null if not delivered)
-    
+
   - name: discount_code
     type: string
     description: Applied discount code if any
-    
+
   - name: discount_amount
     type: decimal
     description: Discount amount applied
-    
+
   - name: tax_amount
     type: decimal
     description: Tax amount
-    
+
   - name: notes
     type: string
     description: Customer or staff notes

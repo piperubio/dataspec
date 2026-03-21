@@ -1,9 +1,10 @@
 /**
-* Platform resource parser for dataspec (Declarative Data Platform Architecture)
+ * Platform resource parser for dataspec (Declarative Data Platform Architecture)
  * @module parsers/platform
  */
 
 import YAML from 'yaml';
+
 import type { PlatformConfig, StorageBackend, AnalyticsEngine } from '../types/platform';
 
 /**

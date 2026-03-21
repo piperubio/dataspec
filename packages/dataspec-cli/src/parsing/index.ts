@@ -23,7 +23,16 @@ export { parseYamlWithLineNumbers, validateYamlSyntax } from './yaml.js';
 /**
  * Workspace and resource types
  */
-export type { Workspace, ParsedSource, ParsedDataset, ParsedContract, ParsedFlow, ParsedPlatform, WorkspaceStructureInfo, ParseResult } from './workspace.js';
+export type {
+  Workspace,
+  ParsedSource,
+  ParsedDataset,
+  ParsedContract,
+  ParsedFlow,
+  ParsedPlatform,
+  WorkspaceStructureInfo,
+  ParseResult,
+} from './workspace.js';
 
 /**
  * Options for YAML parsing

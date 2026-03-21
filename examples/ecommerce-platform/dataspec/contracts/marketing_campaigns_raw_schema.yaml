@@ -2,58 +2,58 @@
 # Schema for CSV exports from marketing platform stored in S3
 
 name: marketing_campaigns_raw_schema
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: campaign_id
     type: string
     constraints:
       not_null: true
     description: Marketing campaign identifier
-    
+
   - name: campaign_name
     type: string
     description: Human-readable campaign name
-    
+
   - name: channel
     type: string
     description: Marketing channel (email, social, paid_search, etc.)
-    
+
   - name: start_date
     type: date
     description: Campaign start date
-    
+
   - name: end_date
     type: date
     description: Campaign end date
-    
+
   - name: budget
     type: decimal
     description: Campaign budget in USD
-    
+
   - name: spend
     type: decimal
     description: Actual spend
-    
+
   - name: impressions
     type: integer
     description: Total impressions
-    
+
   - name: clicks
     type: integer
     description: Total clicks
-    
+
   - name: conversions
     type: integer
     description: Total conversions
-    
+
   - name: revenue_attributed
     type: decimal
     description: Revenue attributed to campaign
-    
+
   - name: target_audience
     type: string
     description: Target audience segment
-    
+
   - name: created_at
     type: timestamp
     description: Export timestamp

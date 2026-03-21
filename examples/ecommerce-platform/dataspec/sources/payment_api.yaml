@@ -18,7 +18,7 @@ entities:
     metadata:
       rate_limit: 1000
       pagination: cursor
-      
+
   - name: refunds
     description: Refund transactions endpoint - returns processed refunds
     entityType: endpoint
@@ -33,14 +33,14 @@ entities:
     metadata:
       rate_limit: 500
       pagination: offset
-      
+
   - name: payment_methods
     description: Available payment methods and configurations
     entityType: endpoint
     method: GET
     metadata:
       cache_duration: 3600
-      
+
   - name: chargebacks
     description: Chargeback and dispute records
     entityType: endpoint
@@ -52,7 +52,7 @@ entities:
     metadata:
       rate_limit: 100
       pagination: cursor
-      
+
   - name: settlements
     description: Daily settlement batches
     entityType: endpoint

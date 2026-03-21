@@ -1,6 +1,12 @@
 import { Command } from 'commander';
+
+import {
+  buildDependencyGraph,
+  getUpstream,
+  getDownstream,
+  type GraphNode,
+} from '../graph/index.js';
 import { parseWorkspace, type Workspace } from '../parsing/index.js';
-import { buildDependencyGraph, getUpstream, getDownstream, type GraphNode } from '../graph/index.js';
 
 export const showCommand = new Command()
   .name('show')
@@ -33,9 +39,13 @@ export const showCommand = new Command()
     }
   });
 
-function showSource(workspace: Workspace, name: string, options: { format: string; deps: boolean }): void {
+function showSource(
+  workspace: Workspace,
+  name: string,
+  options: { format: string; deps: boolean },
+): void {
   const source = workspace.sources.find((s: { name: string }) => s.name === name);
-  
+
   if (!source) {
     console.error(`Source '${name}' not found.`);
     process.exit(2);
@@ -90,9 +100,13 @@ function showSource(workspace: Workspace, name: string, options: { format: strin
   }
 }
 
-function showDataset(workspace: Workspace, name: string, options: { format: string; deps: boolean }): void {
+function showDataset(
+  workspace: Workspace,
+  name: string,
+  options: { format: string; deps: boolean },
+): void {
   const dataset = workspace.datasets.find((d: { name: string }) => d.name === name);
-  
+
   if (!dataset) {
     console.error(`Dataset '${name}' not found.`);
     process.exit(2);
@@ -149,9 +163,13 @@ function showDataset(workspace: Workspace, name: string, options: { format: stri
   }
 }
 
-function showContract(workspace: Workspace, name: string, options: { format: string; deps: boolean }): void {
+function showContract(
+  workspace: Workspace,
+  name: string,
+  options: { format: string; deps: boolean },
+): void {
   const contract = workspace.contracts.find((c: { name: string }) => c.name === name);
-  
+
   if (!contract) {
     console.error(`Contract '${name}' not found.`);
     process.exit(2);
@@ -184,9 +202,13 @@ function showContract(workspace: Workspace, name: string, options: { format: str
   }
 }
 
-function showFlow(workspace: Workspace, name: string, options: { format: string; deps: boolean }): void {
+function showFlow(
+  workspace: Workspace,
+  name: string,
+  options: { format: string; deps: boolean },
+): void {
   const flow = workspace.flows.find((f: { name: string }) => f.name === name);
-  
+
   if (!flow) {
     console.error(`Flow '${name}' not found.`);
     process.exit(2);

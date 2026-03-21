@@ -1,4 +1,3 @@
-
 export type ResourceType = 'source' | 'dataset' | 'contract' | 'flow';
 
 export interface GraphNode {
@@ -36,24 +35,30 @@ export function addEdge(graph: DependencyGraph, edge: GraphEdge): void {
   graph.edges.push(edge);
 }
 
-export function getNode(graph: DependencyGraph, type: ResourceType, name: string): GraphNode | undefined {
+export function getNode(
+  graph: DependencyGraph,
+  type: ResourceType,
+  name: string,
+): GraphNode | undefined {
   return graph.nodes.get(`${type}:${name}`);
 }
 
 export function getOutgoingEdges(graph: DependencyGraph, nodeId: string): GraphEdge[] {
-  return graph.edges.filter(e => e.from === nodeId);
+  return graph.edges.filter((e) => e.from === nodeId);
 }
 
 export function getIncomingEdges(graph: DependencyGraph, nodeId: string): GraphEdge[] {
-  return graph.edges.filter(e => e.to === nodeId);
+  return graph.edges.filter((e) => e.to === nodeId);
 }
 
 export function getUpstream(graph: DependencyGraph, startNodeId: string): GraphNode[] {
   const visited = new Set<string>();
   const result: GraphNode[] = [];
-  
+
   function traverse(nodeId: string) {
-    if (visited.has(nodeId)) return;
+    if (visited.has(nodeId)) {
+      return;
+    }
     visited.add(nodeId);
 
     if (nodeId !== startNodeId) {
@@ -62,13 +67,13 @@ export function getUpstream(graph: DependencyGraph, startNodeId: string): GraphN
         result.push(node);
       }
     }
-    
+
     const incoming = getIncomingEdges(graph, nodeId);
     for (const edge of incoming) {
       traverse(edge.from);
     }
   }
-  
+
   traverse(startNodeId);
   return result;
 }
@@ -76,9 +81,11 @@ export function getUpstream(graph: DependencyGraph, startNodeId: string): GraphN
 export function getDownstream(graph: DependencyGraph, startNodeId: string): GraphNode[] {
   const visited = new Set<string>();
   const result: GraphNode[] = [];
-  
+
   function traverse(nodeId: string) {
-    if (visited.has(nodeId)) return;
+    if (visited.has(nodeId)) {
+      return;
+    }
     visited.add(nodeId);
 
     if (nodeId !== startNodeId) {
@@ -87,13 +94,13 @@ export function getDownstream(graph: DependencyGraph, startNodeId: string): Grap
         result.push(node);
       }
     }
-    
+
     const outgoing = getOutgoingEdges(graph, nodeId);
     for (const edge of outgoing) {
       traverse(edge.to);
     }
   }
-  
+
   traverse(startNodeId);
   return result;
 }

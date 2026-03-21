@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'bun:test';
+
 import { parsePlatformYaml } from '../parsers/platform';
 
 describe('parsePlatformYaml', () => {

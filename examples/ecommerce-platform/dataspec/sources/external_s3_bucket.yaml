@@ -8,31 +8,31 @@ entities:
   - name: marketing_csv_exports
     description: Marketing campaign data exported as CSV files
     entityType: file_pattern
-    pattern: "marketing/campaigns/*.csv"
+    pattern: 'marketing/campaigns/*.csv'
     format: csv
-    
+
   - name: application_logs
     description: Application log files in JSON format
     entityType: file_pattern
-    pattern: "logs/application/*.json"
+    pattern: 'logs/application/*.json'
     format: json
-    
+
   - name: legacy_data_exports
     description: Historical data exports from legacy system
     entityType: file_pattern
-    pattern: "legacy/exports/*.parquet"
+    pattern: 'legacy/exports/*.parquet'
     format: parquet
-    
+
   - name: third_party_datasets
     description: Third-party datasets and enrichments
     entityType: file_pattern
-    pattern: "external/datasets/*"
+    pattern: 'external/datasets/*'
     format: mixed
-    
+
   - name: clickstream_s3
     description: Real-time clickstream data streamed to S3
     entityType: file_pattern
-    pattern: "clickstream/year=*/month=*/day=*/*.json.gz"
+    pattern: 'clickstream/year=*/month=*/day=*/*.json.gz'
     format: json
     compression: gzip
     partitioning: year/month/day
@@ -50,7 +50,7 @@ metadata:
   notes: |
     This S3 bucket is owned by the Data Platform team but acts as a landing zone
     for various external data sources. Files are organized by source system and date.
-    
+
     Access patterns:
     - marketing_csv_exports: Updated daily at 2 AM UTC
     - application_logs: Real-time streaming via Kinesis Firehose

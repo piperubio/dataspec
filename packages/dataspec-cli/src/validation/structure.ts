@@ -14,7 +14,7 @@ export interface StructureValidationResult {
  */
 export function validateWorkspaceStructure(
   structure: WorkspaceStructureInfo,
-  _workspacePath: string
+  _workspacePath: string,
 ): StructureValidationResult {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -23,7 +23,7 @@ export function validateWorkspaceStructure(
   if (!structure.hasDataspecFolder) {
     errors.push(
       `Workspace must contain a 'dataspec/' folder.\n` +
-      `Run 'dataspec init' to create a new project.`
+        `Run 'dataspec init' to create a new project.`,
     );
     return { valid: false, errors, warnings };
   }

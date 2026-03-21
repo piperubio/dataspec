@@ -18,7 +18,7 @@ export const StorageType = {
 /**
  * Storage type values.
  */
-export type StorageType = typeof StorageType[keyof typeof StorageType];
+export type StorageType = (typeof StorageType)[keyof typeof StorageType];
 
 /**
  * Storage backend configuration.
@@ -52,7 +52,7 @@ export const EngineType = {
 /**
  * Analytics engine type values.
  */
-export type EngineType = typeof EngineType[keyof typeof EngineType];
+export type EngineType = (typeof EngineType)[keyof typeof EngineType];
 
 /**
  * Analytics engine configuration.

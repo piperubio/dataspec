@@ -1,9 +1,7 @@
+import type { SourceEntity, FlowStep } from '@dataspec/dataspec-core';
+
 import { readYamlFile, scanWorkspaceWithStructure } from './scanner.js';
 import { parseYamlWithLineNumbers } from './yaml.js';
-import type {
-  SourceEntity,
-  FlowStep,
-} from '@dataspec/dataspec-core';
 
 export interface ParsedSource {
   name: string;
@@ -98,7 +96,9 @@ export async function parseWorkspaceWithStructure(dirPath: string): Promise<Pars
 
   if (resources.platformYaml) {
     const content = await readYamlFile(resources.platformYaml);
-    const result = parseYamlWithLineNumbers<ParsedPlatform>(content, { file: resources.platformYaml });
+    const result = parseYamlWithLineNumbers<ParsedPlatform>(content, {
+      file: resources.platformYaml,
+    });
     if (result.errors.length === 0 && result.data) {
       workspace.platform = {
         ...result.data,
@@ -110,7 +110,11 @@ export async function parseWorkspaceWithStructure(dirPath: string): Promise<Pars
 
   for (const file of resources.sources) {
     const content = await readYamlFile(file);
-    const result = parseYamlWithLineNumbers<{ name: string; type: string; entities: SourceEntity[] }>(content, { file });
+    const result = parseYamlWithLineNumbers<{
+      name: string;
+      type: string;
+      entities: SourceEntity[];
+    }>(content, { file });
     if (result.errors.length === 0 && result.data) {
       workspace.sources.push({
         ...result.data,

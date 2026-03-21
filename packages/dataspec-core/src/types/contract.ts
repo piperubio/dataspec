@@ -3,20 +3,20 @@
  * @module types/contract
  */
 
-import type { Metadata, WithMetadata } from "./common";
+import type { WithMetadata } from './common';
 
 /**
  * Supported data types for contract fields.
  */
 export type DataType =
-  | "uuid"
-  | "string"
-  | "integer"
-  | "decimal"
-  | "boolean"
-  | "timestamp"
-  | "date"
-  | "json";
+  | 'uuid'
+  | 'string'
+  | 'integer'
+  | 'decimal'
+  | 'boolean'
+  | 'timestamp'
+  | 'date'
+  | 'json';
 
 /**
  * Field constraints for data validation and integrity.

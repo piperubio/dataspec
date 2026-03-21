@@ -32,21 +32,21 @@ steps:
 metadata:
   description: |
     ELT (Extract-Load-Transform) pipeline for marketing data.
-    
+
     Benefits of ELT over ETL:
     - Raw data is preserved exactly as received from source
     - Data scientists can query raw data for exploratory analysis
     - Failed transformations don't block data availability
     - Easy to reprocess raw data with new transformation logic
     - Schema changes in source are visible in raw layer first
-    
+
     Pattern:
     1. EXTRACT: Pull CSV files from external S3 bucket
     2. LOAD: Store as-is in raw layer (bronze) - no validation yet
     3. TRANSFORM: Apply business rules, validation, cleaning
     4. LOAD: Save to refined layer (silver) with contract enforcement
   owner: marketing-team
-  schedule: "0 3 * * *"
+  schedule: '0 3 * * *'
   tags:
     - elt
     - extract-load-transform

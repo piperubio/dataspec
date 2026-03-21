@@ -3,62 +3,62 @@
 # This contract documents what we expect to receive from the source
 
 name: users_raw_schema
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: id
     type: uuid
     constraints:
       not_null: true
     description: Primary key from production database
-    
+
   - name: email
     type: string
     constraints:
       not_null: true
     description: User email address as stored in production
-    
+
   - name: first_name
     type: string
     description: User first name
-    
+
   - name: last_name
     type: string
     description: User last name
-    
+
   - name: phone
     type: string
     description: Phone number (may include country code)
-    
+
   - name: date_of_birth
     type: date
     description: Date of birth
-    
+
   - name: created_at
     type: timestamp
     constraints:
       not_null: true
     description: When the user account was created
-    
+
   - name: updated_at
     type: timestamp
     description: Last update timestamp
-    
+
   - name: last_login_at
     type: timestamp
     description: Last login timestamp (null if never logged in)
-    
+
   - name: preferences
     type: json
     description: JSON blob with user preferences
-    
+
   - name: marketing_consent
     type: boolean
     description: Marketing consent flag
-    
+
   - name: country_code
     type: string
     description: ISO country code
-    
+
   - name: timezone
     type: string
     description: Timezone string

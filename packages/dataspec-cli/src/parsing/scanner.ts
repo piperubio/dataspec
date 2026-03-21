@@ -19,7 +19,9 @@ export async function scanWorkspace(dirPath: string): Promise<WorkspaceResources
   return result.resources;
 }
 
-export async function scanWorkspaceWithStructure(dirPath: string): Promise<WorkspaceStructureResult> {
+export async function scanWorkspaceWithStructure(
+  dirPath: string,
+): Promise<WorkspaceStructureResult> {
   const resources: WorkspaceResources = {
     sources: [],
     datasets: [],
@@ -52,7 +54,9 @@ export async function scanWorkspaceWithStructure(dirPath: string): Promise<Works
         continue;
       }
 
-      if (!entry.isDirectory()) continue;
+      if (!entry.isDirectory()) {
+        continue;
+      }
 
       const subDirPath = join(scanPath, entry.name);
 
@@ -66,7 +70,7 @@ export async function scanWorkspaceWithStructure(dirPath: string): Promise<Works
         resources.flows = await scanYamlFiles(subDirPath);
       }
     }
-  } catch (e) {
+  } catch {
     // Directory doesn't exist or not accessible
   }
 
@@ -87,7 +91,7 @@ async function scanYamlFiles(dirPath: string): Promise<string[]> {
         files.push(join(dirPath, entry.name));
       }
     }
-  } catch (e) {
+  } catch {
     // Directory doesn't exist
   }
 
@@ -110,7 +114,7 @@ async function scanYamlFilesRecursive(dirPath: string): Promise<string[]> {
         files.push(fullPath);
       }
     }
-  } catch (e) {
+  } catch {
     // Directory doesn't exist
   }
 

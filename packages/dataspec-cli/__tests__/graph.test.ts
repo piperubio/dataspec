@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'bun:test';
+
+import { buildDependencyGraph } from '../src/graph/builder';
 import { createGraph, addNode, addEdge, getUpstream, getDownstream } from '../src/graph/types';
 import type { Workspace } from '../src/parsing/workspace';
-import { buildDependencyGraph } from '../src/graph/builder';
 
 describe('Dependency Graph', () => {
   describe('Graph operations', () => {
@@ -47,7 +48,7 @@ describe('Dependency Graph', () => {
 
       const upstream = getUpstream(graph, 'dataset:d1');
       // Upstream traverses incoming edges, so from dataset:d1 we find edge from flow:f1
-      expect(upstream.map(n => n.id)).toContain('flow:f1');
+      expect(upstream.map((n) => n.id)).toContain('flow:f1');
     });
 
     it('should get downstream dependencies', () => {
@@ -62,7 +63,7 @@ describe('Dependency Graph', () => {
       addEdge(graph, { from: 'flow:f1', to: 'dataset:d1', type: 'produces' });
 
       const downstream = getDownstream(graph, 'flow:f1');
-      expect(downstream.map(n => n.id)).toContain('dataset:d1');
+      expect(downstream.map((n) => n.id)).toContain('dataset:d1');
     });
   });
 
@@ -71,13 +72,15 @@ describe('Dependency Graph', () => {
       const workspace: Workspace = {
         platform: null,
         rootPath: '/test',
-        sources: [{
-          name: 'db1',
-          type: 'database',
-          entities: [],
-          file: 'sources/db.yaml',
-          line: 1,
-        }],
+        sources: [
+          {
+            name: 'db1',
+            type: 'database',
+            entities: [],
+            file: 'sources/db.yaml',
+            line: 1,
+          },
+        ],
         datasets: [],
         contracts: [],
         flows: [],
@@ -93,21 +96,25 @@ describe('Dependency Graph', () => {
         platform: null,
         rootPath: '/test',
         sources: [],
-        datasets: [{
-          name: 'users',
-          layer: 'raw',
-          storage: { backend: 's3', format: 'parquet', location: 's3://bucket/users' },
-          contract: { name: 'user_contract', version: '1.0.0' },
-          file: 'datasets/users.yaml',
-          line: 1,
-        }],
-        contracts: [{
-          name: 'user_contract',
-          version: '1.0.0',
-          fields: [],
-          file: 'contracts/user.yaml',
-          line: 1,
-        }],
+        datasets: [
+          {
+            name: 'users',
+            layer: 'raw',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/users' },
+            contract: { name: 'user_contract', version: '1.0.0' },
+            file: 'datasets/users.yaml',
+            line: 1,
+          },
+        ],
+        contracts: [
+          {
+            name: 'user_contract',
+            version: '1.0.0',
+            fields: [],
+            file: 'contracts/user.yaml',
+            line: 1,
+          },
+        ],
         flows: [],
       };
 

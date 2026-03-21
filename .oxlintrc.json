@@ -1,0 +1,43 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn",
+    "pedantic": "warn"
+  },
+  "plugins": ["typescript", "oxc", "import"],
+  "rules": {
+    "no-unused-vars": "error",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-debugger": "error",
+    "no-alert": "error",
+    "eqeqeq": ["error", "always"],
+    "curly": ["error", "all"],
+    "typescript/no-explicit-any": "warn",
+    "typescript/explicit-function-return-type": "off",
+    "typescript/no-unused-vars": "error",
+    "typescript/prefer-as-const": "error",
+    "typescript/no-unnecessary-type-assertion": "warn",
+    "import/no-duplicates": "error",
+    "import/order": [
+      "error",
+      { "groups": ["builtin", "external", "internal", "parent", "sibling", "index"] }
+    ],
+    "oxc/approx-constant": "warn"
+  },
+  "env": {
+    "bun": true,
+    "node": true
+  },
+  "ignorePatterns": [
+    "node_modules/**",
+    "dist/**",
+    "bin/**",
+    "coverage/**",
+    "*.min.js",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    ".opencode/**"
+  ]
+}

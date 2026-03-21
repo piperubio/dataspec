@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: product_contract
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Cleaned and validated product catalog with standardized attributes

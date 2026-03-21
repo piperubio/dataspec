@@ -8,30 +8,30 @@ steps:
     source: production_db
     entity: products
     output: raw_products
-    
+
   # Step 2: Extract categories for enrichment
   - type: extract
     source: production_db
     entity: categories
     output: raw_categories
-    
+
   # Step 3: Extract inventory data
   - type: extract
     source: production_db
     entity: inventory
     output: raw_inventory
-    
+
   # Step 4: Transform and load raw products
   - type: transform
     inputs:
       - raw_products
     engine: dbt-transforms
     output: prepared_products
-    
+
   - type: load
     input: prepared_products
     target: products_raw
-    
+
   # Step 5: Transform to refined layer with category enrichment
   - type: transform
     inputs:
@@ -39,11 +39,11 @@ steps:
       - raw_categories
     engine: dbt-transforms
     output: refined_products
-    
+
   - type: load
     input: refined_products
     target: products_refined
-    
+
   # Step 6: Transform for product analytics with inventory
   - type: transform
     inputs:
@@ -51,14 +51,14 @@ steps:
       - raw_inventory
     engine: dbt-transforms
     output: product_metrics
-    
+
   - type: load
     input: product_metrics
     target: product_analytics
 
 metadata:
   description: ETL pipeline for product catalog with inventory and category data
-  version: "1.0.0"
+  version: '1.0.0'
   labels:
     - etl
     - products

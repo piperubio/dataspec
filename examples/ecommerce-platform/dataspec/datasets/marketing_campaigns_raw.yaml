@@ -10,7 +10,7 @@ storage:
 
 contract:
   name: marketing_campaigns_raw_schema
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Marketing campaign data ingested from external S3 bucket CSV exports

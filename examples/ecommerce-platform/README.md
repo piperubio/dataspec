@@ -93,41 +93,45 @@ examples/ecommerce-platform/
 
 ### Storage Backends
 
-| Name | Type | Purpose |
-|------|------|---------|
-| `s3-data-lake` | S3 | Data lake storage |
-| `postgresql-warehouse` | PostgreSQL | Traditional warehouse storage |
+| Name                   | Type       | Purpose                            |
+| ---------------------- | ---------- | ---------------------------------- |
+| `s3-data-lake`         | S3         | Data lake storage                  |
+| `postgresql-warehouse` | PostgreSQL | Traditional warehouse storage      |
 | `clickhouse-analytics` | ClickHouse | High-performance analytics queries |
 
 ### Analytics Engines
 
-| Name | Type | Purpose |
-|------|------|---------|
-| `dbt-transforms` | dbt | SQL-based transformations |
-| `duckdb-local` | DuckDB | Local analytics and testing |
-| `spark-cluster` | Spark | Large-scale distributed processing |
+| Name             | Type   | Purpose                            |
+| ---------------- | ------ | ---------------------------------- |
+| `dbt-transforms` | dbt    | SQL-based transformations          |
+| `duckdb-local`   | DuckDB | Local analytics and testing        |
+| `spark-cluster`  | Spark  | Large-scale distributed processing |
 
 ## Data Sources
 
 ### Production Database
+
 - **Type**: PostgreSQL
 - **Entities**: users, orders, order_items, products, categories, inventory, reviews
 - **Purpose**: Primary transactional data store
 - **Refresh**: Real-time / Hourly
 
 ### Payment API
+
 - **Type**: REST API
 - **Entities**: transactions, refunds, payment_methods, chargebacks, settlements
 - **Purpose**: External payment processor integration
 - **Refresh**: Hourly
 
 ### Analytics Database
+
 - **Type**: ClickHouse
 - **Entities**: events, sessions, experiments, attribution, cohorts
 - **Purpose**: High-volume event and behavioral data
 - **Refresh**: Real-time streaming
 
 ### External APIs
+
 - **Type**: Multiple REST APIs
 - **Entities**: shipments, shipping_rates, campaigns, ad_spend, support_tickets
 - **Purpose**: Third-party integrations (shipping, marketing, support)
@@ -137,15 +141,16 @@ examples/ecommerce-platform/
 
 Contracts define the expected schema and enforce data quality:
 
-| Contract | Fields | Purpose |
-|----------|--------|---------|
-| `user_contract` | 14 fields | Customer profile data with PII |
-| `order_contract` | 16 fields | Order transactions with financial data |
-| `product_contract` | 15 fields | Product catalog with pricing |
-| `order_item_contract` | 12 fields | Order line items |
-| `analytics_events_contract` | 17 fields | Clickstream events |
+| Contract                    | Fields    | Purpose                                |
+| --------------------------- | --------- | -------------------------------------- |
+| `user_contract`             | 14 fields | Customer profile data with PII         |
+| `order_contract`            | 16 fields | Order transactions with financial data |
+| `product_contract`          | 15 fields | Product catalog with pricing           |
+| `order_item_contract`       | 12 fields | Order line items                       |
+| `analytics_events_contract` | 17 fields | Clickstream events                     |
 
 ### Contract Features
+
 - **Type System**: uuid, string, integer, decimal, boolean, timestamp, date, json
 - **Constraints**: unique, not_null, foreign key references
 - **PII Tagging**: Sensitive data identification
@@ -155,6 +160,7 @@ Contracts define the expected schema and enforce data quality:
 Datasets represent data at various stages of the pipeline:
 
 **Ingested Data**
+
 - **Format**: Parquet, JSON
 - **Storage**: S3 Data Lake
 - **Purpose**: Exact copy of source data
@@ -162,6 +168,7 @@ Datasets represent data at various stages of the pipeline:
 - **Datasets**: users_raw, orders_raw, products_raw, events_raw, payments_raw, marketing_campaigns_raw, order_items_raw
 
 **Processed Data**
+
 - **Format**: Delta Lake
 - **Storage**: S3 Data Lake
 - **Purpose**: Cleaned, validated, deduplicated data
@@ -169,6 +176,7 @@ Datasets represent data at various stages of the pipeline:
 - **Datasets**: users_refined, orders_refined, products_refined, order_items_refined, events_refined
 
 **Analytics Data**
+
 - **Format**: Native (ClickHouse)
 - **Storage**: ClickHouse Analytics
 - **Purpose**: Aggregated, business-ready data
@@ -178,37 +186,45 @@ Datasets represent data at various stages of the pipeline:
 ## ETL Pipelines
 
 ### User ETL Pipeline
+
 ```
 production_db.users → users_raw → users_refined → customer_analytics
 ```
+
 - Extracts user data from production
 - Applies PII handling and deduplication
 - Creates customer metrics for analytics
 
 ### Orders ETL Pipeline
+
 ```
-production_db.orders + order_items + users → orders_raw + order_items_raw → 
+production_db.orders + order_items + users → orders_raw + order_items_raw →
 orders_refined + order_items_refined → sales_dashboard
 ```
+
 - Extracts orders and items
 - Validates referential integrity
 - Aggregates sales metrics
 
 ### Products ETL Pipeline
+
 ```
-production_db.products + categories + inventory → products_raw → 
+production_db.products + categories + inventory → products_raw →
 products_refined → product_analytics
 ```
+
 - Extracts product catalog
 - Enriches with categories and inventory
 - Creates product performance metrics
 
 ### Unified Analytics Pipeline
+
 ```
-[production_db + payment_api + analytics_db + external_apis] → 
-[Multiple extracts] → [Joins & transformations] → 
+[production_db + payment_api + analytics_db + external_apis] →
+[Multiple extracts] → [Joins & transformations] →
 [All analytics datasets]
 ```
+
 - Comprehensive pipeline joining all sources
 - Creates unified customer, order, and product views
 - Demonstrates complex multi-source ETL
@@ -218,6 +234,7 @@ products_refined → product_analytics
 All pipelines use three step types:
 
 ### Extract Step
+
 ```yaml
 type: extract
 source: production_db
@@ -226,6 +243,7 @@ output: raw_users
 ```
 
 ### Transform Step
+
 ```yaml
 type: transform
 inputs:
@@ -235,6 +253,7 @@ output: refined_users
 ```
 
 ### Load Step
+
 ```yaml
 type: load
 input: refined_users
@@ -246,6 +265,7 @@ target: users_refined
 This example demonstrates both traditional ETL and modern ELT patterns:
 
 ### ETL (Extract-Transform-Load)
+
 Transform data **before** loading to the data warehouse.
 
 ```
@@ -253,6 +273,7 @@ Source → Extract → Transform → Load → Refined Dataset
 ```
 
 **Use when:**
+
 - Data quality is critical and bad data should not be stored
 - Transformations are simple and fast
 - Storage is expensive
@@ -261,6 +282,7 @@ Source → Extract → Transform → Load → Refined Dataset
 **Example:** `user_etl_pipeline.yaml`
 
 ### ELT (Extract-Load-Transform)
+
 Load data **as-is**, then transform.
 
 ```
@@ -268,6 +290,7 @@ Source → Extract → Load → Transform → Load (Refined)
 ```
 
 **Use when:**
+
 - Data scientists need access to raw data
 - Complex transformations that might fail
 - Need to preserve original data for debugging
@@ -278,14 +301,14 @@ Source → Extract → Load → Transform → Load (Refined)
 
 ### Comparison
 
-| Aspect | ETL | ELT |
-|--------|-----|-----|
-| Raw Data Available | ❌ No | ✅ Yes |
-| Debugging Failed Transforms | Hard | Easy |
-| Reprocessing Capability | Limited | Full |
-| Storage Cost | Lower | Higher |
-| Data Freshness | Delayed | Immediate |
-| Schema Evolution | Rigid | Flexible |
+| Aspect                      | ETL     | ELT       |
+| --------------------------- | ------- | --------- |
+| Raw Data Available          | ❌ No   | ✅ Yes    |
+| Debugging Failed Transforms | Hard    | Easy      |
+| Reprocessing Capability     | Limited | Full      |
+| Storage Cost                | Lower   | Higher    |
+| Data Freshness              | Delayed | Immediate |
+| Schema Evolution            | Rigid   | Flexible  |
 
 ## Best Practices Demonstrated
 

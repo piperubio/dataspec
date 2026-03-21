@@ -2,7 +2,7 @@
 # Defines the schema for user/customer data
 
 name: user_contract
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: user_id
     type: uuid
@@ -10,56 +10,56 @@ fields:
       unique: true
       not_null: true
     description: Unique identifier for the user
-    
+
   - name: email
     type: string
     constraints:
       unique: true
       not_null: true
     description: User email address
-    
+
   - name: first_name
     type: string
     description: User first name
-    
+
   - name: last_name
     type: string
     description: User last name
-    
+
   - name: phone
     type: string
     description: User phone number
-    
+
   - name: date_of_birth
     type: date
     description: User date of birth
-    
+
   - name: created_at
     type: timestamp
     constraints:
       not_null: true
     description: Account creation timestamp
-    
+
   - name: updated_at
     type: timestamp
     description: Last update timestamp
-    
+
   - name: last_login_at
     type: timestamp
     description: Last login timestamp
-    
+
   - name: preferences
     type: json
     description: User preferences stored as JSON
-    
+
   - name: marketing_consent
     type: boolean
     description: User consent for marketing communications
-    
+
   - name: country_code
     type: string
     description: ISO country code
-    
+
   - name: timezone
     type: string
     description: User timezone

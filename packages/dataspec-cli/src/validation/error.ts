@@ -61,7 +61,7 @@ export function createError(
   message: string,
   location: SourceLocation,
   severity: ValidationSeverity = 'error',
-  code?: string
+  code?: string,
 ): ValidationError {
   return { message, location, severity, code };
 }
@@ -98,7 +98,7 @@ export function createSuccessResult(warnings: ValidationError[] = []): Validatio
  */
 export function createFailureResult(
   errors: ValidationError[] = [],
-  warnings: ValidationError[] = []
+  warnings: ValidationError[] = [],
 ): ValidationResult {
   return {
     errors,

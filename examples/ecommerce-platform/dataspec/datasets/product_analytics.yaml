@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: product_analytics_contract
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Product analytics with performance metrics, inventory status, and recommendations

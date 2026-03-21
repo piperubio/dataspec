@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: order_items_raw_schema
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Raw order line items data ingested from production database

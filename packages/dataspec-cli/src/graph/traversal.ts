@@ -9,14 +9,16 @@ import type { DependencyGraph, GraphNode } from './types.js';
 export function getUpstream(graph: DependencyGraph, nodeId: string): GraphNode[] {
   const upstream: GraphNode[] = [];
   const visited = new Set<string>();
-  
+
   function traverse(currentId: string) {
-    if (visited.has(currentId)) return;
+    if (visited.has(currentId)) {
+      return;
+    }
     visited.add(currentId);
-    
+
     // Find all edges where current node is the target (depends on source)
-    const incomingEdges = graph.edges.filter(e => e.to === currentId);
-    
+    const incomingEdges = graph.edges.filter((e) => e.to === currentId);
+
     for (const edge of incomingEdges) {
       const sourceNode = graph.nodes.get(edge.from);
       if (sourceNode) {
@@ -25,7 +27,7 @@ export function getUpstream(graph: DependencyGraph, nodeId: string): GraphNode[]
       }
     }
   }
-  
+
   traverse(nodeId);
   return upstream;
 }
@@ -39,14 +41,16 @@ export function getUpstream(graph: DependencyGraph, nodeId: string): GraphNode[]
 export function getDownstream(graph: DependencyGraph, nodeId: string): GraphNode[] {
   const downstream: GraphNode[] = [];
   const visited = new Set<string>();
-  
+
   function traverse(currentId: string) {
-    if (visited.has(currentId)) return;
+    if (visited.has(currentId)) {
+      return;
+    }
     visited.add(currentId);
-    
+
     // Find all edges where current node is the source (others depend on it)
-    const outgoingEdges = graph.edges.filter(e => e.from === currentId);
-    
+    const outgoingEdges = graph.edges.filter((e) => e.from === currentId);
+
     for (const edge of outgoingEdges) {
       const targetNode = graph.nodes.get(edge.to);
       if (targetNode) {
@@ -55,7 +59,7 @@ export function getDownstream(graph: DependencyGraph, nodeId: string): GraphNode
       }
     }
   }
-  
+
   traverse(nodeId);
   return downstream;
 }
@@ -67,9 +71,9 @@ export function getDownstream(graph: DependencyGraph, nodeId: string): GraphNode
  * @returns Array of directly connected upstream nodes
  */
 export function getImmediateDependencies(graph: DependencyGraph, nodeId: string): GraphNode[] {
-  const incomingEdges = graph.edges.filter(e => e.to === nodeId);
+  const incomingEdges = graph.edges.filter((e) => e.to === nodeId);
   return incomingEdges
-    .map(e => graph.nodes.get(e.from))
+    .map((e) => graph.nodes.get(e.from))
     .filter((n): n is GraphNode => n !== undefined);
 }
 
@@ -80,9 +84,9 @@ export function getImmediateDependencies(graph: DependencyGraph, nodeId: string)
  * @returns Array of directly connected downstream nodes
  */
 export function getImmediateDependents(graph: DependencyGraph, nodeId: string): GraphNode[] {
-  const outgoingEdges = graph.edges.filter(e => e.from === nodeId);
+  const outgoingEdges = graph.edges.filter((e) => e.from === nodeId);
   return outgoingEdges
-    .map(e => graph.nodes.get(e.to))
+    .map((e) => graph.nodes.get(e.to))
     .filter((n): n is GraphNode => n !== undefined);
 }
 
@@ -93,33 +97,31 @@ export function getImmediateDependents(graph: DependencyGraph, nodeId: string): 
  * @param toId - Target node ID
  * @returns Array of paths, where each path is an array of node IDs
  */
-export function findPaths(
-  graph: DependencyGraph,
-  fromId: string,
-  toId: string
-): string[][] {
+export function findPaths(graph: DependencyGraph, fromId: string, toId: string): string[][] {
   const paths: string[][] = [];
   const visited = new Set<string>();
-  
+
   function dfs(currentId: string, currentPath: string[]) {
     if (currentId === toId) {
       paths.push([...currentPath]);
       return;
     }
-    
-    if (visited.has(currentId)) return;
+
+    if (visited.has(currentId)) {
+      return;
+    }
     visited.add(currentId);
-    
-    const outgoingEdges = graph.edges.filter(e => e.from === currentId);
+
+    const outgoingEdges = graph.edges.filter((e) => e.from === currentId);
     for (const edge of outgoingEdges) {
       currentPath.push(edge.to);
       dfs(edge.to, currentPath);
       currentPath.pop();
     }
-    
+
     visited.delete(currentId);
   }
-  
+
   dfs(fromId, [fromId]);
   return paths;
 }
@@ -133,7 +135,7 @@ export function detectCycles(graph: DependencyGraph): string[][] {
   const cycles: string[][] = [];
   const visited = new Set<string>();
   const recursionStack = new Set<string>();
-  
+
   function dfs(nodeId: string, path: string[]) {
     if (recursionStack.has(nodeId)) {
       // Found a cycle - extract it from the path
@@ -143,28 +145,30 @@ export function detectCycles(graph: DependencyGraph): string[][] {
       cycles.push(cycle);
       return;
     }
-    
-    if (visited.has(nodeId)) return;
-    
+
+    if (visited.has(nodeId)) {
+      return;
+    }
+
     visited.add(nodeId);
     recursionStack.add(nodeId);
     path.push(nodeId);
-    
-    const outgoingEdges = graph.edges.filter(e => e.from === nodeId);
+
+    const outgoingEdges = graph.edges.filter((e) => e.from === nodeId);
     for (const edge of outgoingEdges) {
       dfs(edge.to, path);
     }
-    
+
     path.pop();
     recursionStack.delete(nodeId);
   }
-  
+
   for (const nodeId of graph.nodes.keys()) {
     if (!visited.has(nodeId)) {
       dfs(nodeId, []);
     }
   }
-  
+
   return cycles;
 }
 
@@ -183,15 +187,15 @@ export function hasCycles(graph: DependencyGraph): boolean {
  * @returns Array of root nodes
  */
 export function getRootNodes(graph: DependencyGraph): GraphNode[] {
-  const allTargets = new Set(graph.edges.map(e => e.to));
+  const allTargets = new Set(graph.edges.map((e) => e.to));
   const roots: GraphNode[] = [];
-  
+
   for (const [id, node] of graph.nodes) {
     if (!allTargets.has(id)) {
       roots.push(node);
     }
   }
-  
+
   return roots;
 }
 
@@ -201,15 +205,15 @@ export function getRootNodes(graph: DependencyGraph): GraphNode[] {
  * @returns Array of leaf nodes
  */
 export function getLeafNodes(graph: DependencyGraph): GraphNode[] {
-  const allSources = new Set(graph.edges.map(e => e.from));
+  const allSources = new Set(graph.edges.map((e) => e.from));
   const leaves: GraphNode[] = [];
-  
+
   for (const [id, node] of graph.nodes) {
     if (!allSources.has(id)) {
       leaves.push(node);
     }
   }
-  
+
   return leaves;
 }
 
@@ -227,26 +231,28 @@ export interface ImpactNode {
 
 export function getImpactChain(graph: DependencyGraph, nodeId: string): ImpactNode | null {
   const startNode = graph.nodes.get(nodeId);
-  if (!startNode) return null;
-  
+  if (!startNode) {
+    return null;
+  }
+
   const visited = new Set<string>();
-  
+
   function buildTree(currentId: string): ImpactNode {
     const node = graph.nodes.get(currentId)!;
     visited.add(currentId);
-    
-    const outgoingEdges = graph.edges.filter(e => e.from === currentId);
+
+    const outgoingEdges = graph.edges.filter((e) => e.from === currentId);
     const dependents: ImpactNode[] = [];
-    
+
     for (const edge of outgoingEdges) {
       if (!visited.has(edge.to)) {
         dependents.push(buildTree(edge.to));
       }
     }
-    
+
     return { node, dependents };
   }
-  
+
   return buildTree(nodeId);
 }
 
@@ -259,10 +265,10 @@ export function getImpactChain(graph: DependencyGraph, nodeId: string): ImpactNo
 export function formatImpactChain(chain: ImpactNode, indent: number = 0): string {
   const prefix = '  '.repeat(indent);
   let result = `${prefix}→ ${chain.node.type}:${chain.node.name}\n`;
-  
+
   for (const dependent of chain.dependents) {
     result += formatImpactChain(dependent, indent + 1);
   }
-  
+
   return result;
 }

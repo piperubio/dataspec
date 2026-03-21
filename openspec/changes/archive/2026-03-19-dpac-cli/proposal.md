@@ -21,6 +21,7 @@ dpac-core defines what the data platform IS — the resources (sources, datasets
   - Consistent error formatting across all commands
 
 **Out of scope:**
+
 - `dpac inspect` for model introspection (moved to dpac-docs change)
 - LSP server functionality (separate dpac-lsp change)
 - Documentation generation (separate dpac-docs change)
@@ -28,10 +29,12 @@ dpac-core defines what the data platform IS — the resources (sources, datasets
 ## Capabilities
 
 ### New Capabilities
+
 - `validation-engine`: Validate graph integrity, contract consistency, cross-resource references, step type coherence, and breaking changes via workspace dependency graph analysis
 - `cli-tooling`: CLI commands for validation (`dpac validate`), project scaffolding (`dpac init`), resource discovery (`dpac list`), resource inspection (`dpac show`), version display (`--version`), help (`--help`), and consistent error formatting
 
 ### Modified Capabilities
+
 <!-- No existing capabilities are being modified — this change introduces tooling on top of dpac-core -->
 
 ## Impact

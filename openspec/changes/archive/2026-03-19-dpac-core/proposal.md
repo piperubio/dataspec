@@ -14,6 +14,7 @@ This change introduces **dpac-core** — a declarative DSL that defines what a d
 - **Flow definitions** — typed steps (extract, transform, load) describing how datasets are produced
 
 **Out of scope for dpac-core:**
+
 - Validation engine or cross-reference checking (dpac-cli)
 - Breaking change detection (dpac-cli)
 - CLI tooling, LSP, or documentation generation (separate changes)
@@ -23,6 +24,7 @@ This change introduces **dpac-core** — a declarative DSL that defines what a d
 ## Capabilities
 
 ### New Capabilities
+
 - `platform-definition`: Define global platform architecture including storage backends and analytics engines
 - `source-management`: Declare external data producers (databases, APIs, file systems, SaaS) — name, type, and available entities. SIN connection details (host, port, credentials) because dpac-core is definitions-only
 - `dataset-definition`: Create logical data units organized in layers (raw, refined, serving) with storage configurations
@@ -30,6 +32,7 @@ This change introduces **dpac-core** — a declarative DSL that defines what a d
 - `flow-definition`: Define data flows with typed steps (extract, transform, load) describing how datasets are produced from sources
 
 ### Modified Capabilities
+
 <!-- No existing capabilities are being modified - this is a new framework -->
 
 ## Impact
@@ -45,4 +48,3 @@ The following capabilities are planned as separate changes:
 - **`dpac-cli`**: CLI tooling (`dpac validate`, `dpac init`) with validation engine for cross-reference checking and graph integrity
 - **`dpac-lsp`**: Language Server Protocol server providing real-time feedback, hover documentation, and completion
 - **`dpac-docs`**: Documentation generation with lineage diagrams and dataset catalogs
-

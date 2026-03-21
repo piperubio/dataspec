@@ -4,8 +4,8 @@
 
 platform:
   name: ecommerce-platform
-  version: "1.0.0"
-  description: "Comprehensive data platform for global e-commerce operations"
+  version: '1.0.0'
+  description: 'Comprehensive data platform for global e-commerce operations'
   owner: data-platform-team
 
 # Storage backends configuration
@@ -13,21 +13,21 @@ platform:
 storage:
   - name: s3-data-lake
     type: s3
-    connection: "s3://data-lake-bucket/"
+    connection: 's3://data-lake-bucket/'
     options:
       region: us-east-1
       encryption: AES256
-      
+
   - name: postgresql-warehouse
     type: postgresql
-    connection: "postgresql://warehouse:5432/analytics"
+    connection: 'postgresql://warehouse:5432/analytics'
     options:
       ssl_mode: require
       pool_size: 20
-      
+
   - name: clickhouse-analytics
     type: clickhouse
-    connection: "clickhouse://analytics:8123/default"
+    connection: 'clickhouse://analytics:8123/default'
     options:
       compression: lz4
       timeout: 300
@@ -36,21 +36,21 @@ storage:
 engines:
   - name: dbt-transforms
     type: dbt
-    version: ">=1.5.0"
+    version: '>=1.5.0'
     config:
       threads: 8
       target: production
-      
+
   - name: duckdb-local
     type: duckdb
-    version: ">=0.9.0"
+    version: '>=0.9.0'
     config:
       memory_limit: 8GB
       temp_directory: /tmp/duckdb
-      
+
   - name: spark-cluster
     type: spark
-    version: ">=3.4.0"
+    version: '>=3.4.0'
     config:
       executor_memory: 4g
       executor_cores: 4

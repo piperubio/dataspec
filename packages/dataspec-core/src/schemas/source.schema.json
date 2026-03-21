@@ -1,121 +1,109 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema#",
-    "additionalProperties": false,
-    "definitions": {
-        "Metadata": {
-            "additionalProperties": false,
-            "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
-            "type": "object"
-        },
-        "Record<string,unknown>": {
-            "additionalProperties": false,
-            "type": "object"
-        },
-        "SourceEntity": {
-            "additionalProperties": false,
-            "description": "Represents an entity (table, collection, endpoint, file pattern) within a source.",
-            "properties": {
-                "description": {
-                    "description": "Human-readable description of the entity",
-                    "type": "string"
-                },
-                "entityType": {
-                    "description": "Type of entity (e.g., 'table', 'collection', 'endpoint', 'file')",
-                    "type": "string"
-                },
-                "metadata": {
-                    "$ref": "#/definitions/Metadata",
-                    "description": "Additional metadata for the entity"
-                },
-                "method": {
-                    "description": "HTTP method for API sources (e.g., 'GET', 'POST')",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "The name of the entity",
-                    "type": "string"
-                },
-                "pathParams": {
-                    "description": "Path parameters for API endpoints",
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "pattern": {
-                    "description": "File pattern for file_system sources (e.g., '*.csv')",
-                    "type": "string"
-                },
-                "queryParams": {
-                    "description": "Query parameters for API endpoints",
-                    "items": {
-                        "type": "string"
-                    },
-                    "type": "array"
-                },
-                "schema": {
-                    "$ref": "#/definitions/Record%3Cstring%2Cunknown%3E",
-                    "description": "Schema definition if applicable"
-                }
-            },
-            "required": [
-                "name"
-            ],
-            "type": "object"
-        },
-        "SourceType": {
-            "description": "Source type for data ingestion.\nCategorizes where data originates from.\nSource type values.",
-            "enum": [
-                "api",
-                "database",
-                "file_system",
-                "saas"
-            ],
-            "type": "string"
-        }
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "Metadata": {
+      "additionalProperties": false,
+      "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
+      "type": "object"
     },
-    "description": "Represents a data source (database, API, file system, SaaS).\nContains NO connection details - this is definitions-only.",
-    "properties": {
-        "createdAt": {
-            "description": "Creation timestamp",
-            "type": "string"
+    "Record<string,unknown>": {
+      "additionalProperties": false,
+      "type": "object"
+    },
+    "SourceEntity": {
+      "additionalProperties": false,
+      "description": "Represents an entity (table, collection, endpoint, file pattern) within a source.",
+      "properties": {
+        "description": {
+          "description": "Human-readable description of the entity",
+          "type": "string"
         },
-        "entities": {
-            "description": "Entities available in this source",
-            "items": {
-                "$ref": "#/definitions/SourceEntity"
-            },
-            "type": "array"
+        "entityType": {
+          "description": "Type of entity (e.g., 'table', 'collection', 'endpoint', 'file')",
+          "type": "string"
         },
         "metadata": {
-            "$ref": "#/definitions/Metadata",
-            "description": "Metadata associated with the resource"
+          "$ref": "#/definitions/Metadata",
+          "description": "Additional metadata for the entity"
+        },
+        "method": {
+          "description": "HTTP method for API sources (e.g., 'GET', 'POST')",
+          "type": "string"
         },
         "name": {
-            "description": "Unique name for the source",
+          "description": "The name of the entity",
+          "type": "string"
+        },
+        "pathParams": {
+          "description": "Path parameters for API endpoints",
+          "items": {
             "type": "string"
+          },
+          "type": "array"
         },
-        "tags": {
-            "description": "Tags for categorization and filtering",
-            "items": {
-                "type": "string"
-            },
-            "type": "array"
+        "pattern": {
+          "description": "File pattern for file_system sources (e.g., '*.csv')",
+          "type": "string"
         },
-        "type": {
-            "$ref": "#/definitions/SourceType",
-            "description": "Type of source"
-        },
-        "updatedAt": {
-            "description": "Last update timestamp",
+        "queryParams": {
+          "description": "Query parameters for API endpoints",
+          "items": {
             "type": "string"
+          },
+          "type": "array"
+        },
+        "schema": {
+          "$ref": "#/definitions/Record%3Cstring%2Cunknown%3E",
+          "description": "Schema definition if applicable"
         }
+      },
+      "required": ["name"],
+      "type": "object"
     },
-    "required": [
-        "entities",
-        "name",
-        "type"
-    ],
-    "type": "object"
+    "SourceType": {
+      "description": "Source type for data ingestion.\nCategorizes where data originates from.\nSource type values.",
+      "enum": ["api", "database", "file_system", "saas"],
+      "type": "string"
+    }
+  },
+  "description": "Represents a data source (database, API, file system, SaaS).\nContains NO connection details - this is definitions-only.",
+  "properties": {
+    "createdAt": {
+      "description": "Creation timestamp",
+      "type": "string"
+    },
+    "entities": {
+      "description": "Entities available in this source",
+      "items": {
+        "$ref": "#/definitions/SourceEntity"
+      },
+      "type": "array"
+    },
+    "metadata": {
+      "$ref": "#/definitions/Metadata",
+      "description": "Metadata associated with the resource"
+    },
+    "name": {
+      "description": "Unique name for the source",
+      "type": "string"
+    },
+    "tags": {
+      "description": "Tags for categorization and filtering",
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "type": {
+      "$ref": "#/definitions/SourceType",
+      "description": "Type of source"
+    },
+    "updatedAt": {
+      "description": "Last update timestamp",
+      "type": "string"
+    }
+  },
+  "required": ["entities", "name", "type"],
+  "type": "object"
 }
-

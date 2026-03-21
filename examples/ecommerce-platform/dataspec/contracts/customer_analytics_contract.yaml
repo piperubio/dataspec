@@ -2,7 +2,7 @@
 # Defines the schema for aggregated customer analytics in serving layer
 
 name: customer_analytics_contract
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: customer_id
     type: uuid
@@ -10,75 +10,75 @@ fields:
       unique: true
       not_null: true
     description: Unique customer identifier
-    
+
   - name: email
     type: string
     constraints:
       not_null: true
     description: Customer email (hashed if PII restricted)
-    
+
   - name: first_name
     type: string
     description: Customer first name
-    
+
   - name: last_name
     type: string
     description: Customer last name
-    
+
   - name: total_orders
     type: integer
     constraints:
       not_null: true
     description: Total number of orders
-    
+
   - name: total_revenue
     type: decimal
     constraints:
       not_null: true
     description: Lifetime revenue from customer
-    
+
   - name: average_order_value
     type: decimal
     description: Average order value
-    
+
   - name: first_order_date
     type: date
     description: Date of first purchase
-    
+
   - name: last_order_date
     type: date
     description: Date of last purchase
-    
+
   - name: days_since_last_order
     type: integer
     description: Days since last purchase (for churn analysis)
-    
+
   - name: customer_segment
     type: string
     description: Customer segment (VIP, Regular, At Risk, etc.)
-    
+
   - name: ltv_segment
     type: string
     description: Lifetime value segment
-    
+
   - name: preferred_category
     type: string
     description: Most purchased category
-    
+
   - name: country
     type: string
     description: Customer country
-    
+
   - name: acquisition_channel
     type: string
     description: How customer was acquired
-    
+
   - name: created_at
     type: timestamp
     constraints:
       not_null: true
     description: Record creation timestamp
-    
+
   - name: updated_at
     type: timestamp
     description: Last update timestamp

@@ -2,72 +2,72 @@
 # Defines the schema for sales metrics in serving layer
 
 name: sales_dashboard_contract
-version: "1.0.0"
+version: '1.0.0'
 fields:
   - name: metric_date
     type: date
     constraints:
       not_null: true
     description: Date for the metric
-    
+
   - name: metric_hour
     type: integer
     description: Hour of day (0-23) for hourly metrics, null for daily
-    
+
   - name: dimension_type
     type: string
     constraints:
       not_null: true
     description: Type of dimension (overall, category, region, etc.)
-    
+
   - name: dimension_value
     type: string
     description: Value of dimension (e.g., "Electronics", "US", etc.)
-    
+
   - name: total_orders
     type: integer
     constraints:
       not_null: true
     description: Number of orders
-    
+
   - name: total_revenue
     type: decimal
     constraints:
       not_null: true
     description: Total revenue
-    
+
   - name: total_discounts
     type: decimal
     description: Total discounts applied
-    
+
   - name: total_tax
     type: decimal
     description: Total tax collected
-    
+
   - name: average_order_value
     type: decimal
     description: Average order value
-    
+
   - name: unique_customers
     type: integer
     description: Unique customers who placed orders
-    
+
   - name: new_customers
     type: integer
     description: First-time customers
-    
+
   - name: repeat_customers
     type: integer
     description: Returning customers
-    
+
   - name: conversion_rate
     type: decimal
     description: Conversion rate from sessions to orders
-    
+
   - name: refund_rate
     type: decimal
     description: Percentage of orders refunded
-    
+
   - name: created_at
     type: timestamp
     constraints:

@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: order_item_contract
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Cleaned order line items with calculated fields and referential integrity

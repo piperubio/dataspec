@@ -3,12 +3,7 @@
  * @module types/common
  */
 
-export type {
-  Timestamp,
-  Metadata,
-  Tags,
-  WithMetadata,
-} from './common';
+export type { Timestamp, Metadata, Tags, WithMetadata } from './common';
 
 export type {
   StorageType,
@@ -18,25 +13,11 @@ export type {
   PlatformConfig,
 } from './platform';
 
-export type {
-  DataType,
-  FieldConstraints,
-  ContractField,
-  Contract,
-} from './contract';
+export type { DataType, FieldConstraints, ContractField, Contract } from './contract';
 
-export type {
-  ContractReference,
-  StorageConfig,
-  Dataset,
-  DatasetYamlSchema,
-} from './dataset';
+export type { ContractReference, StorageConfig, Dataset, DatasetYamlSchema } from './dataset';
 
-export type {
-  SourceType,
-  SourceEntity,
-  Source,
-} from './source';
+export type { SourceType, SourceEntity, Source } from './source';
 
 export type {
   StepType,

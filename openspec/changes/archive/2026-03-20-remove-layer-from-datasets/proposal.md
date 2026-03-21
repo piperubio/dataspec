@@ -9,6 +9,7 @@ The `layer` property forces all projects into the medallion architecture pattern
 The system SHALL remove the mandatory `layer` property from dataset definitions.
 
 #### Scenario: Dataset without layer field
+
 - **WHEN** a dataset YAML file defines a dataset without a `layer` field
 - **THEN** the system SHALL accept it as a valid configuration
 
@@ -17,6 +18,7 @@ The system SHALL remove the mandatory `layer` property from dataset definitions.
 The system SHALL remove validation that enforces layer assignments.
 
 #### Scenario: Validation without layer check
+
 - **WHEN** the system validates a workspace configuration
 - **THEN** it SHALL NOT check for the presence of a `layer` field in datasets
 
@@ -44,6 +46,7 @@ None - this is a removal change.
 ## Impact
 
 **Code:**
+
 - `packages/dataspec-core/src/types/dataset.ts` - Remove `DatasetLayer` enum and `layer` property
 - `packages/dataspec-core/src/schemas/dataset.schema.json` - Remove `layer` from required fields
 - `packages/dataspec-core/src/parsers/dataset.ts` - Remove layer validation
@@ -53,11 +56,14 @@ None - this is a removal change.
 - `packages/dataspec-cli/src/parsing/workspace.ts` - Remove `layer` from `ParsedDataset`
 
 **Tests:**
+
 - 6 test files need updates for layer removal
 
 **Examples:**
+
 - 30 example YAML files need restructuring (flatten directories)
 
 **Documentation:**
+
 - READMEs for dataspec-core and dataspec-cli
 - openspec/specs/dataset-definition/spec.md

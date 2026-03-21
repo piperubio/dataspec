@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'bun:test';
+
 import { parseContractYaml } from '../parsers/contract';
 
 describe('parseContractYaml', () => {
@@ -39,9 +40,9 @@ fields:
     expect(result.name).toBe('user_contract');
     expect(result.version).toBe('1.0.0');
     expect(result.fields).toHaveLength(8);
-    
+
     // Check field types
-    const types = result.fields.map(f => f.type);
+    const types = result.fields.map((f) => f.type);
     expect(types).toContain('uuid');
     expect(types).toContain('string');
     expect(types).toContain('integer');

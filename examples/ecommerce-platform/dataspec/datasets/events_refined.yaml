@@ -9,7 +9,7 @@ storage:
 
 contract:
   name: analytics_events_contract
-  version: "1.0.0"
+  version: '1.0.0'
 
 metadata:
   description: Cleaned and enriched clickstream events with user attribution

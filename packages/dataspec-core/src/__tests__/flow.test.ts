@@ -4,6 +4,7 @@
  */
 
 import { describe, it, expect } from 'bun:test';
+
 import { parseFlowYaml } from '../parsers/flow';
 
 describe('parseFlowYaml', () => {
@@ -28,17 +29,17 @@ steps:
     const result = parseFlowYaml(yaml);
     expect(result.name).toBe('user_etl_pipeline');
     expect(result.steps).toHaveLength(3);
-    
+
     // Check extract step
     expect(result.steps[0].type).toBe('extract');
     expect(result.steps[0].source).toBe('production_db');
     expect(result.steps[0].entity).toBe('users');
-    
+
     // Check transform step
     expect(result.steps[1].type).toBe('transform');
     expect(result.steps[1].inputs).toContain('raw_users');
     expect(result.steps[1].engine).toBe('dbt-transforms');
-    
+
     // Check load step
     expect(result.steps[2].type).toBe('load');
     expect(result.steps[2].input).toBe('refined_users');
