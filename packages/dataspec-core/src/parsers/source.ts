@@ -197,7 +197,7 @@ function parseSaasEntity(entityObj: Record<string, unknown>): SourceEntitySaas {
 }
 
 function parseMetadata(metadata: unknown): Record<string, unknown> | undefined {
-  if (!metadata || typeof metadata !== 'object') return undefined;
+  if (!metadata || typeof metadata !== 'object') {return undefined;}
   const meta = metadata as Record<string, unknown>;
   return {
     description: meta.description as string | undefined,
@@ -270,7 +270,7 @@ export function parseSourceYaml(yamlContent: string): Source {
         type: 'database',
         entities: parsedEntities as SourceEntityDatabase[],
       };
-      if (meta) source.metadata = meta;
+      if (meta) {source.metadata = meta;}
       return source;
     }
     case 'api': {
@@ -291,7 +291,7 @@ export function parseSourceYaml(yamlContent: string): Source {
         baseUrl: parsedObj.baseUrl,
         entities: parsedEntities as SourceEntityApi[],
       };
-      if (meta) source.metadata = meta;
+      if (meta) {source.metadata = meta;}
       return source;
     }
     case 'file_system': {
@@ -300,7 +300,7 @@ export function parseSourceYaml(yamlContent: string): Source {
         type: 'file_system',
         entities: parsedEntities as SourceEntityFileSystem[],
       };
-      if (meta) source.metadata = meta;
+      if (meta) {source.metadata = meta;}
       return source;
     }
     case 'streaming': {
@@ -321,7 +321,7 @@ export function parseSourceYaml(yamlContent: string): Source {
         baseUrl: parsedObj.baseUrl,
         entities: parsedEntities as SourceEntityStreaming[],
       };
-      if (meta) source.metadata = meta;
+      if (meta) {source.metadata = meta;}
       return source;
     }
     case 'saas': {
@@ -335,7 +335,7 @@ export function parseSourceYaml(yamlContent: string): Source {
         provider: parsedObj.provider,
         entities: parsedEntities as SourceEntitySaas[],
       };
-      if (meta) source.metadata = meta;
+      if (meta) {source.metadata = meta;}
       return source;
     }
     default:
