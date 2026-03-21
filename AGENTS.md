@@ -23,3 +23,7 @@ The project is structured as a monorepo using **Bun** as the primary runtime and
 - NEVER push to `main` directly. ALWAYS create a branch and open a PR
 - Branch naming: `feat/description`, `fix/description`, `docs/description`, `hotfix/description`, `release/description`, `chore/description`
 - When creatinmg PR's, write clear descriptions explaining WHAT and WHY
+
+# File artifacts in project (OpenSpec flow)
+artifact_store:
+  mode: openspec

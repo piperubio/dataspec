@@ -1,0 +1,23 @@
+{
+  "skill_name": "dataspec-dsl",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I'm starting a new data platform for our fintech company. We need to define a DataSpec workspace for a payment processing system. We have a PostgreSQL database as our main source with tables for transactions, merchants, and payouts. Data goes to an S3 data lake first, then gets transformed with dbt and loaded into a ClickHouse analytics warehouse. Can you create all the dataspec YAML files for this?",
+      "expected_output": "A complete dataspec/ directory with platform.yaml, source files, contract files, dataset files, and a flow file, all correctly cross-referenced",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I have an existing DataSpec workspace for my e-commerce platform. I need to add a new Kafka streaming source for real-time inventory events. The topic is called 'inventory-updates' on our Kafka cluster at kafka.internal:9092. Each event has: inventory_id (uuid, required), product_id (uuid, required), warehouse_id (string), quantity_changed (integer, required), change_type (string — 'restock' or 'sale'), and event_timestamp (timestamp, required). I also need to wire it into a new flow that extracts from Kafka and loads to a raw dataset in our S3 lake.",
+      "expected_output": "New source YAML, contract YAML, dataset YAML, and flow YAML files for the Kafka inventory streaming pipeline",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Can you look at my dataspec workspace and explain the relationship between my sources, contracts, datasets, and flows? I want to understand the data lineage — which sources feed which datasets through which flows. Also tell me if there are any orphaned resources or validation issues.",
+      "expected_output": "A clear explanation of the dependency graph, data lineage, and any issues found in the workspace",
+      "files": []
+    }
+  ]
+}
