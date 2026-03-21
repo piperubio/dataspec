@@ -1,6 +1,6 @@
 {
   "name": "@dataspec/dataspec-cli",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "DataSpec CLI - Declarative Data Platform Architecture Command-Line Interface",
   "keywords": [
     "cli",

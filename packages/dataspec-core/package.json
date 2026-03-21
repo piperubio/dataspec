@@ -1,6 +1,6 @@
 {
   "name": "@dataspec/dataspec-core",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Declarative Data Platform Architecture Core - YAML-based DSL for modeling data platforms",
   "keywords": [
     "data-engineering",
