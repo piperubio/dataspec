@@ -5,15 +5,21 @@ name: production_db
 type: database
 entities:
   - name: users
+    location: public.users
+    contract:
+      name: users_raw_schema
+      version: "1.0.0"
     description: Customer accounts and profile information
-    entityType: table
     metadata:
       primary_key: user_id
       estimated_rows: 5000000
 
   - name: orders
+    location: public.orders
+    contract:
+      name: orders_raw_schema
+      version: "1.0.0"
     description: Order transactions including status and totals
-    entityType: table
     metadata:
       primary_key: order_id
       foreign_keys:
@@ -21,8 +27,11 @@ entities:
       estimated_rows: 25000000
 
   - name: order_items
+    location: public.order_items
+    contract:
+      name: order_items_raw_schema
+      version: "1.0.0"
     description: Individual items within orders with quantities and prices
-    entityType: table
     metadata:
       primary_key: order_item_id
       foreign_keys:
@@ -31,8 +40,11 @@ entities:
       estimated_rows: 75000000
 
   - name: products
+    location: public.products
+    contract:
+      name: products_raw_schema
+      version: "1.0.0"
     description: Product catalog with pricing and inventory
-    entityType: table
     metadata:
       primary_key: product_id
       foreign_keys:
@@ -40,15 +52,21 @@ entities:
       estimated_rows: 500000
 
   - name: categories
+    location: public.categories
+    contract:
+      name: categories_raw_schema
+      version: "1.0.0"
     description: Product categories hierarchy
-    entityType: table
     metadata:
       primary_key: category_id
       estimated_rows: 500
 
   - name: inventory
+    location: public.inventory
+    contract:
+      name: inventory_raw_schema
+      version: "1.0.0"
     description: Real-time inventory tracking by product and warehouse
-    entityType: table
     metadata:
       primary_key: inventory_id
       foreign_keys:
@@ -56,8 +74,11 @@ entities:
       estimated_rows: 1000000
 
   - name: reviews
+    location: public.reviews
+    contract:
+      name: reviews_raw_schema
+      version: "1.0.0"
     description: Customer product reviews and ratings
-    entityType: table
     metadata:
       primary_key: review_id
       foreign_keys:

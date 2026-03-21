@@ -1,0 +1,90 @@
+# Source: gRPC User Service
+# High-performance gRPC service for user-related operations
+
+name: grpc_user_service
+type: api
+protocol: grpc
+baseUrl: user-service.internal.example.com
+entities:
+  - name: get_user
+    location: /users.v1.UserService/GetUser
+    method: GetUser
+    contract:
+      name: user_response_schema
+      version: "1.0.0"
+    description: Retrieve user by ID
+    metadata:
+      auth_required: true
+
+  - name: list_users
+    location: /users.v1.UserService/ListUsers
+    method: ListUsers
+    contract:
+      name: user_list_response_schema
+      version: "1.0.0"
+    description: List users with pagination
+    metadata:
+      auth_required: true
+
+  - name: create_user
+    location: /users.v1.UserService/CreateUser
+    method: CreateUser
+    contract:
+      name: user_request_schema
+      version: "1.0.0"
+    description: Create a new user
+    metadata:
+      auth_required: true
+      admin_only: true
+
+  - name: update_user
+    location: /users.v1.UserService/UpdateUser
+    method: UpdateUser
+    contract:
+      name: user_update_schema
+      version: "1.0.0"
+    description: Update existing user
+    metadata:
+      auth_required: true
+
+  - name: delete_user
+    location: /users.v1.UserService/DeleteUser
+    method: DeleteUser
+    contract:
+      name: user_delete_schema
+      version: "1.0.0"
+    description: Soft delete a user
+    metadata:
+      auth_required: true
+      admin_only: true
+
+  - name: get_user_preferences
+    location: /users.v1.UserService/GetUserPreferences
+    method: GetUserPreferences
+    contract:
+      name: user_preferences_schema
+      version: "1.0.0"
+    description: Retrieve user preferences
+    metadata:
+      auth_required: true
+
+  - name: batch_get_users
+    location: /users.v1.UserService/BatchGetUsers
+    method: BatchGetUsers
+    contract:
+      name: batch_users_response_schema
+      version: "1.0.0"
+    description: Retrieve multiple users by IDs
+    metadata:
+      auth_required: true
+      max_batch_size: 100
+
+metadata:
+  description: gRPC microservice for user management operations
+  owner: user-platform-team
+  service_type: grpc
+  tags:
+    - internal
+    - grpc
+    - users
+    - high-performance

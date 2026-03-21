@@ -3,101 +3,93 @@
 
 name: external_apis
 type: api
+protocol: https
+baseUrl: api.example.com
 entities:
   # Shipping Provider API
   - name: shipments
-    description: Shipment tracking and status updates
-    entityType: endpoint
+    location: /api/v1/shipments/{tracking_number}
     method: GET
-    pathParams:
-      - tracking_number
-    queryParams:
-      - carrier
-      - status
-      - date_from
-      - date_to
+    contract:
+      name: shipments_raw_schema
+      version: "1.0.0"
+    description: Shipment tracking and status updates
     metadata:
       provider: fedex-ups-dhl
       rate_limit: 5000
 
   - name: shipping_rates
-    description: Real-time shipping rate calculations
-    entityType: endpoint
+    location: /api/v1/shipping/rates
     method: POST
+    contract:
+      name: shipping_rates_raw_schema
+      version: "1.0.0"
+    description: Real-time shipping rate calculations
     metadata:
       cache_duration: 1800
 
   - name: delivery_estimates
-    description: Estimated delivery dates
-    entityType: endpoint
+    location: /api/v1/delivery/estimates
     method: GET
-    queryParams:
-      - origin_zip
-      - destination_zip
-      - service_type
+    contract:
+      name: delivery_estimates_raw_schema
+      version: "1.0.0"
+    description: Estimated delivery dates
     metadata:
       cache_duration: 3600
 
   # Marketing Platform API
   - name: campaigns
-    description: Marketing campaign metadata
-    entityType: endpoint
+    location: /api/v1/marketing/campaigns
     method: GET
-    queryParams:
-      - status
-      - channel
-      - start_date
-      - end_date
+    contract:
+      name: marketing_campaigns_raw_schema
+      version: "1.0.0"
+    description: Marketing campaign metadata
     metadata:
       provider: hubspot/marketo
       rate_limit: 1000
 
   - name: email_metrics
-    description: Email campaign performance metrics
-    entityType: endpoint
+    location: /api/v1/marketing/email/metrics
     method: GET
-    queryParams:
-      - campaign_id
-      - metric_type
-      - date_range
+    contract:
+      name: email_metrics_raw_schema
+      version: "1.0.0"
+    description: Email campaign performance metrics
     metadata:
       rate_limit: 500
 
   - name: ad_spend
-    description: Advertising spend by platform and campaign
-    entityType: endpoint
+    location: /api/v1/marketing/ads/spend
     method: GET
-    queryParams:
-      - platform
-      - date_from
-      - date_to
-      - campaign_id
+    contract:
+      name: ad_spend_raw_schema
+      version: "1.0.0"
+    description: Advertising spend by platform and campaign
     metadata:
       provider: google-ads-meta
       rate_limit: 300
 
   # Customer Support API
   - name: support_tickets
-    description: Customer support ticket data
-    entityType: endpoint
+    location: /api/v1/support/tickets
     method: GET
-    queryParams:
-      - status
-      - priority
-      - created_after
-      - category
+    contract:
+      name: support_tickets_raw_schema
+      version: "1.0.0"
+    description: Customer support ticket data
     metadata:
       provider: zendesk
       rate_limit: 700
 
   - name: customer_satisfaction
-    description: CSAT and NPS survey responses
-    entityType: endpoint
+    location: /api/v1/support/satisfaction
     method: GET
-    queryParams:
-      - survey_type
-      - date_from
-      - date_to
+    contract:
+      name: customer_satisfaction_raw_schema
+      version: "1.0.0"
+    description: CSAT and NPS survey responses
     metadata:
       rate_limit: 200
 

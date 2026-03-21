@@ -5,38 +5,53 @@ name: analytics_db
 type: database
 entities:
   - name: events
+    location: analytics.events
+    contract:
+      name: events_raw_schema
+      version: "1.0.0"
     description: Clickstream and user behavior events
-    entityType: table
     metadata:
       primary_key: event_id
       partition_key: event_timestamp
       estimated_rows: 1000000000
 
   - name: sessions
+    location: analytics.sessions
+    contract:
+      name: sessions_raw_schema
+      version: "1.0.0"
     description: User session aggregations
-    entityType: table
     metadata:
       primary_key: session_id
       partition_key: session_start
       estimated_rows: 100000000
 
   - name: experiments
+    location: analytics.experiments
+    contract:
+      name: experiments_raw_schema
+      version: "1.0.0"
     description: A/B test experiment assignments
-    entityType: table
     metadata:
       primary_key: experiment_id
       estimated_rows: 5000000
 
   - name: attribution
+    location: analytics.attribution
+    contract:
+      name: attribution_raw_schema
+      version: "1.0.0"
     description: Marketing attribution data
-    entityType: table
     metadata:
       primary_key: attribution_id
       estimated_rows: 50000000
 
   - name: cohorts
+    location: analytics.cohorts
+    contract:
+      name: cohorts_raw_schema
+      version: "1.0.0"
     description: User cohort analysis tables
-    entityType: table
     metadata:
       primary_key: cohort_id
       estimated_rows: 10000000

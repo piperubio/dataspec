@@ -6,36 +6,58 @@ name: external_s3_bucket
 type: file_system
 entities:
   - name: marketing_csv_exports
-    description: Marketing campaign data exported as CSV files
-    entityType: file_pattern
-    pattern: 'marketing/campaigns/*.csv'
+    location: s3://external-data-bucket/marketing/campaigns/*.csv
     format: csv
+    contract:
+      name: marketing_campaigns_raw_schema
+      version: "1.0.0"
+    description: Marketing campaign data exported as CSV files
 
   - name: application_logs
-    description: Application log files in JSON format
-    entityType: file_pattern
-    pattern: 'logs/application/*.json'
+    location: s3://external-data-bucket/logs/application/*.json
     format: json
+    contract:
+      name: application_logs_raw_schema
+      version: "1.0.0"
+    description: Application log files in JSON format
 
   - name: legacy_data_exports
-    description: Historical data exports from legacy system
-    entityType: file_pattern
-    pattern: 'legacy/exports/*.parquet'
+    location: s3://external-data-bucket/legacy/exports/*.parquet
     format: parquet
+    contract:
+      name: legacy_exports_raw_schema
+      version: "1.0.0"
+    description: Historical data exports from legacy system
 
   - name: third_party_datasets
+    location: s3://external-data-bucket/external/datasets/*.parquet
+    format: parquet
+    contract:
+      name: third_party_datasets_raw_schema
+      version: "1.0.0"
     description: Third-party datasets and enrichments
-    entityType: file_pattern
-    pattern: 'external/datasets/*'
-    format: mixed
 
   - name: clickstream_s3
-    description: Real-time clickstream data streamed to S3
-    entityType: file_pattern
-    pattern: 'clickstream/year=*/month=*/day=*/*.json.gz'
+    location: s3://external-data-bucket/clickstream/year=*/month=*/day=*/*.json.gz
     format: json
-    compression: gzip
-    partitioning: year/month/day
+    contract:
+      name: clickstream_raw_schema
+      version: "1.0.0"
+    partition_by:
+      - year
+      - month
+      - day
+    description: Real-time clickstream data streamed to S3
+    metadata:
+      compression: gzip
+
+  - name: product_feeds
+    location: s3://external-data-bucket/product-feeds/*.avro
+    format: avro
+    contract:
+      name: product_feeds_raw_schema
+      version: "1.0.0"
+    description: External product catalog feeds from suppliers
 
 metadata:
   description: External S3 bucket serving as file-based data source for batch ingestion
