@@ -84,6 +84,10 @@ type: database
 entities:
   - name: users
     description: Example users table
+    location: public.users
+    contract:
+      name: user_contract
+      version: 1.0.0
 `;
 
   await writeFile(join(dataspecPath, 'sources', 'example.yaml'), sourceYaml);
@@ -119,6 +123,14 @@ steps:
     source: example_db
     entity: users
     output: raw_users
+  - type: transform
+    engine: dbt
+    inputs:
+      - raw_users
+    output: transformed_users
+  - type: load
+    input: transformed_users
+    target: users_raw
 `;
 
   await writeFile(join(dataspecPath, 'flows', 'example_flow.yaml'), flowYaml);

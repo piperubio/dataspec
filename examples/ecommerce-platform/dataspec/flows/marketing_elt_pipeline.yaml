@@ -20,14 +20,14 @@ steps:
   # All business logic, validation, and cleaning happens here
   - type: transform
     inputs:
-      - marketing_campaigns_raw
+      - s3_csv_files
     engine: dbt-transforms
     output: marketing_campaigns_refined
 
   # Step 4: LOAD to refined layer with contract enforcement
   - type: load
     input: marketing_campaigns_refined
-    target: marketing_campaigns_refined_dataset
+    target: marketing_campaigns_refined
 
 metadata:
   description: |

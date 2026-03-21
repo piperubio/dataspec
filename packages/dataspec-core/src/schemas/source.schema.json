@@ -11,16 +11,40 @@
       "additionalProperties": false,
       "type": "object"
     },
+    "ContractReference": {
+      "additionalProperties": false,
+      "description": "Reference to a contract definition by name and version.",
+      "properties": {
+        "name": {
+          "description": "Name of the contract",
+          "type": "string"
+        },
+        "version": {
+          "description": "Version of the contract (semver format)",
+          "type": "string"
+        }
+      },
+      "required": ["name", "version"],
+      "type": "object"
+    },
     "SourceEntity": {
       "additionalProperties": false,
       "description": "Represents an entity (table, collection, endpoint, file pattern) within a source.",
       "properties": {
+        "contract": {
+          "$ref": "#/definitions/ContractReference",
+          "description": "Reference to a contract that defines the expected schema for this entity"
+        },
         "description": {
           "description": "Human-readable description of the entity",
           "type": "string"
         },
         "entityType": {
           "description": "Type of entity (e.g., 'table', 'collection', 'endpoint', 'file')",
+          "type": "string"
+        },
+        "location": {
+          "description": "Location identifier for the entity (e.g., 'schema.table' for databases, '/api/path' for APIs, '/data/path' for file systems)",
           "type": "string"
         },
         "metadata": {
