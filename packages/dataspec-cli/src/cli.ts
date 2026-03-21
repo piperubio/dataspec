@@ -12,6 +12,8 @@ import { showCommand } from './commands/show.js';
 import { validateCommand } from './commands/validate.js';
 import { setVerbose } from './utils/logger.js';
 
+declare const CLI_VERSION: string;
+
 const program = new Command();
 
 program
@@ -19,7 +21,7 @@ program
   .description(
     'dataspec CLI - DataSpec (Declarative Data Platform Architecture) Command-Line Interface',
   )
-  .version('0.2.1')
+  .version(CLI_VERSION)
   .option('-v, --verbose', 'Enable verbose output')
   .hook('preAction', (thisCommand) => {
     const opts = thisCommand.opts();
