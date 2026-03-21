@@ -15,6 +15,7 @@ async function createTestWorkspace(basePath: string): Promise<void> {
   await mkdir(dataspecPath, { recursive: true });
   await mkdir(join(dataspecPath, 'sources'), { recursive: true });
   await mkdir(join(dataspecPath, 'datasets'), { recursive: true });
+  await mkdir(join(dataspecPath, 'contracts'), { recursive: true });
   await mkdir(join(dataspecPath, 'flows'), { recursive: true });
 
   await writeFile(
@@ -30,11 +31,36 @@ storage:
   );
 
   await writeFile(
+    join(dataspecPath, 'contracts', 'users_contract.yaml'),
+    `name: users_contract
+version: "1.0.0"
+fields:
+  - name: id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Primary key
+  - name: email
+    type: string
+    constraints:
+      not_null: true
+    description: User email
+  - name: name
+    type: string
+    description: User name
+`,
+  );
+
+  await writeFile(
     join(dataspecPath, 'sources', 'test_db.yaml'),
     `name: test_db
 type: database
 entities:
   - name: users
+    location: public.users
+    contract:
+      name: users_contract
+      version: "1.0.0"
     description: Users table
 `,
   );

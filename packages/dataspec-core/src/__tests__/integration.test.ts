@@ -41,17 +41,19 @@ defaults:
   });
 
   it('should parse a complete data pipeline from source to serving', () => {
-    // Source definition
     const sourceYaml = `
 name: production_db
 type: database
 entities:
   - name: users
+    location: public.users
+    contract:
+      name: user_contract
+      version: "1.0.0"
     description: User accounts
     entityType: table
 `;
 
-    // Contract definition
     const contractYaml = `
 name: user_contract
 version: "1.0.0"
@@ -67,7 +69,6 @@ fields:
       not_null: true
 `;
 
-    // Dataset definitions for pipeline stages
     const rawDatasetYaml = `
 name: users_raw
 storage:
@@ -95,7 +96,6 @@ storage:
   location: analytics.customers
 `;
 
-    // Flow definition
     const flowYaml = `
 name: user_etl_pipeline
 steps:
@@ -120,7 +120,6 @@ steps:
     const servingDataset = parseDatasetYaml(servingDatasetYaml);
     const flow = parseFlowYaml(flowYaml);
 
-    // Verify the complete pipeline
     expect(source.name).toBe('production_db');
     expect(contract.name).toBe('user_contract');
     expect(rawDataset.name).toBe('users_raw');
@@ -135,18 +134,55 @@ steps:
 
   it('should support all source types', () => {
     const sources = [
-      { type: 'database', name: 'postgres_db' },
-      { type: 'api', name: 'rest_api' },
-      { type: 'file_system', name: 'local_files' },
-      { type: 'saas', name: 'salesforce' },
+      { type: 'database' as const, name: 'postgres_db', yaml: `
+name: postgres_db
+type: database
+entities:
+  - name: users
+    location: public.users
+    contract: { name: users_schema, version: "1.0.0" }
+` },
+      { type: 'api' as const, name: 'rest_api', yaml: `
+name: rest_api
+type: api
+protocol: https
+baseUrl: api.example.com
+entities:
+  - name: users
+    location: /users
+    method: GET
+    contract: { name: users_schema, version: "1.0.0" }
+` },
+      { type: 'file_system' as const, name: 'local_files', yaml: `
+name: local_files
+type: file_system
+entities:
+  - name: files
+    location: /data/*.csv
+    format: csv
+    contract: { name: files_schema, version: "1.0.0" }
+` },
+      { type: 'streaming' as const, name: 'kafka_stream', yaml: `
+name: kafka_stream
+type: streaming
+protocol: kafka
+baseUrl: kafka.example.com:9092
+entities:
+  - name: events
+    location: user-events
+    contract: { name: events_schema, version: "1.0.0" }
+` },
+      { type: 'saas' as const, name: 'salesforce', yaml: `
+name: salesforce
+type: saas
+provider: salesforce
+entities:
+  - name: leads
+    contract: { name: leads_schema, version: "1.0.0" }
+` },
     ];
 
-    for (const { type, name } of sources) {
-      const yaml = `
-name: ${name}
-type: ${type}
-entities: []
-`;
+    for (const { type, name, yaml } of sources) {
       const source = parseSourceYaml(yaml);
       expect(source.type).toBe(type);
     }
