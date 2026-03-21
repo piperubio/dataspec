@@ -5,6 +5,8 @@ This repository contains the DataSpec (Data Platform Specs) toolset for designin
 ## 🛠 Commands
 
 The project is structured as a monorepo using **Bun** as the primary runtime and test runner.
+- Use `oxlint --lsp` for linting and `oxfmt --lsp` for formatting to maintain code consistency.
+- Run `bun lint` to check for linting errors and `bun format` to auto-format the codebase.
 
 ### 📦 Imports
 
@@ -13,7 +15,6 @@ The project is structured as a monorepo using **Bun** as the primary runtime and
 - Prefer named imports over default imports.
 - Maintain a clean separation between external and internal imports.
 - Don't use barrel files; import directly from source files for clarity.
-- Use `oxlint --lsp` for linting and `oxfmt --lsp` for formatting to maintain code consistency.
 
 ### Git Workflow
 - ALWAYS use conventional commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`, `build:`, `perf:`, `style:`
