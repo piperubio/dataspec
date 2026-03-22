@@ -109,6 +109,26 @@ export function parseContractYaml(yamlContent: string): Contract {
         }
         constraints.ref = constraintsObj.ref;
       }
+      if (constraintsObj.allowed_values !== undefined) {
+        if (!Array.isArray(constraintsObj.allowed_values)) {
+          throw new Error(
+            `Field '${fieldObj.name}' has invalid 'allowed_values' constraint - must be an array`,
+          );
+        }
+        if (fieldObj.type !== 'string') {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'allowed_values' constraint - only valid for string fields`,
+          );
+        }
+        for (const value of constraintsObj.allowed_values) {
+          if (typeof value !== 'string') {
+            throw new Error(
+              `Field '${fieldObj.name}' has invalid 'allowed_values' entry - all values must be strings`,
+            );
+          }
+        }
+        constraints.allowed_values = constraintsObj.allowed_values;
+      }
     }
 
     const contractField: ContractField = {

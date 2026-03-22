@@ -28,6 +28,8 @@ export interface FieldConstraints {
   not_null?: boolean;
   /** Reference to another contract field in format 'ContractName.fieldName' */
   ref?: string;
+  /** Allowed values for string fields (restricts to a specific set of permitted values) */
+  allowed_values?: string[];
 }
 
 /**

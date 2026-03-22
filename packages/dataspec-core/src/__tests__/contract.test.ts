@@ -128,4 +128,65 @@ tags:
     expect(result.metadata?.description).toBe('Test contract description');
     expect(result.tags).toContain('test');
   });
+
+  it('should parse allowed_values constraint on string field', () => {
+    const yaml = `
+name: order_contract
+version: "1.0.0"
+fields:
+  - name: status
+    type: string
+    constraints:
+      allowed_values:
+        - pending
+        - processing
+        - shipped
+        - delivered
+        - cancelled
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.allowed_values).toEqual([
+      'pending',
+      'processing',
+      'shipped',
+      'delivered',
+      'cancelled',
+    ]);
+  });
+
+  it('should throw error for allowed_values on non-string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: count
+    type: integer
+    constraints:
+      allowed_values:
+        - one
+        - two
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow(
+      "Field 'count' has 'allowed_values' constraint - only valid for string fields",
+    );
+  });
+
+  it('should accept empty allowed_values array', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: status
+    type: string
+    constraints:
+      allowed_values: []
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.allowed_values).toEqual([]);
+  });
 });
