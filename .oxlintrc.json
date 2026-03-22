@@ -38,6 +38,8 @@
     "*.min.js",
     "**/*.test.ts",
     "**/*.spec.ts",
-    ".opencode/**"
+    ".opencode/**",
+    "openspec/**",
+    ".husky/**"
   ]
 }
