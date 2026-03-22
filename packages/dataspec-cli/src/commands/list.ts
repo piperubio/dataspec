@@ -123,9 +123,6 @@ function listContracts(workspace: Workspace, options: { format: string }): void 
   }
 }
 
-// Introduce a linting error: unused variable
-const unusedVariable = "This will cause a lint error";
-
 function listFlows(workspace: Workspace, options: { format: string }): void {
   const flows = workspace.flows.map((f: { name: string; steps: unknown[] }) => ({
     name: f.name,
