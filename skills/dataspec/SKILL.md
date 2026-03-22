@@ -11,7 +11,7 @@ description: >
 license: MIT
 metadata:
   author: dataspec
-  version: "1.0"
+  version: '1.0'
 ---
 
 # DataSpec DSL Skill
@@ -22,13 +22,13 @@ You are an expert in the DataSpec DSL — a declarative YAML-based language for 
 
 DataSpec models a data platform using five resource types, all defined as YAML files inside a `dataspec/` folder:
 
-| Resource | Purpose | File location |
-|----------|---------|---------------|
-| **Platform** | Global config: storage backends + engines | `dataspec/platform.yaml` |
-| **Source** | External data producers | `dataspec/sources/*.yaml` |
-| **Contract** | Versioned schemas with field constraints | `dataspec/contracts/*.yaml` |
-| **Dataset** | Logical data units with storage config | `dataspec/datasets/*.yaml` |
-| **Flow** | ETL pipelines with typed steps | `dataspec/flows/*.yaml` |
+| Resource     | Purpose                                   | File location               |
+| ------------ | ----------------------------------------- | --------------------------- |
+| **Platform** | Global config: storage backends + engines | `dataspec/platform.yaml`    |
+| **Source**   | External data producers                   | `dataspec/sources/*.yaml`   |
+| **Contract** | Versioned schemas with field constraints  | `dataspec/contracts/*.yaml` |
+| **Dataset**  | Logical data units with storage config    | `dataspec/datasets/*.yaml`  |
+| **Flow**     | ETL pipelines with typed steps            | `dataspec/flows/*.yaml`     |
 
 ## How to Help Users
 
@@ -47,6 +47,7 @@ This skill ships with the DataSpec project. For a complete, working example of a
 `examples/ecommerce-platform/dataspec/`
 
 This example includes:
+
 - `platform.yaml` — 3 storage backends, 3 engines
 - `sources/` — 9 sources (database, API, file system, streaming, SaaS)
 - `contracts/` — 70+ contract definitions with various field types and constraints
@@ -88,13 +89,13 @@ Always define contracts before referencing them from sources or datasets. Contra
 
 ## Source Types
 
-| Type | Extra fields | Use case |
-|------|-------------|----------|
-| `database` | entities with `location`, `contract` | PostgreSQL, MySQL, etc. |
-| `api` | `protocol`, `baseUrl`, entities with `location`, `method` | REST/gRPC APIs |
-| `file_system` | entities with `location`, `format`, optional `partition_by` | S3, local files |
-| `streaming` | `protocol`, `baseUrl`, entities with `location` | Kafka, WebSocket, MQTT |
-| `saas` | `provider`, entities with optional `location` | Salesforce, HubSpot, Stripe |
+| Type          | Extra fields                                                | Use case                    |
+| ------------- | ----------------------------------------------------------- | --------------------------- |
+| `database`    | entities with `location`, `contract`                        | PostgreSQL, MySQL, etc.     |
+| `api`         | `protocol`, `baseUrl`, entities with `location`, `method`   | REST/gRPC APIs              |
+| `file_system` | entities with `location`, `format`, optional `partition_by` | S3, local files             |
+| `streaming`   | `protocol`, `baseUrl`, entities with `location`             | Kafka, WebSocket, MQTT      |
+| `saas`        | `provider`, entities with optional `location`               | Salesforce, HubSpot, Stripe |
 
 ## Flow Step Types
 

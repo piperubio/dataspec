@@ -7,12 +7,14 @@ Fix `dataspec init --with-examples` to generate validation-compliant YAML resour
 ## Scope
 
 ### In Scope
+
 - Add `location` field to example database entity (e.g., `public.users`)
 - Add `contract` field with `name` and `version` to example entities
 - Complete the example flow with `transform` and `load` steps
 - Link the dataset to the flow's load target
 
 ### Out of Scope
+
 - Schema changes to validation layer
 - Additional example scenarios beyond the basic ETL pattern
 - CLI behavior changes beyond `--with-examples`
@@ -27,15 +29,15 @@ Modify `packages/dataspec-cli/src/commands/init.ts` `createExamples()` function:
 
 ## Affected Areas
 
-| Area | Impact | Description |
-|------|--------|-------------|
+| Area                                         | Impact   | Description                                                      |
+| -------------------------------------------- | -------- | ---------------------------------------------------------------- |
 | `packages/dataspec-cli/src/commands/init.ts` | Modified | Update `createExamples()` to generate validation-compliant YAMLs |
 
 ## Risks
 
-| Risk | Likelihood | Mitigation |
-|------|------------|------------|
-| Breaking existing `--with-examples` users | Low | Changes only add missing fields; existing valid examples unaffected |
+| Risk                                      | Likelihood | Mitigation                                                          |
+| ----------------------------------------- | ---------- | ------------------------------------------------------------------- |
+| Breaking existing `--with-examples` users | Low        | Changes only add missing fields; existing valid examples unaffected |
 
 ## Rollback Plan
 

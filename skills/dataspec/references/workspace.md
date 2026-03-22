@@ -51,21 +51,25 @@ Dataset ──contract──→ Contract name + version
 ## Naming Conventions
 
 ### Resource Names
+
 - Use `snake_case` for all resource names
 - Be descriptive: `production_db`, `user_etl_pipeline`, `users_raw_schema`
 - Avoid abbreviations unless they're universally understood
 
 ### Contract Names
+
 - Raw schemas: `<entity>_raw_schema` (e.g., `users_raw_schema`)
 - Refined contracts: `<entity>_contract` (e.g., `user_contract`)
 - Analytics contracts: `<dashboard>_contract` (e.g., `sales_dashboard_contract`)
 
 ### Dataset Names
+
 - Raw: `<entity>_raw` (e.g., `users_raw`)
 - Refined: `<entity>_refined` (e.g., `users_refined`)
 - Analytics: `<purpose>_analytics` or `<purpose>_dashboard` (e.g., `customer_analytics`)
 
 ### Flow Names
+
 - Use `<entity>_etl_pipeline` or `<purpose>_pipeline` (e.g., `user_etl_pipeline`, `unified_analytics_pipeline`)
 
 ## Metadata Conventions
@@ -74,16 +78,16 @@ Every resource can include a `metadata` block. Common fields:
 
 ```yaml
 metadata:
-  description: <string>       # What this resource is for
-  owner: <string>             # Team responsible
-  tags: [<string>, ...]       # For filtering and categorization
+  description: <string> # What this resource is for
+  owner: <string> # Team responsible
+  tags: [<string>, ...] # For filtering and categorization
   # Type-specific fields:
-  pii: <boolean>              # Contracts: contains PII
+  pii: <boolean> # Contracts: contains PII
   refresh_frequency: <string> # Datasets: hourly, daily, realtime
-  retention_days: <number>    # Datasets: data retention period
-  sla: <string>               # Sources: availability guarantee
-  labels: [<string>, ...]     # Flows: pipeline categorization
-  definedAt: <string>         # Flows: source file path
+  retention_days: <number> # Datasets: data retention period
+  sla: <string> # Sources: availability guarantee
+  labels: [<string>, ...] # Flows: pipeline categorization
+  definedAt: <string> # Flows: source file path
 ```
 
 ## Initialization
@@ -114,6 +118,7 @@ dataspec validate --format json            # JSON output for CI/CD
 ```
 
 The validator checks:
+
 - Workspace structure (dataspec/ folder exists)
 - All cross-references resolve
 - No orphaned resources

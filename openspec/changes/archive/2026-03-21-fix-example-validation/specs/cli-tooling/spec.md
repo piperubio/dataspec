@@ -17,7 +17,7 @@ The system SHALL create the project with example source, dataset, contract, and 
 
 #### Scenario: Initialize examples with missing required fields
 
-- **GIVEN** the user runs `dataspec init --with-examples` 
+- **GIVEN** the user runs `dataspec init --with-examples`
 - **WHEN** the CLI generates example source entities
 - **THEN** each source entity SHALL include the `location` field specifying the database location
 - **AND** each source entity SHALL include a `contract` field with `name` and `version` properties
