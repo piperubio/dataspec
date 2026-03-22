@@ -5,35 +5,35 @@ Contracts define versioned schemas for data entities. They specify field names, 
 ## Structure
 
 ```yaml
-name: <string>              # Contract identifier
-version: <semver>           # Semantic version (e.g., "1.0.0")
-fields:                     # Array of field definitions (required)
-  - name: <string>          # Field name (camelCase)
-    type: <data-type>       # One of the supported types
-    constraints:            # Optional validation rules
+name: <string> # Contract identifier
+version: <semver> # Semantic version (e.g., "1.0.0")
+fields: # Array of field definitions (required)
+  - name: <string> # Field name (camelCase)
+    type: <data-type> # One of the supported types
+    constraints: # Optional validation rules
       unique: <boolean>
       not_null: <boolean>
-      ref: <string>         # Foreign key: "ContractName.fieldName"
-    description: <string>   # What this field contains
-metadata:                   # Optional metadata
+      ref: <string> # Foreign key: "ContractName.fieldName"
+    description: <string> # What this field contains
+metadata: # Optional metadata
   description: <string>
   owner: <string>
-  pii: <boolean>           # Whether this contract contains PII
+  pii: <boolean> # Whether this contract contains PII
   tags: [<string>, ...]
 ```
 
 ## Supported Data Types
 
-| Type | Description | Example values |
-|------|-------------|----------------|
-| `uuid` | Universally unique identifier | `550e8400-e29b-41d4-a716-446655440000` |
-| `string` | Text data | `"hello"`, `"user@example.com"` |
-| `integer` | Whole numbers | `42`, `-1`, `0` |
-| `decimal` | Floating-point numbers | `19.99`, `3.14159` |
-| `boolean` | True/false values | `true`, `false` |
-| `timestamp` | ISO 8601 datetime | `2024-01-15T10:30:00Z` |
-| `date` | ISO 8601 date | `2024-01-15` |
-| `json` | Arbitrary JSON object | `{"key": "value"}` |
+| Type        | Description                   | Example values                         |
+| ----------- | ----------------------------- | -------------------------------------- |
+| `uuid`      | Universally unique identifier | `550e8400-e29b-41d4-a716-446655440000` |
+| `string`    | Text data                     | `"hello"`, `"user@example.com"`        |
+| `integer`   | Whole numbers                 | `42`, `-1`, `0`                        |
+| `decimal`   | Floating-point numbers        | `19.99`, `3.14159`                     |
+| `boolean`   | True/false values             | `true`, `false`                        |
+| `timestamp` | ISO 8601 datetime             | `2024-01-15T10:30:00Z`                 |
+| `date`      | ISO 8601 date                 | `2024-01-15`                           |
+| `json`      | Arbitrary JSON object         | `{"key": "value"}`                     |
 
 ## Field Constraints
 
@@ -68,7 +68,7 @@ Foreign key reference to another contract's field. Format: `"ContractName.fieldN
   type: uuid
   constraints:
     not_null: true
-    ref: "order_contract.order_id"
+    ref: 'order_contract.order_id'
 ```
 
 ## Example

@@ -1,0 +1,27 @@
+# Dataset: Marketing Campaigns Refined
+# Cleaned and validated marketing campaign data
+
+name: marketing_campaigns_refined
+storage:
+  backend: s3-data-lake
+  format: delta
+  location: s3://data-lake/refined/marketing/campaigns/
+
+contract:
+  name: marketing_campaigns_refined_schema
+  version: '1.0.0'
+
+metadata:
+  description: Cleaned and validated marketing campaign data with deduplication and business rules
+  owner: marketing-team
+  tags:
+    - refined
+    - marketing
+    - campaigns
+    - silver-layer
+    - etl
+  refresh_frequency: daily
+  quality_checks:
+    - unique_campaign_id
+    - valid_channel
+    - no_null_budget

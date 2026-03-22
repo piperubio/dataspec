@@ -5,18 +5,18 @@ Sources declare external data producers — systems that originate data for the 
 ## Common Structure
 
 ```yaml
-name: <string>              # Unique source identifier
-type: <source-type>         # database | api | file_system | streaming | saas
-entities:                   # Array of data entities in this source
-  - name: <string>          # Entity name (used in flow extract steps)
-    description: <string>   # What this entity contains
-    location: <string>      # Where to find it (type-specific)
-    contract:               # Schema reference
-      name: <string>        # Contract name
-      version: <semver>     # Contract version
-    metadata:               # Optional entity-level metadata
+name: <string> # Unique source identifier
+type: <source-type> # database | api | file_system | streaming | saas
+entities: # Array of data entities in this source
+  - name: <string> # Entity name (used in flow extract steps)
+    description: <string> # What this entity contains
+    location: <string> # Where to find it (type-specific)
+    contract: # Schema reference
+      name: <string> # Contract name
+      version: <semver> # Contract version
+    metadata: # Optional entity-level metadata
       <key>: <value>
-metadata:                   # Optional source-level metadata
+metadata: # Optional source-level metadata
   description: <string>
   owner: <string>
   tags: [<string>, ...]
@@ -33,7 +33,7 @@ name: production_db
 type: database
 entities:
   - name: users
-    location: public.users          # schema.table format
+    location: public.users # schema.table format
     description: User accounts
     contract:
       name: users_raw_schema
@@ -44,6 +44,7 @@ entities:
 ```
 
 **Entity fields:**
+
 - `location` (required): Physical location — typically `schema.table`
 - `contract` (required): Schema reference
 
@@ -58,18 +59,20 @@ protocol: https
 baseUrl: api.payments.example.com
 entities:
   - name: transactions
-    location: /api/v1/transactions    # URL path
-    method: GET                        # HTTP method
+    location: /api/v1/transactions # URL path
+    method: GET # HTTP method
     contract:
       name: payment_transactions_schema
       version: '1.0.0'
 ```
 
 **Source-level fields:**
+
 - `protocol` (required): `http`, `https`, or `grpc`
 - `baseUrl` (required): API host
 
 **Entity fields:**
+
 - `location` (required): Endpoint path
 - `method` (required): HTTP method (`GET`, `POST`, `PUT`, `DELETE`, `PATCH`) or gRPC method
 - `contract` (required): Schema reference
@@ -85,7 +88,7 @@ entities:
   - name: daily_sales
     location: s3://exports/daily-sales/*.parquet
     format: parquet
-    partition_by:                    # Optional partition columns
+    partition_by: # Optional partition columns
       - year
       - month
     contract:
@@ -94,6 +97,7 @@ entities:
 ```
 
 **Entity fields:**
+
 - `location` (required): File path or glob pattern
 - `format` (required): `parquet`, `csv`, `json`, `avro`, `orc`, `delta`, `fixed-width`
 - `contract` (required): Schema reference
@@ -110,7 +114,7 @@ protocol: kafka
 baseUrl: kafka.example.com:9092
 entities:
   - name: user_events
-    location: user-events              # Topic/queue name
+    location: user-events # Topic/queue name
     contract:
       name: user_events_stream_schema
       version: '1.0.0'
@@ -121,10 +125,12 @@ entities:
 ```
 
 **Source-level fields:**
+
 - `protocol` (required): `kafka`, `ws`, `wss`, `mqtt`, `amqp`
 - `baseUrl` (required): Broker or server address
 
 **Entity fields:**
+
 - `location` (required): Topic, queue, or channel name
 - `contract` (required): Schema reference
 
@@ -138,7 +144,7 @@ type: saas
 provider: salesforce
 entities:
   - name: accounts
-    location: Account                  # SaaS object type
+    location: Account # SaaS object type
     contract:
       name: salesforce_accounts_schema
       version: '1.0.0'
@@ -148,9 +154,11 @@ entities:
 ```
 
 **Source-level fields:**
+
 - `provider` (required): SaaS provider name
 
 **Entity fields:**
+
 - `contract` (required): Schema reference
 - `location` (optional): Provider-specific resource identifier
 

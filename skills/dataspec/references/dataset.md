@@ -5,22 +5,22 @@ Datasets represent logical collections of data at various stages of the pipeline
 ## Structure
 
 ```yaml
-name: <string>              # Dataset identifier
-storage:                    # Storage configuration (required)
-  backend: <string>         # Reference to a platform storage backend name
-  format: <string>          # Data format: parquet, csv, json, delta, etc.
-  location: <string>        # Storage path (type-specific: s3://, /local/path, etc.)
-  config:                   # Optional format-specific settings
+name: <string> # Dataset identifier
+storage: # Storage configuration (required)
+  backend: <string> # Reference to a platform storage backend name
+  format: <string> # Data format: parquet, csv, json, delta, etc.
+  location: <string> # Storage path (type-specific: s3://, /local/path, etc.)
+  config: # Optional format-specific settings
     <key>: <value>
-contract:                   # Optional schema reference
-  name: <string>            # Contract name
-  version: <semver>         # Contract version
-metadata:                   # Optional metadata
+contract: # Optional schema reference
+  name: <string> # Contract name
+  version: <semver> # Contract version
+metadata: # Optional metadata
   description: <string>
   owner: <string>
   tags: [<string>, ...]
-  refresh_frequency: <string>  # How often data is updated
-  retention_days: <number>     # How long data is kept
+  refresh_frequency: <string> # How often data is updated
+  retention_days: <number> # How long data is kept
 ```
 
 ## Storage Configuration
@@ -33,24 +33,24 @@ The `storage` block connects the dataset to a physical location:
 
 ### Common Formats
 
-| Format | Best for | Notes |
-|--------|----------|-------|
-| `parquet` | Columnar analytics, raw layer | Efficient compression, schema embedded |
-| `delta` | Refined layer, ACID transactions | Supports time travel, upserts |
-| `csv` | Simple exports, interchange | No schema, no type safety |
-| `json` | Semi-structured data | Flexible but less efficient |
-| `avro` | Streaming, schema evolution | Row-based, schema embedded |
-| `orc` | Hive-based analytics | Columnar, good compression |
+| Format    | Best for                         | Notes                                  |
+| --------- | -------------------------------- | -------------------------------------- |
+| `parquet` | Columnar analytics, raw layer    | Efficient compression, schema embedded |
+| `delta`   | Refined layer, ACID transactions | Supports time travel, upserts          |
+| `csv`     | Simple exports, interchange      | No schema, no type safety              |
+| `json`    | Semi-structured data             | Flexible but less efficient            |
+| `avro`    | Streaming, schema evolution      | Row-based, schema embedded             |
+| `orc`     | Hive-based analytics             | Columnar, good compression             |
 
 ## Layer Convention
 
 Datasets typically follow a medallion architecture:
 
-| Layer | Prefix | Format | Purpose |
-|-------|--------|--------|---------|
-| **Raw** | `*_raw` | parquet | Ingested data, as-is from source |
-| **Refined** | `*_refined` | delta | Cleaned, validated, deduplicated |
-| **Analytics** | `*_analytics`, `*_dashboard` | delta/parquet | Business-ready aggregates |
+| Layer         | Prefix                       | Format        | Purpose                          |
+| ------------- | ---------------------------- | ------------- | -------------------------------- |
+| **Raw**       | `*_raw`                      | parquet       | Ingested data, as-is from source |
+| **Refined**   | `*_refined`                  | delta         | Cleaned, validated, deduplicated |
+| **Analytics** | `*_analytics`, `*_dashboard` | delta/parquet | Business-ready aggregates        |
 
 This is a convention, not enforced — but following it makes the platform easier to understand.
 

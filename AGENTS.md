@@ -25,5 +25,6 @@ The project is structured as a monorepo using **Bun** as the primary runtime and
 - When creatinmg PR's, write clear descriptions explaining WHAT and WHY
 
 # File artifacts in project (OpenSpec flow)
+
 artifact_store:
-  mode: openspec
+mode: openspec

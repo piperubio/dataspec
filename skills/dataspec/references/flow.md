@@ -5,15 +5,15 @@ Flows define data pipelines — ordered sequences of steps that extract data fro
 ## Structure
 
 ```yaml
-name: <string>              # Flow identifier
-steps:                      # Ordered array of pipeline steps (required)
-  - type: <step-type>       # extract | transform | load
+name: <string> # Flow identifier
+steps: # Ordered array of pipeline steps (required)
+  - type: <step-type> # extract | transform | load
     # ... step-specific fields (see below)
-metadata:                   # Optional metadata
+metadata: # Optional metadata
   description: <string>
   version: <semver>
   labels: [<string>, ...]
-  definedAt: <string>       # File path where this flow is defined
+  definedAt: <string> # File path where this flow is defined
 ```
 
 ## Step Types
@@ -24,12 +24,13 @@ Reads data from a source entity. This is typically the first step in a pipeline.
 
 ```yaml
 - type: extract
-  source: <string>          # Source name (must exist in sources/)
-  entity: <string>          # Entity name within the source
-  output: <string>          # Variable name for downstream steps
+  source: <string> # Source name (must exist in sources/)
+  entity: <string> # Entity name within the source
+  output: <string> # Variable name for downstream steps
 ```
 
 **Example:**
+
 ```yaml
 - type: extract
   source: production_db
@@ -43,13 +44,14 @@ Applies transformations to data using an analytics engine. Can consume multiple 
 
 ```yaml
 - type: transform
-  inputs:                   # Array of variable names from previous steps
+  inputs: # Array of variable names from previous steps
     - <string>
-  engine: <string>          # Engine name (must exist in platform engines)
-  output: <string>          # Variable name for downstream steps
+  engine: <string> # Engine name (must exist in platform engines)
+  output: <string> # Variable name for downstream steps
 ```
 
 **Example:**
+
 ```yaml
 - type: transform
   inputs:
@@ -64,11 +66,12 @@ Writes data to a target dataset. This is typically the final step in a sub-pipel
 
 ```yaml
 - type: load
-  input: <string>           # Variable name from a previous step
-  target: <string>          # Dataset name (must exist in datasets/)
+  input: <string> # Variable name from a previous step
+  target: <string> # Dataset name (must exist in datasets/)
 ```
 
 **Example:**
+
 ```yaml
 - type: load
   input: refined_users
@@ -178,11 +181,11 @@ steps:
 
 ## Naming Conventions
 
-| Step type | Output variable pattern | Example |
-|-----------|------------------------|---------|
-| extract | `raw_<entity>` | `raw_users`, `raw_orders` |
-| transform (raw→refined) | `refined_<entity>` | `refined_users` |
-| transform (→analytics) | `<entity>_metrics`, `<entity>_analytics` | `customer_metrics` |
+| Step type               | Output variable pattern                  | Example                   |
+| ----------------------- | ---------------------------------------- | ------------------------- |
+| extract                 | `raw_<entity>`                           | `raw_users`, `raw_orders` |
+| transform (raw→refined) | `refined_<entity>`                       | `refined_users`           |
+| transform (→analytics)  | `<entity>_metrics`, `<entity>_analytics` | `customer_metrics`        |
 
 ## Validation Rules
 
