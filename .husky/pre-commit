@@ -1,0 +1,5 @@
+echo 'Running oxlint --fix and oxfmt...'
+bun lint:fix && bun fmt
+
+# Add any files that were fixed by the formatter/linter
+git add -u
