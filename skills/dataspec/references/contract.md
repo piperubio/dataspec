@@ -14,6 +14,7 @@ fields: # Array of field definitions (required)
       unique: <boolean>
       not_null: <boolean>
       ref: <string> # Foreign key: "ContractName.fieldName"
+      allowed_values: [<string>, ...] # Enum-like restriction (string fields only)
     description: <string> # What this field contains
 metadata: # Optional metadata
   description: <string>
@@ -70,6 +71,28 @@ Foreign key reference to another contract's field. Format: `"ContractName.fieldN
     not_null: true
     ref: 'order_contract.order_id'
 ```
+
+### allowed_values
+
+Restricts a string field to a specific set of permitted values. Only valid for `type: string` fields.
+
+```yaml
+- name: status
+  type: string
+  constraints:
+    allowed_values:
+      - pending
+      - processing
+      - shipped
+      - delivered
+      - cancelled
+```
+
+**Notes:**
+
+- Only applicable to `type: string` fields
+- Empty array is valid (no values permitted)
+- Duplicate values are allowed (no uniqueness enforcement)
 
 ## Example
 
@@ -136,3 +159,4 @@ metadata:
 - `version` must be valid semver
 - `constraints.ref` must reference an existing contract field
 - `constraints.unique` on `json` type is not supported (warning)
+- `constraints.allowed_values` is only valid for `type: string` fields

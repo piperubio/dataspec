@@ -35,6 +35,13 @@
       "additionalProperties": false,
       "description": "Field constraints for data validation and integrity.",
       "properties": {
+        "allowed_values": {
+          "description": "Allowed values for string fields (restricts to a specific set of permitted values)",
+          "items": {
+            "type": "string"
+          },
+          "type": "array"
+        },
         "not_null": {
           "description": "Whether the field value cannot be null",
           "type": "boolean"
