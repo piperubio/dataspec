@@ -41,6 +41,9 @@ tmp/
 temp/
 *.tmp
 
+# Worktrees
+.worktrees/
+
 # Misc
 .sisyphus
 .atl

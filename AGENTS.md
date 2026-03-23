@@ -2,6 +2,11 @@
 
 This repository contains the DataSpec (Data Platform Specs) toolset for designing data platform specifications with human and agents in mind. It includes the core logic and the CLI.
 
+## Current Version
+
+- dataspec is in current development and not yet released.
+- You can introduce braking changes without worry for retrocompatibility.
+
 ## 🛠 Commands
 
 The project is structured as a monorepo using **Bun** as the primary runtime and test runner.
