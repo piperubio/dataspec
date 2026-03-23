@@ -46,21 +46,21 @@
 
 - [x] 5.1 Test valid precision/scale on decimal field
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
-- [ ] 5.2 Test precision/scale rejected on integer/string/other types
+- [x] 5.2 Test precision/scale rejected on integer/string/other types
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
 - [x] 5.3 Test scale > precision rejected
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
 - [x] 5.4 Test precision without scale (and vice versa) rejected
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
-- [ ] 5.5 Test non-positive precision/scale rejected
+- [x] 5.5 Test non-positive precision/scale rejected
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
-- [ ] 5.6 Test valid min/max on integer and decimal fields
+- [x] 5.6 Test valid min/max on integer and decimal fields
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
-- [ ] 5.7 Test min/max rejected on string/boolean/other types
+- [x] 5.7 Test min/max rejected on string/boolean/other types
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
-- [ ] 5.8 Test min > max rejected
+- [x] 5.8 Test min > max rejected
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
-- [ ] 5.9 Test non-finite min/max rejected
+- [x] 5.9 Test non-finite min/max rejected
 <!-- Files: packages/dataspec-core/src/__tests__/contract.test.ts -->
 
 ## 6. Tests — Validator Integration
