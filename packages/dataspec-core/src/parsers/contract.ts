@@ -158,6 +158,75 @@ export function parseContractYaml(yamlContent: string): Contract {
           );
         }
       }
+
+      // Parse min_length constraint
+      if (constraintsObj.min_length !== undefined) {
+        const minLength = Number(constraintsObj.min_length);
+        if (fieldObj.type !== 'string') {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'min_length' constraint - only valid for string fields`,
+          );
+        }
+        if (!Number.isInteger(minLength) || minLength < 1) {
+          throw new Error(
+            `Field '${fieldObj.name}' has invalid 'min_length' constraint - must be a positive integer`,
+          );
+        }
+        constraints.min_length = minLength;
+      }
+
+      // Parse max_length constraint
+      if (constraintsObj.max_length !== undefined) {
+        const maxLength = Number(constraintsObj.max_length);
+        if (fieldObj.type !== 'string') {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'max_length' constraint - only valid for string fields`,
+          );
+        }
+        if (!Number.isInteger(maxLength) || maxLength < 1) {
+          throw new Error(
+            `Field '${fieldObj.name}' has invalid 'max_length' constraint - must be a positive integer`,
+          );
+        }
+        constraints.max_length = maxLength;
+      }
+
+      // Validate min_length <= max_length when both present
+      if (constraints.min_length !== undefined && constraints.max_length !== undefined) {
+        if (constraints.min_length > constraints.max_length) {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'min_length' (${constraints.min_length}) greater than 'max_length' (${constraints.max_length})`,
+          );
+        }
+      }
+
+      // Parse format constraint
+      if (constraintsObj.format !== undefined) {
+        if (fieldObj.type !== 'string') {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'format' constraint - only valid for string fields`,
+          );
+        }
+        constraints.format = constraintsObj.format as string;
+      }
+
+      // Parse pattern constraint
+      if (constraintsObj.pattern !== undefined) {
+        if (fieldObj.type !== 'string') {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'pattern' constraint - only valid for string fields`,
+          );
+        }
+        const patternStr = constraintsObj.pattern as string;
+        try {
+          new RegExp(patternStr);
+        } catch {
+          throw new Error(
+            `Field '${fieldObj.name}' has invalid 'pattern' constraint - '${patternStr}' is not a valid regex`,
+          );
+        }
+        constraints.pattern = patternStr;
+      }
     }
 
     const contractField: ContractField = {
