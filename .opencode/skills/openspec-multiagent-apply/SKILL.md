@@ -83,11 +83,17 @@ Orchestrate a Claude Code agent team to implement a change in parallel using the
 
 7. **Spawn teammates**
 
+   Before spawning agents, detect current working context:
+   ```bash
+   current_workdir=$(pwd)
+   git_toplevel=$(git rev-parse --show-toplevel)
+   branch=$(git branch --show-current)
+   ```
+
    For each agent in the distribution plan, use the `Agent` tool with:
    - `name`: agent name from the distribution plan (e.g., "new-skill")
    - `team_name`: the change name
    - `subagent_type`: "general-purpose"
-   - `isolation`: "worktree"
    - `prompt`: include:
      - The agent's assigned task IDs and descriptions
       - File ownership list
@@ -95,6 +101,7 @@ Orchestrate a Claude Code agent team to implement a change in parallel using the
       - Cross-agent dependencies (what to wait for)
       - The change directory path
       - The path to `tasks.md` in the change directory (e.g. `/path/to/openspec/changes/<name>/tasks.md`)
+      - **Working directory**: "Your working directory is: `<current_workdir>`. You MUST execute all commands from this directory. Do NOT create new worktrees — work in the existing one. Project root: `<git_toplevel>`. Current branch: `<branch>`."
       - Instructions: "Use `TaskList` to find available work. Use `TaskUpdate` to mark tasks as `in_progress` when starting and `completed` when done. **After marking a task as `completed` via TaskUpdate, you MUST also update `tasks.md`** in the change directory: find the line matching your task description and change `- [ ]` to `- [x]` for that task. This keeps the OpenSpec artifact in sync with execution progress. Check `TaskList` after completing each task for newly unblocked work."
 
    Spawn agents that have no cross-agent dependencies first (they can start immediately).
@@ -150,7 +157,8 @@ Orchestrate a Claude Code agent team to implement a change in parallel using the
 - MUST validate schema is `dispec-driven` before proceeding
 - MUST validate all artifacts are complete (especially `distribution`)
 - MUST show token cost warning and get user confirmation before spawning agents
-- MUST use `isolation: "worktree"` for all teammates to prevent file conflicts
+- MUST detect current working directory and branch before spawning agents
+- MUST include working directory instructions in each agent's prompt
 - MUST keep `tasks.md` in sync: agents update it on task completion, orchestrator verifies on monitoring and pre-shutdown
 - If the distribution plan shows file ownership conflicts (two agents writing same file), warn the user and ask whether to proceed or reassign
 - If a teammate reports a blocker, try to help resolve it before escalating to the user
