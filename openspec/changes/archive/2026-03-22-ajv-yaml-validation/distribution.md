@@ -165,7 +165,7 @@ The 3-agent distribution is **feasible and well-balanced** for this change:
 
 **Total sync points**: 5 cross-agent dependencies. After the initial gate (task 2.2), Agents 1, 2, and 3 proceed largely in parallel until the final CI verification wave.
 
-## Claude Code Team Setup
+## Team Setup
 
 To execute this plan, run `/opsx-multiagent-apply` on this change. It will automate the steps below.
 

@@ -162,7 +162,7 @@
 
 **Total sync points**: 7. The main bottleneck is Agent A's 1.1 — it gates Agent B and cascades to Agent C.
 
-## Claude Code Team Setup
+## Team Setup
 
 To execute this plan, run `/opsx-multiagent-apply` on this change. It will automate the steps below.
 

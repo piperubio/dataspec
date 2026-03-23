@@ -129,7 +129,7 @@ No file conflicts — clean isolation.
 | Agent 3       | 5.1–5.12 (all tests)     | 2.1, 2.2, 2.3, 2.4, 2.5 | Agent 1      |
 | Agent 3       | 6.2 (build verification) | 3.1–3.4, 4.1–4.5        | Agent 2      |
 
-## Claude Code Team Setup
+## Team Setup
 
 To execute this plan, run `/opsx:multiagent-apply` on this change. It will automate the steps below.
 

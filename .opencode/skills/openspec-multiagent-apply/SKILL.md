@@ -1,6 +1,6 @@
 ---
 name: openspec-multiagent-apply
-description: Orchestrate a Claude Code agent team to implement a change in parallel using a dispec-driven distribution plan. Use when the user has completed /opsx:multiagent planning and wants to start multi-agent execution.
+description: Orchestrate an agent team to implement a change in parallel using a dispec-driven distribution plan. Use when the user has completed /opsx:multiagent planning and wants to start multi-agent execution.
 license: MIT
 compatibility: Requires openspec CLI.
 metadata:
@@ -8,7 +8,7 @@ metadata:
   version: "1.0"
 ---
 
-Orchestrate a Claude Code agent team to implement a change in parallel using the distribution plan.
+Orchestrate an agent team to implement a change in parallel using the distribution plan.
 
 **Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 

@@ -209,7 +209,7 @@ artifacts:
       Create the agent distribution plan that assigns tasks to parallel agents.
 
       **Before starting**: Ask the user how many agents they want to use.
-      Recommend 3-5 agents based on Claude Code agent teams best practices.
+      Recommend 3-5 agents based on agent teams best practices.
       If the user requests 1 agent, suggest using `/opsx:propose` instead for
       a simpler single-agent workflow.
 
@@ -243,8 +243,8 @@ artifacts:
       6. **Cross-Agent Dependencies**: List sync points where one agent must wait
          for another. Minimize these - they are the main source of coordination overhead.
 
-      7. **Claude Code Team Setup**: Provide actionable team setup instructions using
-         Claude Code's team primitives:
+      7. **Team Setup**: Provide actionable team setup instructions using
+         team primitives:
          - Team creation via `TeamCreate` with `team_name` (change name) and `description`
          - Task list population via `TaskCreate` with `subject`, `description`, `activeForm`
            for each task, then `TaskUpdate` with `addBlockedBy` for dependencies and `owner`
@@ -269,7 +269,7 @@ apply:
     This schema supports multi-agent parallel execution via `/opsx:multiagent-apply`.
 
     **Multi-agent execution (recommended):**
-    1. Run `/opsx:multiagent-apply` to orchestrate a Claude Code agent team
+    1. Run `/opsx:multiagent-apply` to orchestrate an agent team
     2. It reads distribution.md and automatically:
        - Creates a team via `TeamCreate` with the change name
        - Populates the shared task list via `TaskCreate` with dependencies
