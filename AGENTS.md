@@ -25,7 +25,7 @@ The project is structured as a monorepo using **Bun** as the primary runtime and
 ### Git Workflow
 
 - ALWAYS create a branch for new specs and open a PR for review.
-- ALWAYS use conventional commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`, `build:`, `perf:`, `style:`
+- ALWAYS use conventional commits (<type>[optional scope]: <description>): `feat:`, `fix(dataspec-cli):`, `docs:`, `chore:`, `refactor:`, `test(dataspec-core):`, `ci:`, `build:`, `perf:`, `style:`
 - NEVER push to `main` directly. ALWAYS create a branch and open a PR
 - Branch naming: `feat/description`, `fix/description`, `docs/description`, `hotfix/description`, `release/description`, `chore/description`
 - When creating PR's, write clear descriptions explaining WHAT and WHY
