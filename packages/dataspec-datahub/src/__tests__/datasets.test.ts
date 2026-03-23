@@ -81,11 +81,13 @@ describe('mapDatasetToEntity', () => {
 
 describe('syncDatasets', () => {
   const mockClient = {
-    ingestDatasetsBatch: mock(() => Promise.resolve([])),
+    ingestDataset: mock(() => Promise.resolve({ ingestDataset: { dataset: { urn: 'urn1' } } })),
   } as unknown as DataHubClient;
 
   beforeEach(() => {
-    mockClient.ingestDatasetsBatch = mock(() => Promise.resolve([]));
+    mockClient.ingestDataset = mock(() =>
+      Promise.resolve({ ingestDataset: { dataset: { urn: 'urn1' } } }),
+    );
   });
 
   const sampleDatasets: Dataset[] = [
@@ -104,14 +106,6 @@ describe('syncDatasets', () => {
   ];
 
   test('should sync all datasets', async () => {
-    mockClient.ingestDatasetsBatch = mock(() =>
-      Promise.resolve([
-        { ingestDataset: { dataset: { urn: 'urn1' } } },
-        { ingestDataset: { dataset: { urn: 'urn2' } } },
-        { ingestDataset: { dataset: { urn: 'urn3' } } },
-      ]),
-    );
-
     const result = await syncDatasets({
       client: mockClient,
       datasets: sampleDatasets,
@@ -120,13 +114,10 @@ describe('syncDatasets', () => {
     expect(result.synced).toBe(3);
     expect(result.failed).toBe(0);
     expect(result.skipped).toBe(0);
+    expect(mockClient.ingestDataset).toHaveBeenCalledTimes(3);
   });
 
   test('should filter by name when specified', async () => {
-    mockClient.ingestDatasetsBatch = mock(() =>
-      Promise.resolve([{ ingestDataset: { dataset: { urn: 'urn1' } } }]),
-    );
-
     const result = await syncDatasets({
       client: mockClient,
       datasets: sampleDatasets,
@@ -134,9 +125,9 @@ describe('syncDatasets', () => {
     });
 
     expect(result.synced).toBe(1);
-    expect(mockClient.ingestDatasetsBatch).toHaveBeenCalledWith(
-      [expect.objectContaining({ name: 'orders' })],
-      50,
+    expect(mockClient.ingestDataset).toHaveBeenCalledTimes(1);
+    expect(mockClient.ingestDataset).toHaveBeenCalledWith(
+      expect.objectContaining({ name: 'orders' }),
     );
   });
 
@@ -165,10 +156,6 @@ describe('syncDatasets', () => {
       },
     ];
 
-    mockClient.ingestDatasetsBatch = mock(() =>
-      Promise.resolve([{ ingestDataset: { dataset: { urn: 'urn1' } } }]),
-    );
-
     const result = await syncDatasets({
       client: mockClient,
       datasets: datasetsWithTimestamp,
@@ -177,17 +164,29 @@ describe('syncDatasets', () => {
     });
 
     expect(result.synced).toBe(1);
+    expect(mockClient.ingestDataset).toHaveBeenCalledTimes(1);
+    expect(mockClient.ingestDataset).toHaveBeenCalledWith(expect.objectContaining({ name: 'new' }));
   });
 
-  test('should handle batch errors gracefully', async () => {
-    mockClient.ingestDatasetsBatch = mock(() => Promise.reject(new Error('Batch failed')));
+  test('should continue on per-item failure', async () => {
+    let callCount = 0;
+    mockClient.ingestDataset = mock(() => {
+      callCount++;
+      if (callCount === 2) {
+        return Promise.reject(new Error('Dataset 2 failed'));
+      }
+      return Promise.resolve({ ingestDataset: { dataset: { urn: 'urn' } } });
+    });
 
     const result = await syncDatasets({
       client: mockClient,
       datasets: sampleDatasets,
     });
 
-    expect(result.failed).toBe(3);
-    expect(result.errors).toHaveLength(3);
+    expect(result.synced).toBe(2);
+    expect(result.failed).toBe(1);
+    expect(result.errors).toHaveLength(1);
+    expect(result.errors[0].dataset).toBe('customers');
+    expect(result.errors[0].error).toBe('Dataset 2 failed');
   });
 });
