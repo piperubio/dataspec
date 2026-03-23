@@ -1170,6 +1170,63 @@ entities:
   });
 });
 
+describe('Schema validation errors', () => {
+  it('should throw schema validation error for missing name', () => {
+    const yaml = `
+type: database
+entities:
+  - name: users
+    contract:
+      name: users_schema
+      version: "1.0.0"
+`;
+
+    expect(() => parseSourceYaml(yaml)).toThrow('Schema validation failed');
+  });
+
+  it('should throw schema validation error for missing type', () => {
+    const yaml = `
+name: test_source
+entities:
+  - name: users
+    contract:
+      name: users_schema
+      version: "1.0.0"
+`;
+
+    expect(() => parseSourceYaml(yaml)).toThrow('Schema validation failed');
+    expect(() => parseSourceYaml(yaml)).toThrow('type');
+  });
+
+  it('should throw schema validation error for missing entities', () => {
+    const yaml = `
+name: test_source
+type: database
+`;
+
+    expect(() => parseSourceYaml(yaml)).toThrow('Schema validation failed');
+    expect(() => parseSourceYaml(yaml)).toThrow('entities');
+  });
+
+  it('should collect multiple schema validation errors', () => {
+    const yaml = `{}`;
+
+    expect(() => parseSourceYaml(yaml)).toThrow('Schema validation failed');
+    expect(() => parseSourceYaml(yaml)).toThrow('name');
+    expect(() => parseSourceYaml(yaml)).toThrow('type');
+  });
+
+  it('should throw schema error for invalid source type', () => {
+    const yaml = `
+name: test_source
+type: invalid_type
+entities: []
+`;
+
+    expect(() => parseSourceYaml(yaml)).toThrow('Schema validation failed');
+  });
+});
+
 describe('Deprecated fields rejection', () => {
   it('should reject deprecated pattern field', () => {
     const yaml = `

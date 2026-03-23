@@ -6,6 +6,7 @@
 import YAML from 'yaml';
 
 import type { PlatformConfig, StorageBackend, AnalyticsEngine } from '../types/platform';
+import { validateAgainstSchema } from '../validation/schema-validator';
 
 /**
  * Validates that all storage backend names are unique.
@@ -45,6 +46,12 @@ function validateUniqueEngineNames(engines: AnalyticsEngine[]): void {
  */
 export function parsePlatformYaml(yamlContent: string): PlatformConfig {
   const parsed = YAML.parse(yamlContent) as PlatformConfig;
+
+  // Validate against JSON Schema
+  const schemaResult = validateAgainstSchema(parsed, 'platform');
+  if (!schemaResult.valid) {
+    throw new Error(`Schema validation failed:\n${schemaResult.errors.join('\n')}`);
+  }
 
   // Validate unique backend names
   if (parsed.storage && Array.isArray(parsed.storage)) {

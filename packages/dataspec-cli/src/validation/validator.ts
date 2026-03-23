@@ -9,8 +9,14 @@ import {
   createFailureResult,
   ErrorCodes,
 } from './error.js';
+import { validateAgainstSchema } from './schema-validator.js';
 
 const VALID_SOURCE_TYPES = ['database', 'api', 'file_system', 'streaming', 'saas'] as const;
+
+function stripWorkspaceProperties(obj: Record<string, unknown>): Record<string, unknown> {
+  const { file: _file, line: _line, layer: _layer, ...rest } = obj;
+  return rest;
+}
 const API_PROTOCOLS = ['http', 'https', 'grpc'] as const;
 const STREAMING_PROTOCOLS = ['ws', 'wss', 'kafka', 'mqtt', 'amqp'] as const;
 const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] as const;
@@ -28,6 +34,7 @@ export class Validator {
   }
 
   validate(): ValidationResult {
+    this.validateSchema();
     this.validateUniqueResourceNames();
     this.validateCrossResourceReferences();
     this.validateStepTypeCoherence();
@@ -41,6 +48,37 @@ export class Validator {
     }
 
     return createSuccessResult(this.warnings);
+  }
+
+  private validateResourceSchema(
+    resources: any[],
+    type: 'source' | 'dataset' | 'contract' | 'flow' | 'platform',
+  ): void {
+    for (const resource of resources) {
+      const result = validateAgainstSchema(stripWorkspaceProperties(resource), type);
+      if (!result.valid) {
+        for (const error of result.errors) {
+          this.errors.push(
+            createError(
+              `Schema validation error: ${error}`,
+              { file: resource.file, line: resource.line },
+              'error',
+              ErrorCodes.SCHEMA_VALIDATION,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  private validateSchema(): void {
+    this.validateResourceSchema(this.workspace.sources, 'source');
+    this.validateResourceSchema(this.workspace.datasets, 'dataset');
+    this.validateResourceSchema(this.workspace.contracts, 'contract');
+    this.validateResourceSchema(this.workspace.flows, 'flow');
+    if (this.workspace.platform) {
+      this.validateResourceSchema([this.workspace.platform], 'platform');
+    }
   }
 
   private validateSources(): void {

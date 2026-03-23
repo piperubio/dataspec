@@ -30,6 +30,7 @@
   },
   "dependencies": {
     "@dataspec/dataspec-core": "workspace:*",
+    "ajv": "^8.12.0",
     "commander": "^12.0.0",
     "yaml": "^2.3.4"
   },

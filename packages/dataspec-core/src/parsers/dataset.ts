@@ -5,7 +5,13 @@
 
 import { parse } from 'yaml';
 
-import { Dataset, DatasetYamlSchema, StorageConfig, ContractReference } from '../types/dataset';
+import {
+  type Dataset,
+  type DatasetYamlSchema,
+  type StorageConfig,
+  type ContractReference,
+} from '../types/dataset';
+import { validateAgainstSchema } from '../validation/schema-validator';
 
 /**
  * Parses a YAML content string into a typed Dataset object.
@@ -34,25 +40,10 @@ export function parseDatasetYaml(yamlContent: string): Dataset {
   // Parse the YAML content
   const parsed = parse(yamlContent) as DatasetYamlSchema;
 
-  // Validate required fields exist
-  if (!parsed.name) {
-    throw new Error('Dataset YAML missing required field: name');
-  }
-
-  if (!parsed.storage) {
-    throw new Error('Dataset YAML missing required field: storage');
-  }
-
-  if (!parsed.storage.backend) {
-    throw new Error('Dataset YAML storage missing required field: backend');
-  }
-
-  if (!parsed.storage.format) {
-    throw new Error('Dataset YAML storage missing required field: format');
-  }
-
-  if (!parsed.storage.location) {
-    throw new Error('Dataset YAML storage missing required field: location');
+  // Validate against JSON Schema
+  const schemaResult = validateAgainstSchema(parsed, 'dataset');
+  if (!schemaResult.valid) {
+    throw new Error(`Schema validation failed:\n${schemaResult.errors.join('\n')}`);
   }
 
   // Build the storage config

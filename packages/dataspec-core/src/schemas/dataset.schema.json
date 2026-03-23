@@ -1,9 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "additionalProperties": false,
   "definitions": {
     "ContractReference": {
-      "additionalProperties": false,
       "description": "Reference to a contract definition by name and version.\nUsed to link datasets to their validation contracts.",
       "properties": {
         "name": {
@@ -20,16 +18,13 @@
     },
 
     "Metadata": {
-      "additionalProperties": false,
       "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
       "type": "object"
     },
     "Record<string,unknown>": {
-      "additionalProperties": false,
       "type": "object"
     },
     "StorageConfig": {
-      "additionalProperties": false,
       "description": "Storage configuration for a dataset.\nReferences a storage backend and specifies location and format.",
       "properties": {
         "backend": {

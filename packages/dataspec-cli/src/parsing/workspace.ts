@@ -1,5 +1,6 @@
 import type { SourceEntity, FlowStep } from '@dataspec/dataspec-core';
 
+import { validateAgainstSchema } from '../validation/schema-validator.js';
 import { readYamlFile, scanWorkspaceWithStructure } from './scanner.js';
 import { parseYamlWithLineNumbers } from './yaml.js';
 
@@ -100,6 +101,12 @@ export async function parseWorkspaceWithStructure(dirPath: string): Promise<Pars
       file: resources.platformYaml,
     });
     if (result.errors.length === 0 && result.data) {
+      const schemaResult = validateAgainstSchema(result.data, 'platform');
+      if (!schemaResult.valid) {
+        for (const error of schemaResult.errors) {
+          console.warn(`Schema validation error in ${resources.platformYaml}: ${error}`);
+        }
+      }
       workspace.platform = {
         ...result.data,
         file: resources.platformYaml,
@@ -116,6 +123,12 @@ export async function parseWorkspaceWithStructure(dirPath: string): Promise<Pars
       entities: SourceEntity[];
     }>(content, { file });
     if (result.errors.length === 0 && result.data) {
+      const schemaResult = validateAgainstSchema(result.data, 'source');
+      if (!schemaResult.valid) {
+        for (const error of schemaResult.errors) {
+          console.warn(`Schema validation error in ${file}: ${error}`);
+        }
+      }
       workspace.sources.push({
         ...result.data,
         file,
@@ -128,6 +141,12 @@ export async function parseWorkspaceWithStructure(dirPath: string): Promise<Pars
     const content = await readYamlFile(file);
     const result = parseYamlWithLineNumbers<ParsedDataset>(content, { file });
     if (result.errors.length === 0 && result.data) {
+      const schemaResult = validateAgainstSchema(result.data, 'dataset');
+      if (!schemaResult.valid) {
+        for (const error of schemaResult.errors) {
+          console.warn(`Schema validation error in ${file}: ${error}`);
+        }
+      }
       workspace.datasets.push({
         ...result.data,
         file,
@@ -140,6 +159,12 @@ export async function parseWorkspaceWithStructure(dirPath: string): Promise<Pars
     const content = await readYamlFile(file);
     const result = parseYamlWithLineNumbers<ParsedContract>(content, { file });
     if (result.errors.length === 0 && result.data) {
+      const schemaResult = validateAgainstSchema(result.data, 'contract');
+      if (!schemaResult.valid) {
+        for (const error of schemaResult.errors) {
+          console.warn(`Schema validation error in ${file}: ${error}`);
+        }
+      }
       workspace.contracts.push({
         ...result.data,
         file,
@@ -152,6 +177,12 @@ export async function parseWorkspaceWithStructure(dirPath: string): Promise<Pars
     const content = await readYamlFile(file);
     const result = parseYamlWithLineNumbers<ParsedFlow>(content, { file });
     if (result.errors.length === 0 && result.data) {
+      const schemaResult = validateAgainstSchema(result.data, 'flow');
+      if (!schemaResult.valid) {
+        for (const error of schemaResult.errors) {
+          console.warn(`Schema validation error in ${file}: ${error}`);
+        }
+      }
       workspace.flows.push({
         ...result.data,
         file,

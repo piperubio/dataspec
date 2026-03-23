@@ -1,18 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "additionalProperties": false,
   "definitions": {
-    "Metadata": {
-      "additionalProperties": false,
-      "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
-      "type": "object"
-    },
-    "Record<string,unknown>": {
-      "additionalProperties": false,
-      "type": "object"
-    },
     "ContractReference": {
-      "additionalProperties": false,
       "description": "Reference to a contract definition by name and version.",
       "properties": {
         "name": {
@@ -27,8 +16,11 @@
       "required": ["name", "version"],
       "type": "object"
     },
+    "Metadata": {
+      "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
+      "type": "object"
+    },
     "SourceEntity": {
-      "additionalProperties": false,
       "description": "Represents an entity (table, collection, endpoint, file pattern) within a source.",
       "properties": {
         "contract": {
@@ -43,8 +35,12 @@
           "description": "Type of entity (e.g., 'table', 'collection', 'endpoint', 'file')",
           "type": "string"
         },
+        "format": {
+          "description": "Data format for file_system entities (e.g., 'parquet', 'csv', 'json')",
+          "type": "string"
+        },
         "location": {
-          "description": "Location identifier for the entity (e.g., 'schema.table' for databases, '/api/path' for APIs, '/data/path' for file systems)",
+          "description": "Location identifier for the entity",
           "type": "string"
         },
         "metadata": {
@@ -59,42 +55,31 @@
           "description": "The name of the entity",
           "type": "string"
         },
-        "pathParams": {
-          "description": "Path parameters for API endpoints",
-          "items": {
-            "type": "string"
-          },
-          "type": "array"
-        },
-        "pattern": {
-          "description": "File pattern for file_system sources (e.g., '*.csv')",
-          "type": "string"
-        },
-        "queryParams": {
-          "description": "Query parameters for API endpoints",
+        "partition_by": {
+          "description": "Partition columns for file_system entities",
           "items": {
             "type": "string"
           },
           "type": "array"
         },
         "schema": {
-          "$ref": "#/definitions/Record%3Cstring%2Cunknown%3E",
-          "description": "Schema definition if applicable"
+          "description": "Schema definition if applicable",
+          "type": "object"
         }
       },
       "required": ["name"],
       "type": "object"
     },
     "SourceType": {
-      "description": "Source type for data ingestion.\nCategorizes where data originates from.\nSource type values.",
-      "enum": ["api", "database", "file_system", "saas"],
+      "description": "Source type for data ingestion.\nCategorizes where data originates from.",
+      "enum": ["api", "database", "file_system", "saas", "streaming"],
       "type": "string"
     }
   },
-  "description": "Represents a data source (database, API, file system, SaaS).\nContains NO connection details - this is definitions-only.",
+  "description": "Represents a data source (database, API, file system, streaming, SaaS).\nContains NO connection details - this is definitions-only.",
   "properties": {
-    "createdAt": {
-      "description": "Creation timestamp",
+    "baseUrl": {
+      "description": "Base URL for API and streaming sources",
       "type": "string"
     },
     "entities": {
@@ -112,6 +97,14 @@
       "description": "Unique name for the source",
       "type": "string"
     },
+    "protocol": {
+      "description": "Protocol for API and streaming sources",
+      "type": "string"
+    },
+    "provider": {
+      "description": "Provider name for SaaS sources",
+      "type": "string"
+    },
     "tags": {
       "description": "Tags for categorization and filtering",
       "items": {
@@ -122,10 +115,6 @@
     "type": {
       "$ref": "#/definitions/SourceType",
       "description": "Type of source"
-    },
-    "updatedAt": {
-      "description": "Last update timestamp",
-      "type": "string"
     }
   },
   "required": ["entities", "name", "type"],

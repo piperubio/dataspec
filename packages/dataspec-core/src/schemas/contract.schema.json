@@ -1,9 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "additionalProperties": false,
   "definitions": {
     "ContractField": {
-      "additionalProperties": false,
       "description": "Represents a single field definition within a contract.",
       "properties": {
         "constraints": {
@@ -32,7 +30,6 @@
       "type": "string"
     },
     "FieldConstraints": {
-      "additionalProperties": false,
       "description": "Field constraints for data validation and integrity.",
       "properties": {
         "allowed_values": {
@@ -58,7 +55,6 @@
       "type": "object"
     },
     "Metadata": {
-      "additionalProperties": false,
       "description": "Key-value metadata map for storing arbitrary resource metadata.\nKeys are strings, values can be any JSON-serializable type.",
       "type": "object"
     }
