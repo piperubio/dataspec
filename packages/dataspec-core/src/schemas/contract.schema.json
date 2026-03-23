@@ -53,21 +53,19 @@
         },
         "precision": {
           "description": "Total number of digits for decimal fields (must be paired with scale)",
-          "type": "integer",
-          "minimum": 1
+          "type": "integer"
         },
         "scale": {
           "description": "Number of decimal places for decimal fields (must be paired with precision, must be ≤ precision)",
-          "type": "integer",
-          "minimum": 0
+          "type": "integer"
         },
         "min": {
           "description": "Inclusive minimum value for integer and decimal fields",
-          "type": "number"
+          "type": ["number", "string"]
         },
         "max": {
           "description": "Inclusive maximum value for integer and decimal fields",
-          "type": "number"
+          "type": ["number", "string"]
         }
       },
       "type": "object"

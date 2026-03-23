@@ -26,6 +26,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "ajv": "^8.18.0",
     "yaml": "^2.3.4"
   },
   "devDependencies": {
