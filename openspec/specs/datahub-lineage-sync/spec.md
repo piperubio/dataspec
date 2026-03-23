@@ -4,7 +4,7 @@
 
 Synchronization of flow-defined lineages to DataHub's lineage graph. Maps dataspec flow steps (extract, transform, load) to DataHub's dataset-to-dataset lineage edges.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Sync lineages to DataHub
 

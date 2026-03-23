@@ -4,7 +4,7 @@
 
 CLI commands for managing DataHub integration: `dataspec datahub connect`, `dataspec datahub sync datasets`, `dataspec datahub sync sources`, `dataspec datahub sync lineage`.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: DataHub CLI command group
 

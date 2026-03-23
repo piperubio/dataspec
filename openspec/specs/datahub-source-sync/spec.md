@@ -4,7 +4,7 @@
 
 Synchronization of source definitions from dataspec to DataHub's data platform entities. Maps dataspec source concepts (type, entities) to DataHub's data platform metadata.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Sync sources to DataHub
 

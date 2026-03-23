@@ -4,7 +4,7 @@
 
 Synchronization of dataset definitions from dataspec to DataHub's dataset entities. Maps dataspec dataset concepts (name, storage, schema) to DataHub's dataset entity model.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Sync datasets to DataHub
 

@@ -4,7 +4,7 @@
 
 Configuration and connection management for DataHub's GraphQL API. Handles authentication, endpoint configuration, and connection health checks.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: DataHub configuration in platform.yaml
 
