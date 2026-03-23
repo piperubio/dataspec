@@ -871,6 +871,420 @@ describe('Validation Engine', () => {
     });
   });
 
+  describe('Breaking change detection - precision/scale', () => {
+    it('should detect breaking change when precision is tightened on decimal field', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [
+          {
+            name: 'prices',
+            layer: 'refined',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/prices' },
+            contract: { name: 'price_contract', version: '1.0.0' },
+            file: 'datasets/prices.yaml',
+            line: 1,
+          },
+        ],
+        contracts: [
+          {
+            name: 'price_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'amount',
+                type: 'decimal',
+                constraints: {
+                  precision: 8,
+                  scale: 2,
+                },
+              },
+            ],
+            file: 'contracts/price.yaml',
+            line: 1,
+          },
+        ],
+        flows: [
+          {
+            name: 'load_prices',
+            steps: [
+              {
+                type: 'load',
+                input: 'price_data',
+                target: 'prices',
+              },
+            ],
+            file: 'flows/load_prices.yaml',
+            line: 1,
+          },
+        ],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(
+        result.warnings.some(
+          (w) =>
+            w.code === 'POTENTIAL_BREAKING_CHANGE' &&
+            w.message.includes('precision/scale constraints narrow numeric type'),
+        ),
+      ).toBe(true);
+    });
+
+    it('should detect breaking change when scale is tightened on decimal field', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [
+          {
+            name: 'rates',
+            layer: 'refined',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/rates' },
+            contract: { name: 'rate_contract', version: '1.0.0' },
+            file: 'datasets/rates.yaml',
+            line: 1,
+          },
+        ],
+        contracts: [
+          {
+            name: 'rate_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'interest_rate',
+                type: 'decimal',
+                constraints: {
+                  precision: 10,
+                  scale: 4,
+                },
+              },
+            ],
+            file: 'contracts/rate.yaml',
+            line: 1,
+          },
+        ],
+        flows: [
+          {
+            name: 'load_rates',
+            steps: [
+              {
+                type: 'load',
+                input: 'rate_data',
+                target: 'rates',
+              },
+            ],
+            file: 'flows/load_rates.yaml',
+            line: 1,
+          },
+        ],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(
+        result.warnings.some(
+          (w) =>
+            w.code === 'POTENTIAL_BREAKING_CHANGE' &&
+            w.message.includes('precision/scale constraints narrow numeric type'),
+        ),
+      ).toBe(true);
+    });
+
+    it('should not warn when decimal field has no precision/scale constraints', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [
+          {
+            name: 'amounts',
+            layer: 'refined',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/amounts' },
+            contract: { name: 'amount_contract', version: '1.0.0' },
+            file: 'datasets/amounts.yaml',
+            line: 1,
+          },
+        ],
+        contracts: [
+          {
+            name: 'amount_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'total',
+                type: 'decimal',
+              },
+            ],
+            file: 'contracts/amount.yaml',
+            line: 1,
+          },
+        ],
+        flows: [
+          {
+            name: 'load_amounts',
+            steps: [
+              {
+                type: 'load',
+                input: 'amount_data',
+                target: 'amounts',
+              },
+            ],
+            file: 'flows/load_amounts.yaml',
+            line: 1,
+          },
+        ],
+      };
+
+      const result = validateWorkspace(workspace);
+      const precisionWarnings = result.warnings.filter(
+        (w) =>
+          w.code === 'POTENTIAL_BREAKING_CHANGE' &&
+          w.message.includes('precision/scale constraints narrow numeric type'),
+      );
+      expect(precisionWarnings.length).toBe(0);
+    });
+  });
+
+  describe('Breaking change detection - min/max', () => {
+    it('should detect breaking change when min is tightened on integer field', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [
+          {
+            name: 'ages',
+            layer: 'refined',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/ages' },
+            contract: { name: 'age_contract', version: '1.0.0' },
+            file: 'datasets/ages.yaml',
+            line: 1,
+          },
+        ],
+        contracts: [
+          {
+            name: 'age_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'age',
+                type: 'integer',
+                constraints: {
+                  min: 5,
+                  max: 120,
+                },
+              },
+            ],
+            file: 'contracts/age.yaml',
+            line: 1,
+          },
+        ],
+        flows: [
+          {
+            name: 'load_ages',
+            steps: [
+              {
+                type: 'load',
+                input: 'age_data',
+                target: 'ages',
+              },
+            ],
+            file: 'flows/load_ages.yaml',
+            line: 1,
+          },
+        ],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(
+        result.warnings.some(
+          (w) =>
+            w.code === 'POTENTIAL_BREAKING_CHANGE' &&
+            w.message.includes('min constraint tightens lower bound'),
+        ),
+      ).toBe(true);
+    });
+
+    it('should detect breaking change when max is tightened on integer field', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [
+          {
+            name: 'scores',
+            layer: 'refined',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/scores' },
+            contract: { name: 'score_contract', version: '1.0.0' },
+            file: 'datasets/scores.yaml',
+            line: 1,
+          },
+        ],
+        contracts: [
+          {
+            name: 'score_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'score',
+                type: 'integer',
+                constraints: {
+                  min: 0,
+                  max: 50,
+                },
+              },
+            ],
+            file: 'contracts/score.yaml',
+            line: 1,
+          },
+        ],
+        flows: [
+          {
+            name: 'load_scores',
+            steps: [
+              {
+                type: 'load',
+                input: 'score_data',
+                target: 'scores',
+              },
+            ],
+            file: 'flows/load_scores.yaml',
+            line: 1,
+          },
+        ],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(
+        result.warnings.some(
+          (w) =>
+            w.code === 'POTENTIAL_BREAKING_CHANGE' &&
+            w.message.includes('max constraint tightens upper bound'),
+        ),
+      ).toBe(true);
+    });
+
+    it('should detect breaking change when min/max are tightened on decimal field', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [
+          {
+            name: 'prices',
+            layer: 'refined',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/prices' },
+            contract: { name: 'price_range_contract', version: '1.0.0' },
+            file: 'datasets/prices.yaml',
+            line: 1,
+          },
+        ],
+        contracts: [
+          {
+            name: 'price_range_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'price',
+                type: 'decimal',
+                constraints: {
+                  min: 5.0,
+                  max: 50.0,
+                },
+              },
+            ],
+            file: 'contracts/price_range.yaml',
+            line: 1,
+          },
+        ],
+        flows: [
+          {
+            name: 'load_prices',
+            steps: [
+              {
+                type: 'load',
+                input: 'price_data',
+                target: 'prices',
+              },
+            ],
+            file: 'flows/load_prices.yaml',
+            line: 1,
+          },
+        ],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(
+        result.warnings.some(
+          (w) =>
+            w.code === 'POTENTIAL_BREAKING_CHANGE' &&
+            w.message.includes('min constraint tightens lower bound'),
+        ),
+      ).toBe(true);
+      expect(
+        result.warnings.some(
+          (w) =>
+            w.code === 'POTENTIAL_BREAKING_CHANGE' &&
+            w.message.includes('max constraint tightens upper bound'),
+        ),
+      ).toBe(true);
+    });
+
+    it('should not warn when integer field has no min/max constraints', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [
+          {
+            name: 'counts',
+            layer: 'refined',
+            storage: { backend: 's3', format: 'parquet', location: 's3://bucket/counts' },
+            contract: { name: 'count_contract', version: '1.0.0' },
+            file: 'datasets/counts.yaml',
+            line: 1,
+          },
+        ],
+        contracts: [
+          {
+            name: 'count_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'count',
+                type: 'integer',
+              },
+            ],
+            file: 'contracts/count.yaml',
+            line: 1,
+          },
+        ],
+        flows: [
+          {
+            name: 'load_counts',
+            steps: [
+              {
+                type: 'load',
+                input: 'count_data',
+                target: 'counts',
+              },
+            ],
+            file: 'flows/load_counts.yaml',
+            line: 1,
+          },
+        ],
+      };
+
+      const result = validateWorkspace(workspace);
+      const minMaxWarnings = result.warnings.filter(
+        (w) =>
+          w.code === 'POTENTIAL_BREAKING_CHANGE' &&
+          (w.message.includes('min constraint') || w.message.includes('max constraint')),
+      );
+      expect(minMaxWarnings.length).toBe(0);
+    });
+  });
+
   describe('Schema validation', () => {
     it('should run schema validation before semantic validation', () => {
       const workspace: Workspace = {

@@ -65,9 +65,9 @@
 
 ## 6. Tests — Validator Integration
 
-- [ ] 6.1 Test breaking change detection for tightened precision/scale
+- [x] 6.1 Test breaking change detection for tightened precision/scale
 <!-- Files: packages/dataspec-cli/__tests__/validator.test.ts -->
-- [ ] 6.2 Test breaking change detection for tightened min/max
+- [x] 6.2 Test breaking change detection for tightened min/max
 <!-- Files: packages/dataspec-cli/__tests__/validator.test.ts -->
 - [x] 6.3 Test consistency validation rejects precision/scale on non-decimal
 <!-- Files: packages/dataspec-cli/__tests__/validator.test.ts -->
