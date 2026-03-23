@@ -50,7 +50,7 @@
 | -------------- | ------------- | ------------------------ | -------------- |
 | <!-- agent --> | <!-- task --> | <!-- dependency task --> | <!-- agent --> |
 
-## Claude Code Team Setup
+## Team Setup
 
 To execute this plan, run `/opsx:multiagent-apply` on this change. It will automate the steps below.
 

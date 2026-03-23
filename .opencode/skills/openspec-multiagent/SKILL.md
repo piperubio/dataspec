@@ -106,7 +106,7 @@ After completing all artifacts, summarize:
 - **Agent assignment summary**: Which tasks go to which agent
 - **Token cost warning**: Remind that N agents ≈ N× token usage
 - What's ready: "All artifacts created! Ready for multi-agent implementation."
-- Prompt: "Run `/opsx:multiagent-apply` to orchestrate a Claude Code agent team for parallel implementation."
+- Prompt: "Run `/opsx:multiagent-apply` to orchestrate an agent team for parallel implementation."
 
 **Artifact Creation Guidelines**
 
