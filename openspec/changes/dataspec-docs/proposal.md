@@ -5,7 +5,6 @@ The DataSpec core validates data platform configurations but does not generate c
 ## What Changes
 
 - **New Capability**: Documentation generation (`dataspec docs generate`) that produces GitHub-renderable Markdown with Mermaid lineage diagrams, dataset catalog tables, and contract reference docs
-- **New Capability**: Model inspection CLI (`dataspec inspect`) for interactive exploration of platform resources including overview, specific datasets, flows, and lineage queries
 - No breaking changes to existing validation or DSL
 
 ## Capabilities
@@ -13,7 +12,6 @@ The DataSpec core validates data platform configurations but does not generate c
 ### New Capabilities
 
 - `documentation-generation`: Generate Markdown documentation with Mermaid lineage graphs, dataset catalog tables, and contract reference docs. GitHub-renderable.
-- `cli-tooling` (advanced): `dataspec inspect` — model inspection command (inspect overview, specific dataset, specific flow, lineage)
 
 ### Modified Capabilities
 
@@ -22,7 +20,6 @@ The DataSpec core validates data platform configurations but does not generate c
 ## Impact
 
 - **CLI**: New subcommand `dataspec docs` with `generate` subcommand
-- **CLI**: New subcommand `dataspec inspect` with overview, dataset, flow, and lineage modes
 - **New module**: Documentation generator with Markdown and Mermaid rendering
 - **Output**: Generated `docs/` directory with platform documentation
-- **Dependencies**: Requires DPaC core (validation engine, domain model) to be available
+- **Dependencies**: Requires DataSpec core (validation engine, domain model) to be available
