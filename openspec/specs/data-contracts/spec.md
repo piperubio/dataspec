@@ -26,7 +26,7 @@ The system SHALL support the following data types in contract field definitions:
 
 ### Requirement: Field constraints
 
-The system SHALL support declaring constraints on fields including: unique, not_null, referential integrity references, allowed_values for string fields, precision and scale for decimal fields, and min and max for numeric fields.
+The system SHALL support declaring constraints on fields including: unique, not_null, referential integrity references, allowed_values for string fields, precision and scale for decimal fields, min and max for numeric fields, and min_length, max_length, format, and pattern for string fields.
 
 #### Scenario: Field with multiple constraints
 
@@ -82,6 +82,41 @@ The system SHALL support declaring constraints on fields including: unique, not_
 
 - **WHEN** a contract field declares `constraints.min` or `constraints.max` as a non-finite number (NaN or Infinity)
 - **THEN** the system MUST reject the constraint with an error indicating min and max must be finite numbers
+
+#### Scenario: Field with min_length constraint
+
+- **WHEN** a contract field with `type: string` declares `constraints.min_length` as a positive integer
+- **THEN** the system SHALL store min_length as part of the field constraint definition
+
+#### Scenario: Field with max_length constraint
+
+- **WHEN** a contract field with `type: string` declares `constraints.max_length` as a positive integer
+- **THEN** the system SHALL store max_length as part of the field constraint definition
+
+#### Scenario: min_length greater than max_length
+
+- **WHEN** a contract field declares `constraints.min_length` greater than `constraints.max_length`
+- **THEN** the system MUST reject the constraint with an error indicating min_length must be less than or equal to max_length
+
+#### Scenario: Field with format constraint
+
+- **WHEN** a contract field with `type: string` declares `constraints.format` as a string
+- **THEN** the system SHALL store format as part of the field constraint definition
+
+#### Scenario: Field with pattern constraint
+
+- **WHEN** a contract field with `type: string` declares `constraints.pattern` as a valid regex string
+- **THEN** the system SHALL store pattern as part of the field constraint definition
+
+#### Scenario: Pattern with invalid regex syntax
+
+- **WHEN** a contract field declares `constraints.pattern` with an invalid regex string
+- **THEN** the system MUST reject the constraint with an error indicating the pattern is not a valid regular expression
+
+#### Scenario: String constraints on non-string type
+
+- **WHEN** a contract field with a non-string type declares `constraints.min_length`, `constraints.max_length`, `constraints.format`, or `constraints.pattern`
+- **THEN** the system MUST reject the constraint with an error indicating these constraints are only valid for string types
 
 ### Requirement: Contract versioning
 

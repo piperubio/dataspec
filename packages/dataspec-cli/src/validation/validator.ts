@@ -964,6 +964,37 @@ export class Validator {
               ),
             );
           }
+
+          // Validate min_length/max_length only on string type
+          if (
+            (field.constraints.min_length !== undefined ||
+              field.constraints.max_length !== undefined) &&
+            field.type !== 'string'
+          ) {
+            this.errors.push(
+              createError(
+                `Constraint 'min_length/max_length' is only valid for string fields in contract '${contract.name}'`,
+                { file: contract.file, line: contract.line },
+                'error',
+                'INVALID_CONSTRAINT',
+              ),
+            );
+          }
+
+          // Validate format/pattern only on string type
+          if (
+            (field.constraints.format !== undefined || field.constraints.pattern !== undefined) &&
+            field.type !== 'string'
+          ) {
+            this.errors.push(
+              createError(
+                `Constraint 'format/pattern' is only valid for string fields in contract '${contract.name}'`,
+                { file: contract.file, line: contract.line },
+                'error',
+                'INVALID_CONSTRAINT',
+              ),
+            );
+          }
         }
       }
     }
@@ -1080,10 +1111,6 @@ export class Validator {
 
     // String type narrowing
     if (field.type === 'string' && field.constraints) {
-      if (field.constraints.format) {
-        // Adding a format constraint narrows the type
-        issues.push(`format constraint '${field.constraints.format}' narrows string type`);
-      }
       if (field.constraints.max_length && Number(field.constraints.max_length) < 1000) {
         issues.push(`max_length constraint tightens string length`);
       }
@@ -1157,6 +1184,14 @@ export class Validator {
     }
     if (field.constraints.scale !== undefined) {
       issues.push(`scale constraint limits decimal places`);
+    }
+
+    // String length constraint tightening
+    if (field.constraints.min_length !== undefined) {
+      issues.push(`min_length constraint tightens string length`);
+    }
+    if (field.constraints.max_length !== undefined) {
+      issues.push(`max_length constraint tightens string length`);
     }
 
     // Exclusive minimum/maximum are tighter than inclusive

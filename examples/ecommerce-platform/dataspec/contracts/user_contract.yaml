@@ -16,14 +16,20 @@ fields:
     constraints:
       unique: true
       not_null: true
+      format: email
+      max_length: 255
     description: User email address
 
   - name: first_name
     type: string
+    constraints:
+      max_length: 100
     description: User first name
 
   - name: last_name
     type: string
+    constraints:
+      max_length: 100
     description: User last name
 
   - name: phone
@@ -58,6 +64,11 @@ fields:
 
   - name: country_code
     type: string
+    constraints:
+      format: ISO-3166-1-alpha-2
+      pattern: '^[A-Z]{2}$'
+      min_length: 2
+      max_length: 2
     description: ISO country code
 
   - name: timezone

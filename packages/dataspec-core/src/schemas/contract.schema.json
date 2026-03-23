@@ -66,6 +66,22 @@
         "max": {
           "description": "Inclusive maximum value for integer and decimal fields",
           "type": ["number", "string"]
+        },
+        "min_length": {
+          "description": "Minimum string length for string fields (positive integer, must be ≤ max_length if both set)",
+          "type": "integer"
+        },
+        "max_length": {
+          "description": "Maximum string length for string fields (positive integer, must be ≥ min_length if both set)",
+          "type": "integer"
+        },
+        "format": {
+          "description": "Format hint for string fields (metadata only, e.g., 'email', 'uri', 'uuid')",
+          "type": "string"
+        },
+        "pattern": {
+          "description": "Regex pattern for string field validation (must be valid regex syntax)",
+          "type": "string"
         }
       },
       "type": "object"

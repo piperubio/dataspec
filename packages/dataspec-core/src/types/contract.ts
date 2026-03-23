@@ -38,6 +38,14 @@ export interface FieldConstraints {
   min?: number;
   /** Inclusive maximum value for integer and decimal fields */
   max?: number;
+  /** Minimum string length for string fields (positive integer, must be <= max_length) */
+  min_length?: number;
+  /** Maximum string length for string fields (positive integer, must be >= min_length) */
+  max_length?: number;
+  /** Format hint for string fields (open-ended metadata, e.g., 'email', 'uri') */
+  format?: string;
+  /** Regex pattern for string fields (validated syntactically at parse time) */
+  pattern?: string;
 }
 
 /**

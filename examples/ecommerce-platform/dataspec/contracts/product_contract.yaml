@@ -16,16 +16,22 @@ fields:
     constraints:
       unique: true
       not_null: true
+      max_length: 50
+      pattern: '^[A-Z0-9-]+$'
     description: Stock keeping unit - unique product code
 
   - name: name
     type: string
     constraints:
       not_null: true
+      max_length: 255
+      min_length: 1
     description: Product name
 
   - name: description
     type: string
+    constraints:
+      max_length: 5000
     description: Product description
 
   - name: price
