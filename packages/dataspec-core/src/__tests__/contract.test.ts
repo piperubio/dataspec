@@ -314,4 +314,237 @@ fields:
       "must specify both 'precision' and 'scale' together",
     );
   });
+
+  it('should reject precision/scale on integer field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: count
+    type: integer
+    constraints:
+      precision: 10
+      scale: 2
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for decimal fields');
+  });
+
+  it('should reject precision/scale on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      precision: 10
+      scale: 2
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for decimal fields');
+  });
+
+  it('should reject precision/scale on boolean field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: flag
+    type: boolean
+    constraints:
+      precision: 5
+      scale: 2
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for decimal fields');
+  });
+
+  it('should reject non-positive precision', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      precision: 0
+      scale: 2
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow("'precision' must be a positive integer");
+  });
+
+  it('should reject negative precision', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      precision: -1
+      scale: 2
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow("'precision' must be a positive integer");
+  });
+
+  it('should reject negative scale', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      precision: 10
+      scale: -1
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow("'scale' must be a non-negative integer");
+  });
+
+  it('should parse valid min/max on integer field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: quantity
+    type: integer
+    constraints:
+      min: 0
+      max: 1000
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.min).toBe(0);
+    expect(field.constraints?.max).toBe(1000);
+  });
+
+  it('should parse valid min/max on decimal field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      min: 0.01
+      max: 999999.99
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.min).toBe(0.01);
+    expect(field.constraints?.max).toBe(999999.99);
+  });
+
+  it('should reject min/max on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      min: 0
+      max: 100
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for integer or decimal fields');
+  });
+
+  it('should reject min/max on boolean field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: flag
+    type: boolean
+    constraints:
+      min: 0
+      max: 1
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for integer or decimal fields');
+  });
+
+  it('should reject min/max on timestamp field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: created_at
+    type: timestamp
+    constraints:
+      min: 0
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for integer or decimal fields');
+  });
+
+  it('should reject min greater than max', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: quantity
+    type: integer
+    constraints:
+      min: 100
+      max: 50
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow("'min' (100) greater than 'max' (50)");
+  });
+
+  it('should reject NaN as min', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: value
+    type: decimal
+    constraints:
+      min: NaN
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow(
+      "invalid 'min' constraint - must be a finite number",
+    );
+  });
+
+  it('should reject Infinity as max', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: value
+    type: decimal
+    constraints:
+      max: Infinity
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow(
+      "invalid 'max' constraint - must be a finite number",
+    );
+  });
+
+  it('should reject -Infinity as min', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: value
+    type: integer
+    constraints:
+      min: -Infinity
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow(
+      "invalid 'min' constraint - must be a finite number",
+    );
+  });
 });

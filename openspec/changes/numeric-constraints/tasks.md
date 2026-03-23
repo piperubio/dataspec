@@ -31,15 +31,15 @@
 
 ## 4. Validator — Type Narrowing & Constraint Tightening
 
-- [ ] 4.1 Verify `detectTypeNarrowing()` activates for precision/scale changes
+- [x] 4.1 Verify `detectTypeNarrowing()` activates for precision/scale changes
 <!-- Files: packages/dataspec-cli/src/validation/validator.ts -->
-- [ ] 4.2 Add min/max constraint tightening detection in `detectConstraintTightening()`
+- [x] 4.2 Add min/max constraint tightening detection in `detectConstraintTightening()`
 <!-- Files: packages/dataspec-cli/src/validation/validator.ts -->
-- [ ] 4.3 Add precision/scale tightening detection in `detectConstraintTightening()`
+- [x] 4.3 Add precision/scale tightening detection in `detectConstraintTightening()`
 <!-- Files: packages/dataspec-cli/src/validation/validator.ts -->
-- [ ] 4.4 Add consistency check: precision/scale only on decimal in `validateContractConsistency()`
+- [x] 4.4 Add consistency check: precision/scale only on decimal in `validateContractConsistency()`
 <!-- Files: packages/dataspec-cli/src/validation/validator.ts -->
-- [ ] 4.5 Add consistency check: min/max only on numeric types in `validateContractConsistency()`
+- [x] 4.5 Add consistency check: min/max only on numeric types in `validateContractConsistency()`
 <!-- Files: packages/dataspec-cli/src/validation/validator.ts -->
 
 ## 5. Tests — Parser
@@ -69,7 +69,7 @@
 <!-- Files: packages/dataspec-cli/__tests__/validator.test.ts -->
 - [ ] 6.2 Test breaking change detection for tightened min/max
 <!-- Files: packages/dataspec-cli/__tests__/validator.test.ts -->
-- [ ] 6.3 Test consistency validation rejects precision/scale on non-decimal
+- [x] 6.3 Test consistency validation rejects precision/scale on non-decimal
 <!-- Files: packages/dataspec-cli/__tests__/validator.test.ts -->
 
 ## 7. Documentation
