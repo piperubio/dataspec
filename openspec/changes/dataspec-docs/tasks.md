@@ -65,36 +65,19 @@
 - [ ] 5.3 Register `docsCommand` in CLI entry point
   - Files: `packages/dataspec-cli/src/cli.ts`, `packages/dataspec-cli/src/commands/index.ts`
 
-## 6. CLI — `dataspec inspect` Command
+- [ ] 5.4 Write unit tests for docs command
+  - Files: `packages/dataspec-cli/src/commands/__tests__/docs.test.ts`
 
-- [ ] 6.1 Create `dataspec inspect` command with default overview action: display resource counts and storage backends
-  - Files: `packages/dataspec-cli/src/commands/inspect.ts`
+## 6. Integration and Validation
 
-- [ ] 6.2 Implement `inspect dataset <name>` action: show dataset details, layer, storage, contract, producing/consuming flows
-  - Files: `packages/dataspec-cli/src/commands/inspect.ts`
-
-- [ ] 6.3 Implement `inspect flow <name>` action: show flow steps, inputs, and outputs
-  - Files: `packages/dataspec-cli/src/commands/inspect.ts`
-
-- [ ] 6.4 Implement `inspect lineage <dataset>` action: show upstream and downstream lineage tree
-  - Files: `packages/dataspec-cli/src/commands/inspect.ts`
-
-- [ ] 6.5 Register `inspectCommand` in CLI entry point
-  - Files: `packages/dataspec-cli/src/cli.ts`, `packages/dataspec-cli/src/commands/index.ts`
-
-- [ ] 6.6 Write unit tests for inspect command (all four modes)
-  - Files: `packages/dataspec-cli/src/commands/__tests__/inspect.test.ts`
-
-## 7. Integration and Validation
-
-- [ ] 7.1 Update ecommerce example workspace with a larger platform that triggers diagram splitting (>40 nodes)
+- [ ] 6.1 Update ecommerce example workspace with a larger platform that triggers diagram splitting (>40 nodes)
   - Files: `examples/ecommerce-platform/`
 
-- [ ] 7.2 Run `bun run build` in `packages/dataspec-cli` to verify binary compilation
+- [ ] 6.2 Run `bun run build` in `packages/dataspec-cli` to verify binary compilation
   - Files: `packages/dataspec-cli/`
 
-- [ ] 7.3 Run `bun lint` and `bun format` to ensure code consistency
+- [ ] 6.3 Run `bun lint` and `bun format` to ensure code consistency
   - Files: project root
 
-- [ ] 7.4 End-to-end test: run `dataspec docs generate` on ecommerce workspace and verify all output files render correctly
+- [ ] 6.4 End-to-end test: run `dataspec docs generate` on ecommerce workspace and verify all output files render correctly
   - Files: `packages/dataspec-cli/src/docs/__tests__/e2e.test.ts`
