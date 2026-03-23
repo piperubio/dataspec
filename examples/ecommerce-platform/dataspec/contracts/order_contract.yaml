@@ -28,18 +28,33 @@ fields:
     type: string
     constraints:
       not_null: true
+      format: ISO-4217
+      pattern: '^[A-Z]{3}$'
+      min_length: 3
+      max_length: 3
     description: Currency code (ISO 4217)
 
   - name: status
     type: string
     constraints:
       not_null: true
+      allowed_values:
+        - pending
+        - confirmed
+        - shipped
+        - delivered
+        - cancelled
     description: Order status (pending, confirmed, shipped, delivered, cancelled)
 
   - name: payment_status
     type: string
     constraints:
       not_null: true
+      allowed_values:
+        - pending
+        - paid
+        - failed
+        - refunded
     description: Payment status (pending, paid, failed, refunded)
 
   - name: shipping_address

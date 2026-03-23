@@ -547,4 +547,423 @@ fields:
       "invalid 'min' constraint - must be a finite number",
     );
   });
+
+  // 5.1: Tests for valid min_length on string field
+  it('should parse valid min_length on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: username
+    type: string
+    constraints:
+      min_length: 3
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.min_length).toBe(3);
+  });
+
+  // 5.2: Tests for min_length rejection on non-string fields
+  it('should reject min_length on integer field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: count
+    type: integer
+    constraints:
+      min_length: 1
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  it('should reject min_length on decimal field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      min_length: 1
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  it('should reject min_length on boolean field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: flag
+    type: boolean
+    constraints:
+      min_length: 1
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  // 5.3: Tests for min_length rejection with zero, negative, non-integer values
+  it('should reject min_length of zero', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      min_length: 0
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('must be a positive integer');
+  });
+
+  it('should reject negative min_length', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      min_length: -1
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('must be a positive integer');
+  });
+
+  it('should reject non-integer min_length', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      min_length: 2.5
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('Schema validation failed');
+  });
+
+  // 5.4: Tests for valid max_length on string field
+  it('should parse valid max_length on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: email
+    type: string
+    constraints:
+      max_length: 255
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.max_length).toBe(255);
+  });
+
+  // 5.5: Tests for max_length rejection on non-string fields and invalid values
+  it('should reject max_length on integer field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: count
+    type: integer
+    constraints:
+      max_length: 10
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  it('should reject max_length on boolean field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: flag
+    type: boolean
+    constraints:
+      max_length: 10
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  it('should reject max_length of zero', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      max_length: 0
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('must be a positive integer');
+  });
+
+  it('should reject negative max_length', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      max_length: -5
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('must be a positive integer');
+  });
+
+  // 5.6: Tests for min_length > max_length cross-constraint rejection
+  it('should reject min_length greater than max_length', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: username
+    type: string
+    constraints:
+      min_length: 10
+      max_length: 5
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow(
+      "'min_length' (10) greater than 'max_length' (5)",
+    );
+  });
+
+  it('should accept min_length equal to max_length', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: country_code
+    type: string
+    constraints:
+      min_length: 2
+      max_length: 2
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.min_length).toBe(2);
+    expect(field.constraints?.max_length).toBe(2);
+  });
+
+  // 5.7: Tests for valid format on string field with arbitrary values
+  it('should parse format: email on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: email
+    type: string
+    constraints:
+      format: email
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.format).toBe('email');
+  });
+
+  it('should parse format: uri on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: website
+    type: string
+    constraints:
+      format: uri
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.format).toBe('uri');
+  });
+
+  it('should parse custom format values on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: country
+    type: string
+    constraints:
+      format: ISO-3166-1-alpha-2
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.format).toBe('ISO-3166-1-alpha-2');
+  });
+
+  // 5.8: Tests for format rejection on non-string fields
+  it('should reject format on integer field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: count
+    type: integer
+    constraints:
+      format: number
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  it('should reject format on decimal field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      format: currency
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  it('should reject format on boolean field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: flag
+    type: boolean
+    constraints:
+      format: boolean-string
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  // 5.9: Tests for valid pattern on string field
+  it('should parse valid pattern on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: country_code
+    type: string
+    constraints:
+      pattern: '^[A-Z]{2}$'
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.pattern).toBe('^[A-Z]{2}$');
+  });
+
+  it('should parse complex regex pattern on string field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: phone
+    type: string
+    constraints:
+      pattern: '^\\+?[1-9]\\d{1,14}$'
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.pattern).toBe('^\\+?[1-9]\\d{1,14}$');
+  });
+
+  // 5.10: Tests for pattern rejection on non-string fields
+  it('should reject pattern on integer field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: count
+    type: integer
+    constraints:
+      pattern: '^\\d+$'
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  it('should reject pattern on boolean field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: flag
+    type: boolean
+    constraints:
+      pattern: 'true|false'
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('only valid for string fields');
+  });
+
+  // 5.11: Tests for pattern rejection with invalid regex syntax
+  it('should reject pattern with invalid regex syntax', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      pattern: '[invalid'
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('is not a valid regex');
+  });
+
+  it('should reject pattern with invalid regex group', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: label
+    type: string
+    constraints:
+      pattern: '(unclosed'
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('is not a valid regex');
+  });
+
+  // 5.12: Test for all string constraints combined on one field
+  it('should parse all string constraints combined on one field', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: username
+    type: string
+    constraints:
+      min_length: 3
+      max_length: 20
+      format: username
+      pattern: '^[a-zA-Z0-9_]+$'
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.min_length).toBe(3);
+    expect(field.constraints?.max_length).toBe(20);
+    expect(field.constraints?.format).toBe('username');
+    expect(field.constraints?.pattern).toBe('^[a-zA-Z0-9_]+$');
+  });
 });
