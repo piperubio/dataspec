@@ -7,6 +7,7 @@ import YAML from 'yaml';
 
 import type { Metadata } from '../types/common';
 import type { Contract, ContractField, DataType, FieldConstraints } from '../types/contract';
+import { validateAgainstSchema } from '../validation/schema-validator';
 
 /**
  * Parses a YAML string into a typed Contract object.
@@ -42,52 +43,15 @@ export function parseContractYaml(yamlContent: string): Contract {
     throw new Error('Invalid YAML: expected an object');
   }
 
-  // Validate required fields
-  if (!parsed.name || typeof parsed.name !== 'string') {
-    throw new Error("Contract must have a 'name' field");
-  }
-
-  if (!parsed.version || typeof parsed.version !== 'string') {
-    throw new Error("Contract must have a 'version' field");
-  }
-
-  if (!Array.isArray(parsed.fields)) {
-    throw new Error("Contract must have a 'fields' array");
+  // Validate against JSON Schema
+  const schemaResult = validateAgainstSchema(parsed, 'contract');
+  if (!schemaResult.valid) {
+    throw new Error(`Schema validation failed:\n${schemaResult.errors.join('\n')}`);
   }
 
   // Parse fields
-  const fields: ContractField[] = parsed.fields.map((field: unknown, index: number) => {
-    if (!field || typeof field !== 'object') {
-      throw new Error(`Field at index ${index} must be an object`);
-    }
-
+  const fields: ContractField[] = parsed.fields.map((field: unknown) => {
     const fieldObj = field as Record<string, unknown>;
-
-    if (!fieldObj.name || typeof fieldObj.name !== 'string') {
-      throw new Error(`Field at index ${index} must have a 'name' field`);
-    }
-
-    if (!fieldObj.type || typeof fieldObj.type !== 'string') {
-      throw new Error(`Field at index ${index} must have a 'type' field`);
-    }
-
-    // Validate that the type is a valid DataType
-    const validTypes: DataType[] = [
-      'uuid',
-      'string',
-      'integer',
-      'decimal',
-      'boolean',
-      'timestamp',
-      'date',
-      'json',
-    ];
-    if (!validTypes.includes(fieldObj.type as DataType)) {
-      throw new Error(
-        `Field '${fieldObj.name}' has invalid type '${fieldObj.type}'. ` +
-          `Valid types are: ${validTypes.join(', ')}`,
-      );
-    }
 
     // Parse constraints if present
     let constraints: FieldConstraints | undefined;
@@ -102,37 +66,20 @@ export function parseContractYaml(yamlContent: string): Contract {
         constraints.not_null = Boolean(constraintsObj.not_null);
       }
       if (constraintsObj.ref !== undefined) {
-        if (typeof constraintsObj.ref !== 'string') {
-          throw new Error(
-            `Field '${fieldObj.name}' has invalid 'ref' constraint - must be a string`,
-          );
-        }
-        constraints.ref = constraintsObj.ref;
+        constraints.ref = constraintsObj.ref as string;
       }
       if (constraintsObj.allowed_values !== undefined) {
-        if (!Array.isArray(constraintsObj.allowed_values)) {
-          throw new Error(
-            `Field '${fieldObj.name}' has invalid 'allowed_values' constraint - must be an array`,
-          );
-        }
         if (fieldObj.type !== 'string') {
           throw new Error(
             `Field '${fieldObj.name}' has 'allowed_values' constraint - only valid for string fields`,
           );
         }
-        for (const value of constraintsObj.allowed_values) {
-          if (typeof value !== 'string') {
-            throw new Error(
-              `Field '${fieldObj.name}' has invalid 'allowed_values' entry - all values must be strings`,
-            );
-          }
-        }
-        constraints.allowed_values = constraintsObj.allowed_values;
+        constraints.allowed_values = constraintsObj.allowed_values as string[];
       }
     }
 
     const contractField: ContractField = {
-      name: fieldObj.name,
+      name: fieldObj.name as string,
       type: fieldObj.type as DataType,
     };
 

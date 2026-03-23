@@ -30,3 +30,10 @@ export * from './parsers';
 
 // Export all JSON schemas for editor integration
 export * from './schemas';
+
+// Export schema validation
+export {
+  validateAgainstSchema,
+  setSchemaValidator,
+  type ValidationResult,
+} from './validation/schema-validator';

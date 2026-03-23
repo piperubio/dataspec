@@ -4,6 +4,7 @@
  * Command-line interface for the DataSpec (Declarative Data Platform Architecture)
  */
 
+import './validation/schema-validator.js'; // Registers AJV validator with core
 import { Command } from 'commander';
 
 import { initCommand } from './commands/init.js';

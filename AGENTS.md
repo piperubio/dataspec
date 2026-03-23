@@ -19,12 +19,13 @@ The project is structured as a monorepo using **Bun** as the primary runtime and
 
 ### Git Workflow
 
+- ALWAYS create a branch for new specs and open a PR for review.
 - ALWAYS use conventional commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`, `test:`, `ci:`, `build:`, `perf:`, `style:`
 - NEVER push to `main` directly. ALWAYS create a branch and open a PR
 - Branch naming: `feat/description`, `fix/description`, `docs/description`, `hotfix/description`, `release/description`, `chore/description`
-- When creatinmg PR's, write clear descriptions explaining WHAT and WHY
+- When creating PR's, write clear descriptions explaining WHAT and WHY
 
-# File artifacts in project (OpenSpec flow)
+### Validation
 
-artifact_store:
-mode: openspec
+- validate the binary compilation with `bun run build` in `packages/dataspec-cli`
+- `examples/ecommerce-platform` contains a sample workspace. Use it for testing and validation.

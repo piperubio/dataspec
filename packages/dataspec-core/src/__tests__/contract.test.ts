@@ -53,7 +53,16 @@ fields:
     expect(types).toContain('json');
   });
 
-  it('should throw error for missing version', () => {
+  it('should throw schema validation error for missing version', () => {
+    const yaml = `
+name: test_contract
+fields: []
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('Schema validation failed');
+  });
+
+  it('should include schema error details for missing version', () => {
     const yaml = `
 name: test_contract
 fields: []
@@ -62,7 +71,7 @@ fields: []
     expect(() => parseContractYaml(yaml)).toThrow('version');
   });
 
-  it('should throw error for invalid field type', () => {
+  it('should throw schema validation error for invalid field type', () => {
     const yaml = `
 name: test_contract
 version: "1.0.0"
@@ -71,7 +80,19 @@ fields:
     type: invalid_type
 `;
 
-    expect(() => parseContractYaml(yaml)).toThrow('invalid type');
+    expect(() => parseContractYaml(yaml)).toThrow('Schema validation failed');
+  });
+
+  it('should include field path in schema error for invalid type', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - name: field1
+    type: invalid_type
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('/fields/0/type');
   });
 
   it('should throw error for duplicate field names', () => {
@@ -172,6 +193,45 @@ fields:
     expect(() => parseContractYaml(yaml)).toThrow(
       "Field 'count' has 'allowed_values' constraint - only valid for string fields",
     );
+  });
+
+  it('should throw schema validation error for missing name field', () => {
+    const yaml = `
+version: "1.0.0"
+fields: []
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('Schema validation failed');
+    expect(() => parseContractYaml(yaml)).toThrow('name');
+  });
+
+  it('should throw schema validation error for missing fields array', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('Schema validation failed');
+    expect(() => parseContractYaml(yaml)).toThrow('fields');
+  });
+
+  it('should collect multiple schema validation errors', () => {
+    const yaml = `{}`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('Schema validation failed');
+    expect(() => parseContractYaml(yaml)).toThrow('name');
+    expect(() => parseContractYaml(yaml)).toThrow('version');
+  });
+
+  it('should throw schema error for missing field name', () => {
+    const yaml = `
+name: test_contract
+version: "1.0.0"
+fields:
+  - type: string
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow('Schema validation failed');
   });
 
   it('should accept empty allowed_values array', () => {
