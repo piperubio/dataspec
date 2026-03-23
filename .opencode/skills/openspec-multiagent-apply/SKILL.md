@@ -90,11 +90,12 @@ Orchestrate a Claude Code agent team to implement a change in parallel using the
    - `isolation`: "worktree"
    - `prompt`: include:
      - The agent's assigned task IDs and descriptions
-     - File ownership list
-     - Execution order
-     - Cross-agent dependencies (what to wait for)
-     - The change directory path
-     - Instructions: "Use `TaskList` to find available work. Use `TaskUpdate` to mark tasks as `in_progress` when starting and `completed` when done. Check `TaskList` after completing each task for newly unblocked work."
+      - File ownership list
+      - Execution order
+      - Cross-agent dependencies (what to wait for)
+      - The change directory path
+      - The path to `tasks.md` in the change directory (e.g. `/path/to/openspec/changes/<name>/tasks.md`)
+      - Instructions: "Use `TaskList` to find available work. Use `TaskUpdate` to mark tasks as `in_progress` when starting and `completed` when done. **After marking a task as `completed` via TaskUpdate, you MUST also update `tasks.md`** in the change directory: find the line matching your task description and change `- [ ]` to `- [x]` for that task. This keeps the OpenSpec artifact in sync with execution progress. Check `TaskList` after completing each task for newly unblocked work."
 
    Spawn agents that have no cross-agent dependencies first (they can start immediately).
    Spawn agents with dependencies after — they will find their tasks blocked in the task list and wait.
@@ -107,9 +108,21 @@ Orchestrate a Claude Code agent team to implement a change in parallel using the
    - Periodically check `TaskList` to see overall progress
    - When a teammate reports all their tasks done, acknowledge
 
+   **Tasks.md sync (orquestador as backup):**
+   - When a teammate reports a task completed, read `tasks.md` and verify the corresponding line is marked `- [x]`. If not, update it yourself: `- [ ]` → `- [x]` for that task description.
+   - This ensures `tasks.md` stays in sync even if a teammate's worktree didn't propagate the change.
+
 9. **Shutdown and report**
 
    When all tasks show as completed in `TaskList`:
+
+   **Pre-shutdown tasks.md sync:**
+   - Read `tasks.md` from the change directory
+   - Compare every task line against `TaskList` status
+   - Any line still `- [ ]` that corresponds to a completed task in `TaskList` must be updated to `- [x]`
+   - Write the corrected `tasks.md` back
+
+   Then:
    - Send `shutdown_request` via `SendMessage` to each teammate
    - Wait for shutdown confirmations
    - Display final summary:
@@ -120,7 +133,7 @@ Orchestrate a Claude Code agent team to implement a change in parallel using the
    **Change:** <change-name>
    **Schema:** dispec-driven
    **Agents:** N agents used
-   **Tasks:** M/M complete
+    **Tasks:** M/M complete (tasks.md synced ✓)
 
    ### Agent Summary
    - <agent-1>: N tasks completed (branch: <worktree-branch>)
@@ -138,6 +151,7 @@ Orchestrate a Claude Code agent team to implement a change in parallel using the
 - MUST validate all artifacts are complete (especially `distribution`)
 - MUST show token cost warning and get user confirmation before spawning agents
 - MUST use `isolation: "worktree"` for all teammates to prevent file conflicts
+- MUST keep `tasks.md` in sync: agents update it on task completion, orchestrator verifies on monitoring and pre-shutdown
 - If the distribution plan shows file ownership conflicts (two agents writing same file), warn the user and ask whether to proceed or reassign
 - If a teammate reports a blocker, try to help resolve it before escalating to the user
 - Do not create the team or spawn agents if the user cancels at the confirmation step
