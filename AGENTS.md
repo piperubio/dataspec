@@ -28,4 +28,4 @@ The project is structured as a monorepo using **Bun** as the primary runtime and
 ### Validation
 
 - validate the binary compilation with `bun run build` in `packages/dataspec-cli`
-- `examples/ecommerce-platform` contains a sample workspace. Use it for testing and validation.
+- `examples/ecommerce-platform` contains a sample workspace. Use it for testing and validation. Keep it up to date with the latest features and changes.

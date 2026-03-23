@@ -50,6 +50,24 @@
         "unique": {
           "description": "Whether the field value must be unique across all records",
           "type": "boolean"
+        },
+        "precision": {
+          "description": "Total number of digits for decimal fields (must be paired with scale)",
+          "type": "integer",
+          "minimum": 1
+        },
+        "scale": {
+          "description": "Number of decimal places for decimal fields (must be paired with precision, must be ≤ precision)",
+          "type": "integer",
+          "minimum": 0
+        },
+        "min": {
+          "description": "Inclusive minimum value for integer and decimal fields",
+          "type": "number"
+        },
+        "max": {
+          "description": "Inclusive maximum value for integer and decimal fields",
+          "type": "number"
         }
       },
       "type": "object"

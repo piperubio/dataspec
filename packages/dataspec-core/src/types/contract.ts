@@ -30,6 +30,14 @@ export interface FieldConstraints {
   ref?: string;
   /** Allowed values for string fields (restricts to a specific set of permitted values) */
   allowed_values?: string[];
+  /** Total number of digits for decimal fields (must be paired with scale) */
+  precision?: number;
+  /** Number of decimal places for decimal fields (must be paired with precision, must be ≤ precision) */
+  scale?: number;
+  /** Inclusive minimum value for integer and decimal fields */
+  min?: number;
+  /** Inclusive maximum value for integer and decimal fields */
+  max?: number;
 }
 
 /**
