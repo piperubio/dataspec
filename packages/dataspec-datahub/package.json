@@ -1,19 +1,16 @@
 {
-  "name": "@dataspec/dataspec-cli",
-  "version": "0.3.0",
-  "description": "DataSpec CLI - Declarative Data Platform Architecture Command-Line Interface",
+  "name": "@dataspec/dataspec-datahub",
+  "version": "0.1.0",
+  "description": "DataSpec DataHub Integration - Sync data platform metadata to DataHub catalog",
   "keywords": [
-    "cli",
-    "data-engineering",
-    "data-platform",
+    "data-catalog",
+    "datahub",
     "dataspec",
-    "validation"
+    "lineage",
+    "metadata"
   ],
   "license": "MIT",
   "author": "",
-  "bin": {
-    "dataspec": "./bin/dataspec"
-  },
   "main": "./src/index.ts",
   "types": "./src/index.ts",
   "exports": {
@@ -24,16 +21,13 @@
     }
   },
   "scripts": {
-    "build": "bun scripts/build.ts",
     "test": "bun test",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@dataspec/dataspec-core": "workspace:*",
-    "@dataspec/dataspec-datahub": "workspace:*",
-    "ajv": "^8.12.0",
-    "commander": "^12.0.0",
-    "yaml": "^2.3.4"
+    "graphql-request": "^7.1.2",
+    "yaml": "^2.7.0"
   },
   "devDependencies": {
     "@types/bun": "latest",

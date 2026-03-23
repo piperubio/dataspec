@@ -265,3 +265,37 @@ The system SHALL provide a CLI command `dataspec show <resource> <name>` that di
 
 - **WHEN** a user runs `dataspec show dataset users_raw --format json`
 - **THEN** the CLI SHALL output the resource details in JSON format
+
+### Requirement: Provide DataHub command group
+
+The system SHALL provide a `dataspec datahub` command group with subcommands for DataHub integration.
+
+#### Scenario: DataHub help output
+
+- **WHEN** a user runs `dataspec datahub --help`
+- **THEN** the CLI SHALL display help information for the datahub command group including available subcommands
+
+#### Scenario: DataHub subcommands available
+
+- **WHEN** a user runs `dataspec datahub --help`
+- **THEN** the CLI SHALL show subcommands: `connect`, `sync datasets`, `sync sources`, `sync lineage`
+
+#### Scenario: Connect command
+
+- **WHEN** a user runs `dataspec datahub connect`
+- **THEN** the CLI SHALL validate the DataHub connection using configuration from `platform.yaml`
+
+#### Scenario: Sync datasets command
+
+- **WHEN** a user runs `dataspec datahub sync datasets`
+- **THEN** the CLI SHALL synchronize dataset definitions to DataHub
+
+#### Scenario: Sync sources command
+
+- **WHEN** a user runs `dataspec datahub sync sources`
+- **THEN** the CLI SHALL synchronize source definitions to DataHub
+
+#### Scenario: Sync lineage command
+
+- **WHEN** a user runs `dataspec datahub sync lineage`
+- **THEN** the CLI SHALL synchronize flow-defined lineages to DataHub
