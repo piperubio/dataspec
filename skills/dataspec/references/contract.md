@@ -118,7 +118,7 @@ Total number of digits for a decimal field. Only valid for `type: decimal`. Must
 
 ### scale
 
-Number of decimal places for a decimal field. Only valid for `type: decimal`. Must be a positive integer and less than or equal to `precision`.
+Number of decimal places for a decimal field. Only valid for `type: decimal`. Must be a non-negative integer and less than or equal to `precision`.
 
 ```yaml
 - name: price
@@ -131,7 +131,7 @@ Number of decimal places for a decimal field. Only valid for `type: decimal`. Mu
 **Notes:**
 
 - Only applicable to `type: decimal` fields
-- Must be a positive integer (> 0)
+- Must be a non-negative integer (>= 0)
 - Must be ≤ `precision`
 - Must be specified together with `precision`
 
