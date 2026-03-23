@@ -7,6 +7,10 @@ This repository contains the DataSpec (Data Platform Specs) toolset for designin
 - dataspec is in current development and not yet released.
 - You can introduce braking changes without worry for retrocompatibility.
 
+## Specification-Driven Development
+
+This project follows a specification-driven development approach. Changes are proposed, designed, and implemented through a structured change process using the OpenSpec framework. Each change includes detailed artifacts such as proposals, specifications, design documents, task breakdowns, dependency analysis, and distribution plans for parallel implementation.
+
 ## 🛠 Commands
 
 The project is structured as a monorepo using **Bun** as the primary runtime and test runner.
