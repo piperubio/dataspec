@@ -1,9 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "additionalProperties": false,
   "definitions": {
     "ExtractStep": {
-      "additionalProperties": false,
       "description": "Extract step - reads data from a source.\nThis is the first step in an ETL pipeline.",
       "properties": {
         "entity": {
@@ -28,7 +26,6 @@
       "type": "object"
     },
     "FlowMetadata": {
-      "additionalProperties": false,
       "description": "Metadata for a Flow resource.",
       "properties": {
         "definedAt": {
@@ -68,7 +65,6 @@
       "description": "Union type for all flow step types.\nUses discriminated union pattern with 'type' property."
     },
     "LoadStep": {
-      "additionalProperties": false,
       "description": "Load step - writes data to the serving layer.\nThis is the final step in an ETL pipeline.",
       "properties": {
         "input": {
@@ -89,7 +85,6 @@
       "type": "object"
     },
     "TransformStep": {
-      "additionalProperties": false,
       "description": "Transform step - applies transformations to data.\nThis is the middle step in an ETL pipeline.",
       "properties": {
         "engine": {

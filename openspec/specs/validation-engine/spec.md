@@ -2,7 +2,7 @@
 
 ## Purpose
 
-TBD - created by archiving change dataspec-cli. Update Purpose after archive.
+Validate workspace resources for semantic correctness (graph integrity, contract consistency, cross-resource references) and structural validity against JSON Schemas using AJV before semantic validation.
 
 ## Requirements
 
@@ -120,6 +120,25 @@ The system SHALL detect breaking changes by building and traversing the cross-re
 
 - **WHEN** a contract changes a field from nullable to non-nullable and downstream flows do not handle the constraint
 - **THEN** the validation engine SHALL report a breaking change error indicating the constraint tightening
+
+### Requirement: Validate YAML structure against JSON Schema before semantic validation
+
+The system SHALL validate parsed YAML data against the corresponding JSON Schema using AJV before running semantic validation (graph integrity, cross-resource references, etc.).
+
+#### Scenario: Schema validation runs first
+
+- **WHEN** the validation engine processes a workspace
+- **THEN** schema validation SHALL execute before semantic validation, and semantic validation SHALL only run on data that passes schema validation
+
+#### Scenario: Schema errors reported with file path
+
+- **WHEN** a YAML file fails schema validation
+- **THEN** the validation report SHALL include the file path and all schema validation errors for that file
+
+#### Scenario: Schema validation does not block semantic validation on other files
+
+- **WHEN** one file fails schema validation but other files are valid
+- **THEN** the system SHALL still run semantic validation on the valid files and report both schema errors and any semantic issues
 
 ### Requirement: Validation report with severity levels
 

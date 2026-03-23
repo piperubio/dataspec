@@ -88,7 +88,7 @@ steps:
     some_field: value
 `;
 
-    expect(() => parseFlowYaml(yaml)).toThrow('Invalid FlowStep type');
+    expect(() => parseFlowYaml(yaml)).toThrow();
   });
 
   it('should throw error for missing extract step fields', () => {

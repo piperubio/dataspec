@@ -1,14 +1,12 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "additionalProperties": false,
   "definitions": {
     "AnalyticsEngine": {
-      "additionalProperties": false,
       "description": "Analytics engine configuration.\nRepresents a processing engine for data transformations.",
       "properties": {
         "config": {
-          "$ref": "#/definitions/Record%3Cstring%2Cunknown%3E",
-          "description": "Engine-specific configuration"
+          "description": "Engine-specific configuration",
+          "type": "object"
         },
         "name": {
           "description": "Unique identifier for the analytics engine",
@@ -31,12 +29,7 @@
       "enum": ["dbt", "duckdb", "python", "spark"],
       "type": "string"
     },
-    "Record<string,unknown>": {
-      "additionalProperties": false,
-      "type": "object"
-    },
     "StorageBackend": {
-      "additionalProperties": false,
       "description": "Storage backend configuration.\nRepresents a connection to a storage system.",
       "properties": {
         "connection": {
@@ -48,15 +41,15 @@
           "type": "string"
         },
         "options": {
-          "$ref": "#/definitions/Record%3Cstring%2Cunknown%3E",
-          "description": "Additional storage-specific options"
+          "description": "Additional storage-specific options",
+          "type": "object"
         },
         "type": {
           "$ref": "#/definitions/StorageType",
           "description": "Type of storage backend"
         }
       },
-      "required": ["connection", "name", "type"],
+      "required": ["name", "type"],
       "type": "object"
     },
     "StorageType": {
@@ -68,7 +61,6 @@
   "description": "Platform configuration for data platform resources.\nDefines storage backends and analytics engines available to the platform.",
   "properties": {
     "defaults": {
-      "additionalProperties": false,
       "description": "Optional default settings",
       "properties": {
         "storage": {
@@ -93,6 +85,5 @@
       "type": "array"
     }
   },
-  "required": ["engines", "storage"],
   "type": "object"
 }

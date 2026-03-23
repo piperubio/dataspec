@@ -1,23 +1,22 @@
 import { parse } from 'yaml';
 
-import type {
-  Source,
-  SourceDatabase,
-  SourceApi,
-  SourceFileSystem,
-  SourceStreaming,
-  SourceSaas,
-  SourceEntity,
-  SourceEntityDatabase,
-  SourceEntityApi,
-  SourceEntityFileSystem,
-  SourceEntityStreaming,
-  SourceEntitySaas,
-  SourceType,
-  ContractReference,
+import {
+  type Source,
+  type SourceDatabase,
+  type SourceApi,
+  type SourceFileSystem,
+  type SourceStreaming,
+  type SourceSaas,
+  type SourceEntity,
+  type SourceEntityDatabase,
+  type SourceEntityApi,
+  type SourceEntityFileSystem,
+  type SourceEntityStreaming,
+  type SourceEntitySaas,
+  type ContractReference,
 } from '../types/source';
+import { validateAgainstSchema } from '../validation/schema-validator';
 
-const VALID_SOURCE_TYPES: SourceType[] = ['database', 'api', 'file_system', 'streaming', 'saas'];
 const VALID_API_PROTOCOLS = ['http', 'https', 'grpc'];
 const VALID_STREAMING_PROTOCOLS = ['ws', 'wss', 'kafka', 'mqtt', 'amqp'];
 const VALID_FORMATS = ['parquet', 'csv', 'json', 'avro', 'fixed-width', 'orc', 'delta'];
@@ -262,37 +261,22 @@ export function parseSourceYaml(yamlContent: string): Source {
     throw new Error('Invalid YAML: expected an object');
   }
 
+  // Validate against JSON Schema
+  const schemaResult = validateAgainstSchema(parsed, 'source');
+  if (!schemaResult.valid) {
+    throw new Error(`Schema validation failed:\n${schemaResult.errors.join('\n')}`);
+  }
+
   const { name, type, entities, metadata } = parsed as Record<string, unknown>;
 
-  if (!name || typeof name !== 'string') {
-    throw new Error('Invalid Source: "name" is required and must be a string');
-  }
-
-  if (!type || typeof type !== 'string') {
-    throw new Error('Invalid Source: "type" is required and must be a string');
-  }
-
-  if (!VALID_SOURCE_TYPES.includes(type as SourceType)) {
-    throw new Error(
-      `Invalid Source type: "${type}". Must be one of: ${VALID_SOURCE_TYPES.join(', ')}`,
-    );
-  }
-
-  if (!entities || !Array.isArray(entities)) {
-    throw new Error('Invalid Source: "entities" is required and must be an array');
-  }
+  const sourceName = name as string;
+  const sourceType = type as string;
 
   const parsedEntities: SourceEntity[] = [];
-  for (const entity of entities) {
-    if (!entity || typeof entity !== 'object') {
-      throw new Error('Invalid SourceEntity: each entity must be an object');
-    }
+  for (const entity of entities as unknown[]) {
     const entityObj = entity as Record<string, unknown>;
-    if (!entityObj.name || typeof entityObj.name !== 'string') {
-      throw new Error('Invalid SourceEntity: "name" is required and must be a string');
-    }
     rejectDeprecatedFields(entityObj, entityObj.name as string);
-    switch (type) {
+    switch (sourceType) {
       case 'database':
         parsedEntities.push(parseDatabaseEntity(entityObj));
         break;
@@ -313,10 +297,10 @@ export function parseSourceYaml(yamlContent: string): Source {
 
   const meta = parseMetadata(metadata);
 
-  switch (type) {
+  switch (sourceType) {
     case 'database': {
       const source: SourceDatabase = {
-        name,
+        name: sourceName,
         type: 'database',
         entities: parsedEntities as SourceEntityDatabase[],
       };
@@ -339,7 +323,7 @@ export function parseSourceYaml(yamlContent: string): Source {
         throw new Error('Invalid Source: "baseUrl" is required for api sources');
       }
       const source: SourceApi = {
-        name,
+        name: sourceName,
         type: 'api',
         protocol: parsedObj.protocol,
         baseUrl: parsedObj.baseUrl,
@@ -352,7 +336,7 @@ export function parseSourceYaml(yamlContent: string): Source {
     }
     case 'file_system': {
       const source: SourceFileSystem = {
-        name,
+        name: sourceName,
         type: 'file_system',
         entities: parsedEntities as SourceEntityFileSystem[],
       };
@@ -375,7 +359,7 @@ export function parseSourceYaml(yamlContent: string): Source {
         throw new Error('Invalid Source: "baseUrl" is required for streaming sources');
       }
       const source: SourceStreaming = {
-        name,
+        name: sourceName,
         type: 'streaming',
         protocol: parsedObj.protocol,
         baseUrl: parsedObj.baseUrl,
@@ -392,7 +376,7 @@ export function parseSourceYaml(yamlContent: string): Source {
         throw new Error('Invalid Source: "provider" is required for saas sources');
       }
       const source: SourceSaas = {
-        name,
+        name: sourceName,
         type: 'saas',
         provider: parsedObj.provider,
         entities: parsedEntities as SourceEntitySaas[],
@@ -403,6 +387,6 @@ export function parseSourceYaml(yamlContent: string): Source {
       return source;
     }
     default:
-      throw new Error(`Invalid Source type: ${type}`);
+      throw new Error(`Invalid Source type: ${sourceType}`);
   }
 }
