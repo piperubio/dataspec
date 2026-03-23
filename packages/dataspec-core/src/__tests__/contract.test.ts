@@ -249,4 +249,69 @@ fields:
     const field = result.fields[0];
     expect(field.constraints?.allowed_values).toEqual([]);
   });
+
+  it('should parse valid precision and scale on decimal field', () => {
+    const yaml = `
+name: product_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      precision: 10
+      scale: 2
+`;
+
+    const result = parseContractYaml(yaml);
+    const field = result.fields[0];
+    expect(field.constraints?.precision).toBe(10);
+    expect(field.constraints?.scale).toBe(2);
+  });
+
+  it('should reject scale greater than precision', () => {
+    const yaml = `
+name: product_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      precision: 3
+      scale: 5
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow("'scale' (5) cannot exceed 'precision' (3)");
+  });
+
+  it('should reject precision without scale', () => {
+    const yaml = `
+name: product_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      precision: 10
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow(
+      "must specify both 'precision' and 'scale' together",
+    );
+  });
+
+  it('should reject scale without precision', () => {
+    const yaml = `
+name: product_contract
+version: "1.0.0"
+fields:
+  - name: price
+    type: decimal
+    constraints:
+      scale: 2
+`;
+
+    expect(() => parseContractYaml(yaml)).toThrow(
+      "must specify both 'precision' and 'scale' together",
+    );
+  });
 });

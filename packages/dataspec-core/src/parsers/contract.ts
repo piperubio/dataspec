@@ -76,6 +76,88 @@ export function parseContractYaml(yamlContent: string): Contract {
         }
         constraints.allowed_values = constraintsObj.allowed_values as string[];
       }
+
+      // Precision/scale constraints (2.1 - 2.5)
+      const hasPrecision = constraintsObj.precision !== undefined;
+      const hasScale = constraintsObj.scale !== undefined;
+
+      if (hasPrecision || hasScale) {
+        // 2.2: Only valid on decimal type
+        if (fieldObj.type !== 'decimal') {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'precision'/'scale' constraint - only valid for decimal fields`,
+          );
+        }
+
+        // 2.3: Both must be present or neither
+        if (hasPrecision !== hasScale) {
+          throw new Error(
+            `Field '${fieldObj.name}' must specify both 'precision' and 'scale' together`,
+          );
+        }
+
+        // 2.4: Must be positive integers (precision > 0, scale >= 0)
+        const precision = Number(constraintsObj.precision);
+        const scale = Number(constraintsObj.scale);
+
+        if (!Number.isInteger(precision) || precision < 1) {
+          throw new Error(`Field '${fieldObj.name}' 'precision' must be a positive integer`);
+        }
+        if (!Number.isInteger(scale) || scale < 0) {
+          throw new Error(`Field '${fieldObj.name}' 'scale' must be a non-negative integer`);
+        }
+
+        // 2.5: scale <= precision
+        if (scale > precision) {
+          throw new Error(
+            `Field '${fieldObj.name}' 'scale' (${scale}) cannot exceed 'precision' (${precision})`,
+          );
+        }
+
+        constraints.precision = precision;
+        constraints.scale = scale;
+      }
+
+      // Parse min constraint
+      if (constraintsObj.min !== undefined) {
+        const min = Number(constraintsObj.min);
+        if (fieldObj.type !== 'integer' && fieldObj.type !== 'decimal') {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'min' constraint - only valid for integer or decimal fields`,
+          );
+        }
+        if (!Number.isFinite(min)) {
+          throw new Error(
+            `Field '${fieldObj.name}' has invalid 'min' constraint - must be a finite number`,
+          );
+        }
+        constraints.min = min;
+      }
+
+      // Parse max constraint
+      if (constraintsObj.max !== undefined) {
+        const max = Number(constraintsObj.max);
+        if (fieldObj.type !== 'integer' && fieldObj.type !== 'decimal') {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'max' constraint - only valid for integer or decimal fields`,
+          );
+        }
+        if (!Number.isFinite(max)) {
+          throw new Error(
+            `Field '${fieldObj.name}' has invalid 'max' constraint - must be a finite number`,
+          );
+        }
+        constraints.max = max;
+      }
+
+      // Validate min ≤ max when both present
+      if (constraints.min !== undefined && constraints.max !== undefined) {
+        if (constraints.min > constraints.max) {
+          throw new Error(
+            `Field '${fieldObj.name}' has 'min' (${constraints.min}) greater than 'max' (${constraints.max})`,
+          );
+        }
+      }
     }
 
     const contractField: ContractField = {

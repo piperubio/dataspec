@@ -251,6 +251,186 @@ describe('Validation Engine', () => {
   });
 
   describe('Contract consistency', () => {
+    it('should reject precision/scale on non-decimal fields', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [],
+        contracts: [
+          {
+            name: 'test_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'field1',
+                type: 'integer',
+                constraints: {
+                  precision: 10,
+                  scale: 2,
+                },
+              },
+            ],
+            file: 'contracts/test.yaml',
+            line: 1,
+          },
+        ],
+        flows: [],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(result.passed).toBe(false);
+      expect(result.errors.some((e) => e.code === 'INVALID_CONSTRAINT')).toBe(true);
+      expect(
+        result.errors.some(
+          (e) => e.code === 'INVALID_CONSTRAINT' && e.message.includes('precision/scale'),
+        ),
+      ).toBe(true);
+    });
+
+    it('should reject min/max on non-numeric fields', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [],
+        contracts: [
+          {
+            name: 'test_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'field1',
+                type: 'string',
+                constraints: {
+                  min: 0,
+                  max: 100,
+                },
+              },
+            ],
+            file: 'contracts/test.yaml',
+            line: 1,
+          },
+        ],
+        flows: [],
+      };
+
+      const result = validateWorkspace(workspace);
+      expect(result.passed).toBe(false);
+      expect(result.errors.some((e) => e.code === 'INVALID_CONSTRAINT')).toBe(true);
+      expect(
+        result.errors.some((e) => e.code === 'INVALID_CONSTRAINT' && e.message.includes('min/max')),
+      ).toBe(true);
+    });
+
+    it('should allow precision/scale on decimal fields', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [],
+        contracts: [
+          {
+            name: 'test_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'field1',
+                type: 'decimal',
+                constraints: {
+                  precision: 10,
+                  scale: 2,
+                },
+              },
+            ],
+            file: 'contracts/test.yaml',
+            line: 1,
+          },
+        ],
+        flows: [],
+      };
+
+      const result = validateWorkspace(workspace);
+      const constraintErrors = result.errors.filter(
+        (e) =>
+          e.code === 'INVALID_CONSTRAINT' &&
+          (e.message.includes('precision/scale') || e.message.includes('min/max')),
+      );
+      expect(constraintErrors.length).toBe(0);
+    });
+
+    it('should allow min/max on integer fields', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [],
+        contracts: [
+          {
+            name: 'test_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'field1',
+                type: 'integer',
+                constraints: {
+                  min: 0,
+                  max: 100,
+                },
+              },
+            ],
+            file: 'contracts/test.yaml',
+            line: 1,
+          },
+        ],
+        flows: [],
+      };
+
+      const result = validateWorkspace(workspace);
+      const constraintErrors = result.errors.filter(
+        (e) =>
+          e.code === 'INVALID_CONSTRAINT' &&
+          (e.message.includes('precision/scale') || e.message.includes('min/max')),
+      );
+      expect(constraintErrors.length).toBe(0);
+    });
+
+    it('should allow min/max on decimal fields', () => {
+      const workspace: Workspace = {
+        platform: null,
+        rootPath: '/test',
+        sources: [],
+        datasets: [],
+        contracts: [
+          {
+            name: 'test_contract',
+            version: '1.0.0',
+            fields: [
+              {
+                name: 'field1',
+                type: 'decimal',
+                constraints: {
+                  min: 0.0,
+                  max: 999.99,
+                },
+              },
+            ],
+            file: 'contracts/test.yaml',
+            line: 1,
+          },
+        ],
+        flows: [],
+      };
+
+      const result = validateWorkspace(workspace);
+      const constraintErrors = result.errors.filter(
+        (e) =>
+          e.code === 'INVALID_CONSTRAINT' &&
+          (e.message.includes('precision/scale') || e.message.includes('min/max')),
+      );
+      expect(constraintErrors.length).toBe(0);
+    });
+
     it('should detect invalid field types', () => {
       const workspace: Workspace = {
         platform: null,

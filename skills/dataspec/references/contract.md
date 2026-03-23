@@ -15,6 +15,10 @@ fields: # Array of field definitions (required)
       not_null: <boolean>
       ref: <string> # Foreign key: "ContractName.fieldName"
       allowed_values: [<string>, ...] # Enum-like restriction (string fields only)
+      precision: <number> # Total digits, decimal only
+      scale: <number> # Decimal places, decimal only, must be ≤ precision
+      min: <number> # Inclusive minimum, integer + decimal
+      max: <number> # Inclusive maximum, integer + decimal
     description: <string> # What this field contains
 metadata: # Optional metadata
   description: <string>
@@ -94,6 +98,86 @@ Restricts a string field to a specific set of permitted values. Only valid for `
 - Empty array is valid (no values permitted)
 - Duplicate values are allowed (no uniqueness enforcement)
 
+### precision
+
+Total number of digits for a decimal field. Only valid for `type: decimal`. Must be a positive integer. Must be specified together with `scale`.
+
+```yaml
+- name: price
+  type: decimal
+  constraints:
+    precision: 10
+    scale: 2
+```
+
+**Notes:**
+
+- Only applicable to `type: decimal` fields
+- Must be a positive integer (> 0)
+- Must be specified together with `scale`
+
+### scale
+
+Number of decimal places for a decimal field. Only valid for `type: decimal`. Must be a positive integer and less than or equal to `precision`.
+
+```yaml
+- name: price
+  type: decimal
+  constraints:
+    precision: 10
+    scale: 2
+```
+
+**Notes:**
+
+- Only applicable to `type: decimal` fields
+- Must be a positive integer (> 0)
+- Must be ≤ `precision`
+- Must be specified together with `precision`
+
+### min
+
+Inclusive minimum value for a numeric field. Valid for `type: integer` and `type: decimal`. Must be a finite number.
+
+```yaml
+- name: quantity
+  type: integer
+  constraints:
+    min: 0
+
+- name: price
+  type: decimal
+  constraints:
+    min: 0.01
+    max: 999999.99
+```
+
+**Notes:**
+
+- Only applicable to `type: integer` and `type: decimal` fields
+- Must be a finite number (not NaN or Infinity)
+- Inclusive bound (value >= min)
+- When both `min` and `max` are specified, `min` must be ≤ `max`
+
+### max
+
+Inclusive maximum value for a numeric field. Valid for `type: integer` and `type: decimal`. Must be a finite number.
+
+```yaml
+- name: quantity
+  type: integer
+  constraints:
+    min: 0
+    max: 1000
+```
+
+**Notes:**
+
+- Only applicable to `type: integer` and `type: decimal` fields
+- Must be a finite number (not NaN or Infinity)
+- Inclusive bound (value <= max)
+- When both `min` and `max` are specified, `min` must be ≤ `max`
+
 ## Example
 
 ```yaml
@@ -160,3 +244,10 @@ metadata:
 - `constraints.ref` must reference an existing contract field
 - `constraints.unique` on `json` type is not supported (warning)
 - `constraints.allowed_values` is only valid for `type: string` fields
+- `constraints.precision` and `constraints.scale` are only valid for `type: decimal` fields
+- `constraints.precision` and `constraints.scale` must be positive integers
+- `constraints.precision` and `constraints.scale` must be specified together (or neither)
+- `constraints.scale` must be ≤ `constraints.precision`
+- `constraints.min` and `constraints.max` are only valid for `type: integer` and `type: decimal` fields
+- `constraints.min` and `constraints.max` must be finite numbers
+- When both `constraints.min` and `constraints.max` are specified, min must be ≤ max

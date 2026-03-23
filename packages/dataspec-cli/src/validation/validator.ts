@@ -933,6 +933,37 @@ export class Validator {
               ),
             );
           }
+
+          // Task 4.4: Validate precision/scale only on decimal type
+          if (
+            (field.constraints.precision !== undefined || field.constraints.scale !== undefined) &&
+            field.type !== 'decimal'
+          ) {
+            this.errors.push(
+              createError(
+                `Constraint 'precision/scale' is only valid for decimal fields in contract '${contract.name}'`,
+                { file: contract.file, line: contract.line },
+                'error',
+                'INVALID_CONSTRAINT',
+              ),
+            );
+          }
+
+          // Task 4.5: Validate min/max only on numeric types (integer or decimal)
+          if (
+            (field.constraints.min !== undefined || field.constraints.max !== undefined) &&
+            field.type !== 'integer' &&
+            field.type !== 'decimal'
+          ) {
+            this.errors.push(
+              createError(
+                `Constraint 'min/max' is only valid for integer or decimal fields in contract '${contract.name}'`,
+                { file: contract.file, line: contract.line },
+                'error',
+                'INVALID_CONSTRAINT',
+              ),
+            );
+          }
         }
       }
     }
@@ -1110,6 +1141,22 @@ export class Validator {
     }
     if (field.constraints.maximum !== undefined) {
       issues.push(`maximum constraint tightens upper bound`);
+    }
+
+    // Task 4.2: min/max constraint tightening detection
+    if (field.constraints.min !== undefined) {
+      issues.push(`min constraint tightens lower bound`);
+    }
+    if (field.constraints.max !== undefined) {
+      issues.push(`max constraint tightens upper bound`);
+    }
+
+    // Task 4.3: precision/scale constraint tightening detection
+    if (field.constraints.precision !== undefined) {
+      issues.push(`precision constraint limits total digits`);
+    }
+    if (field.constraints.scale !== undefined) {
+      issues.push(`scale constraint limits decimal places`);
     }
 
     // Exclusive minimum/maximum are tighter than inclusive
