@@ -60,6 +60,21 @@
   },
   "description": "Platform configuration for data platform resources.\nDefines storage backends and analytics engines available to the platform.",
   "properties": {
+    "datahub": {
+      "description": "DataHub integration configuration",
+      "properties": {
+        "gms_url": {
+          "description": "DataHub GMS endpoint URL",
+          "type": "string"
+        },
+        "token": {
+          "description": "DataHub authentication token (supports env var reference: ${VAR})",
+          "type": "string"
+        }
+      },
+      "required": ["gms_url"],
+      "type": "object"
+    },
     "defaults": {
       "description": "Optional default settings",
       "properties": {

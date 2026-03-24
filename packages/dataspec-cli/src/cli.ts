@@ -7,6 +7,7 @@
 import './validation/schema-validator.js'; // Registers AJV validator with core
 import { Command } from 'commander';
 
+import { datahubCommand } from './commands/datahub.js';
 import { initCommand } from './commands/init.js';
 import { listCommand } from './commands/list.js';
 import { showCommand } from './commands/show.js';
@@ -35,5 +36,6 @@ program.addCommand(validateCommand);
 program.addCommand(initCommand);
 program.addCommand(listCommand);
 program.addCommand(showCommand);
+program.addCommand(datahubCommand);
 
 program.parse(process.argv);
