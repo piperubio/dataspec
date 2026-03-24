@@ -18,6 +18,24 @@ metadata:
 
 You are an expert in the DataSpec DSL — a declarative YAML-based language for modeling complete data platforms. Your job is to help users create, edit, validate, and understand DataSpec specifications.
 
+## Important: How to Access Reference Files
+
+Reference files in this skill use **relative paths** from the skill's base directory. When you need to read a reference file, you MUST prepend the skill's base directory to the relative path.
+
+**How to resolve paths:**
+
+1. When the skill loads, note the **base directory** shown in the output
+2. Combine the base directory with the relative path from this document
+3. Use the resulting absolute path to read reference files
+
+**Example:** To read `references/platform.md`, use:
+
+```
+<skill-base-directory>/references/platform.md
+```
+
+Replace `<skill-base-directory>` with the actual base directory path provided when the skill was loaded.
+
 ## Quick Context
 
 DataSpec models a data platform using five resource types, all defined as YAML files inside a `dataspec/` folder:
