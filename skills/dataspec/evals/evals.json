@@ -5,18 +5,48 @@
       "id": 1,
       "prompt": "I'm starting a new data platform for our fintech company. We need to define a DataSpec workspace for a payment processing system. We have a PostgreSQL database as our main source with tables for transactions, merchants, and payouts. Data goes to an S3 data lake first, then gets transformed with dbt and loaded into a ClickHouse analytics warehouse. Can you create all the dataspec YAML files for this?",
       "expected_output": "A complete dataspec/ directory with platform.yaml, source files, contract files, dataset files, and a flow file, all correctly cross-referenced",
+      "expectations": [
+        "Creates a dataspec/ directory with platform.yaml",
+        "platform.yaml defines at least one storage backend (s3 or clickhouse)",
+        "platform.yaml defines at least one engine (dbt)",
+        "Creates source files for the PostgreSQL database",
+        "Creates contract files with proper field types (uuid, string, integer, timestamp)",
+        "Creates dataset files that reference storage backends from platform.yaml",
+        "Creates at least one flow file with extract, transform, and load steps",
+        "All cross-references between resources are valid (source names, contract names, dataset names, engine names)",
+        "The skill correctly reads reference files to understand syntax"
+      ],
       "files": []
     },
     {
       "id": 2,
       "prompt": "I have an existing DataSpec workspace for my e-commerce platform. I need to add a new Kafka streaming source for real-time inventory events. The topic is called 'inventory-updates' on our Kafka cluster at kafka.internal:9092. Each event has: inventory_id (uuid, required), product_id (uuid, required), warehouse_id (string), quantity_changed (integer, required), change_type (string — 'restock' or 'sale'), and event_timestamp (timestamp, required). I also need to wire it into a new flow that extracts from Kafka and loads to a raw dataset in our S3 lake.",
       "expected_output": "New source YAML, contract YAML, dataset YAML, and flow YAML files for the Kafka inventory streaming pipeline",
+      "expectations": [
+        "Creates a streaming source YAML with type 'streaming' and protocol 'kafka'",
+        "Source includes baseUrl for the Kafka cluster",
+        "Creates a contract with all specified fields (inventory_id, product_id, warehouse_id, quantity_changed, change_type, event_timestamp)",
+        "Contract uses correct data types for each field",
+        "Contract marks required fields with not_null: true",
+        "Creates a dataset YAML for the raw inventory data",
+        "Creates a flow with extract step from the Kafka source",
+        "Flow includes load step to the target dataset",
+        "The skill reads source reference to understand streaming source syntax"
+      ],
       "files": []
     },
     {
       "id": 3,
       "prompt": "Can you look at my dataspec workspace and explain the relationship between my sources, contracts, datasets, and flows? I want to understand the data lineage — which sources feed which datasets through which flows. Also tell me if there are any orphaned resources or validation issues.",
       "expected_output": "A clear explanation of the dependency graph, data lineage, and any issues found in the workspace",
+      "expectations": [
+        "Reads the workspace structure to understand existing resources",
+        "Explains the relationship between sources, contracts, datasets, and flows",
+        "Identifies which sources feed which datasets through which flows",
+        "Checks for orphaned resources (unused sources, contracts, datasets)",
+        "Identifies validation issues (missing references, invalid types)",
+        "The skill reads workspace reference to understand validation rules"
+      ],
       "files": []
     }
   ]
