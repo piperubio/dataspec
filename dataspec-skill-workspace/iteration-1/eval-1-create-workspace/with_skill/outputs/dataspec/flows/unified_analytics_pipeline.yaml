@@ -1,0 +1,63 @@
+# Flow: Unified Analytics Pipeline
+# Aggregates data from PostgreSQL source and loads to ClickHouse analytics warehouse
+
+name: unified_analytics_pipeline
+steps:
+  # === EXTRACT PHASE: Pull data from PostgreSQL source ===
+
+  # Extract transactions for analytics
+  - type: extract
+    source: postgresql_db
+    entity: transactions
+    output: source_transactions
+
+  # Extract merchants for analytics
+  - type: extract
+    source: postgresql_db
+    entity: merchants
+    output: source_merchants
+
+  # Extract payouts for analytics
+  - type: extract
+    source: postgresql_db
+    entity: payouts
+    output: source_payouts
+
+  # === TRANSFORM PHASE: Create analytics aggregates ===
+
+  # Transform for payment analytics
+  - type: transform
+    inputs:
+      - source_transactions
+      - source_merchants
+    engine: dbt-transforms
+    output: payment_analytics_data
+
+  # Transform for payout analytics
+  - type: transform
+    inputs:
+      - source_payouts
+      - source_merchants
+    engine: dbt-transforms
+    output: payout_analytics_data
+
+  # === LOAD PHASE: Load to ClickHouse analytics ===
+
+  # Load payment analytics to ClickHouse
+  - type: load
+    input: payment_analytics_data
+    target: payment_analytics
+
+  # Load payout analytics to ClickHouse
+  - type: load
+    input: payout_analytics_data
+    target: payout_analytics
+
+metadata:
+  description: Unified analytics pipeline - aggregates from PostgreSQL to ClickHouse warehouse
+  version: '1.0.0'
+  labels:
+    - etl
+    - analytics
+    - clickhouse
+    - unified

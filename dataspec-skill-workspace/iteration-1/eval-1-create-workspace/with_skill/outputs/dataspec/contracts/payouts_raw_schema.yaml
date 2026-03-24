@@ -1,0 +1,111 @@
+# Contract: Payouts Raw Schema
+# Raw schema for payout requests from PostgreSQL
+
+name: payouts_raw_schema
+version: '1.0.0'
+fields:
+  - name: payout_id
+    type: uuid
+    constraints:
+      unique: true
+      not_null: true
+    description: Unique identifier for the payout
+
+  - name: merchant_id
+    type: uuid
+    constraints:
+      not_null: true
+      ref: 'merchants_raw_schema.merchant_id'
+    description: Foreign key to merchant
+
+  - name: amount
+    type: decimal
+    constraints:
+      not_null: true
+      precision: 18
+      scale: 2
+      min: 0.01
+    description: Payout amount in currency units
+
+  - name: currency
+    type: string
+    constraints:
+      not_null: true
+    description: ISO 4217 currency code
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+      allowed_values:
+        - pending
+        - processing
+        - completed
+        - failed
+        - cancelled
+    description: Payout status
+
+  - name: payment_method
+    type: string
+    constraints:
+      not_null: true
+      allowed_values:
+        - bank_transfer
+        - swift
+        - wallet
+    description: Payout method
+
+  - name: bank_account_id
+    type: uuid
+    description: Reference to bank account for payout
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Timestamp when payout was requested
+
+  - name: processed_at
+    type: timestamp
+    description: Timestamp when payout was processed
+
+  - name: completed_at
+    type: timestamp
+    description: Timestamp when payout was completed
+
+  - name: failure_reason
+    type: string
+    description: Reason for failure if status is failed
+
+  - name: reference_id
+    type: string
+    description: External reference ID from banking partner
+
+  - name: fee_amount
+    type: decimal
+    constraints:
+      precision: 18
+      scale: 2
+      min: 0
+    description: Processing fee deducted from payout
+
+  - name: net_amount
+    type: decimal
+    constraints:
+      precision: 18
+      scale: 2
+      min: 0
+    description: Net amount after fees
+
+  - name: metadata
+    type: json
+    description: Additional payout metadata
+
+metadata:
+  description: Raw schema for payout requests - contains financial data
+  owner: payments-team
+  pii: false
+  tags:
+    - payouts
+    - financial
+    - settlement

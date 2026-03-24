@@ -1,0 +1,109 @@
+# Contract: Merchant Contract
+# Refined schema for merchant data after transformation
+
+name: merchant_contract
+version: '1.0.0'
+fields:
+  - name: merchant_id
+    type: uuid
+    constraints:
+      unique: true
+      not_null: true
+    description: Unique identifier for the merchant
+
+  - name: business_name
+    type: string
+    constraints:
+      not_null: true
+    description: Business name
+
+  - name: display_name
+    type: string
+    description: Public display name for the merchant
+
+  - name: email
+    type: string
+    constraints:
+      not_null: true
+    description: Business email
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+      allowed_values:
+        - pending
+        - active
+        - suspended
+        - terminated
+    description: Merchant account status
+
+  - name: verification_status
+    type: string
+    constraints:
+      not_null: true
+    description: KYC verification status
+
+  - name: risk_level
+    type: string
+    constraints:
+      allowed_values:
+        - low
+        - medium
+        - high
+    description: Merchant risk classification
+
+  - name: merchant_category
+    type: string
+    description: Merchant category code (MCC)
+
+  - name: country
+    type: string
+    constraints:
+      not_null: true
+    description: Country code
+
+  - name: currency
+    type: string
+    constraints:
+      not_null: true
+    description: Settlement currency
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Account creation timestamp
+
+  - name: activated_at
+    type: timestamp
+    description: Timestamp when merchant became active
+
+  - name: monthly_volume_usd
+    type: decimal
+    constraints:
+      precision: 18
+      scale: 2
+      min: 0
+    description: Average monthly transaction volume in USD
+
+  - name: transaction_count_30d
+    type: integer
+    description: Transaction count in last 30 days
+
+  - name: average_transaction_usd
+    type: decimal
+    constraints:
+      precision: 18
+      scale: 2
+      min: 0
+    description: Average transaction amount in USD
+
+metadata:
+  description: Refined schema for merchant data with aggregated metrics
+  owner: data-platform-team
+  pii: true
+  tags:
+    - merchants
+    - refined
+    - business

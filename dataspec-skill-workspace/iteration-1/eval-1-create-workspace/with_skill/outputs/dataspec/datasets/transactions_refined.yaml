@@ -1,0 +1,23 @@
+# Dataset: Transactions Refined
+# Cleaned and validated transaction data with normalized amounts
+
+name: transactions_refined
+storage:
+  backend: s3-data-lake
+  format: delta
+  location: s3://fintech-data-lake/refined/transactions/
+
+contract:
+  name: transaction_contract
+  version: '1.0.0'
+
+metadata:
+  description: Cleaned and validated transaction data with normalized amounts
+  owner: data-platform-team
+  tags:
+    - refined
+    - transactions
+    - payments
+    - silver-layer
+  refresh_frequency: hourly
+  retention_days: 730

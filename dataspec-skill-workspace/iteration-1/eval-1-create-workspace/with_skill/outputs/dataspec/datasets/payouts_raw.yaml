@@ -1,0 +1,22 @@
+# Dataset: Payouts Raw
+# Raw ingestion of payout data from PostgreSQL
+
+name: payouts_raw
+storage:
+  backend: s3-data-lake
+  format: parquet
+  location: s3://fintech-data-lake/raw/payouts/
+
+contract:
+  name: payouts_raw_schema
+  version: '1.0.0'
+
+metadata:
+  description: Raw payout data ingested from PostgreSQL production database
+  owner: data-engineering-team
+  tags:
+    - raw
+    - payouts
+    - settlement
+  refresh_frequency: hourly
+  retention_days: 365

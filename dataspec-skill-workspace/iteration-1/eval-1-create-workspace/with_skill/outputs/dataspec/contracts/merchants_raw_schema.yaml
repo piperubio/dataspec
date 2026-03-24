@@ -1,0 +1,105 @@
+# Contract: Merchants Raw Schema
+# Raw schema for merchant data from PostgreSQL
+
+name: merchants_raw_schema
+version: '1.0.0'
+fields:
+  - name: merchant_id
+    type: uuid
+    constraints:
+      unique: true
+      not_null: true
+    description: Unique identifier for the merchant
+
+  - name: business_name
+    type: string
+    constraints:
+      not_null: true
+    description: Registered business name
+
+  - name: legal_name
+    type: string
+    description: Legal entity name
+
+  - name: email
+    type: string
+    constraints:
+      not_null: true
+    description: Business email address
+
+  - name: phone
+    type: string
+    description: Business phone number
+
+  - name: website
+    type: string
+    description: Business website URL
+
+  - name: status
+    type: string
+    constraints:
+      not_null: true
+      allowed_values:
+        - pending
+        - active
+        - suspended
+        - terminated
+    description: Merchant account status
+
+  - name: verification_status
+    type: string
+    constraints:
+      not_null: true
+      allowed_values:
+        - unverified
+        - pending
+        - verified
+        - rejected
+    description: KYC verification status
+
+  - name: merchant_category
+    type: string
+    description: Business category code (MCC)
+
+  - name: country
+    type: string
+    constraints:
+      not_null: true
+    description: Business country code
+
+  - name: currency
+    type: string
+    constraints:
+      not_null: true
+    description: Default settlement currency
+
+  - name: created_at
+    type: timestamp
+    constraints:
+      not_null: true
+    description: Timestamp when merchant was registered
+
+  - name: updated_at
+    type: timestamp
+    description: Timestamp when merchant was last updated
+
+  - name: onboarded_at
+    type: timestamp
+    description: Timestamp when merchant onboarding was completed
+
+  - name: bank_account
+    type: json
+    description: Bank account details for settlements
+
+  - name: metadata
+    type: json
+    description: Additional merchant metadata
+
+metadata:
+  description: Raw schema for merchant data - contains business PII
+  owner: payments-team
+  pii: true
+  tags:
+    - merchants
+    - business
+    - pii

@@ -1,0 +1,46 @@
+# Source: Production PostgreSQL Database
+# Primary transactional database for payment processing
+
+name: postgresql_db
+type: database
+entities:
+  - name: transactions
+    location: public.transactions
+    contract:
+      name: transactions_raw_schema
+      version: '1.0.0'
+    description: Payment transactions with amounts, status, and timestamps
+    metadata:
+      primary_key: transaction_id
+      estimated_rows: 50000000
+
+  - name: merchants
+    location: public.merchants
+    contract:
+      name: merchants_raw_schema
+      version: '1.0.0'
+    description: Merchant accounts with business details and verification status
+    metadata:
+      primary_key: merchant_id
+      estimated_rows: 100000
+
+  - name: payouts
+    location: public.payouts
+    contract:
+      name: payouts_raw_schema
+      version: '1.0.0'
+    description: Payout requests to merchants with amounts and status
+    metadata:
+      primary_key: payout_id
+      estimated_rows: 5000000
+
+metadata:
+  description: Primary production PostgreSQL database for payment processing
+  owner: payments-team
+  refresh_frequency: realtime
+  sla: '99.99%'
+  tags:
+    - production
+    - transactional
+    - payments
+    - critical

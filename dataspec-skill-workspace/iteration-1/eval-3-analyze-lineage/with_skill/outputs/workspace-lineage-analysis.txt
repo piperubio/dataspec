@@ -1,0 +1,115 @@
+================================================================================
+DataSpec Workspace Lineage Analysis
+================================================================================
+Workspace: C:/Users/pipe/Documents/work/personal/dataspec/examples/ecommerce-platform/dataspec
+
+================================================================================
+1. WORKSPACE OVERVIEW
+================================================================================
+
+The workspace is a comprehensive e-commerce data platform with:
+
+- PLATFORM: 3 storage backends (S3, PostgreSQL, ClickHouse) and 3 engines (dbt, DuckDB, Spark)
+- SOURCES: 9 data sources (databases, APIs, streaming, SaaS)
+- CONTRACTS: 78+ schema definitions
+- DATASETS: 16 datasets across raw, refined, and analytics layers
+- FLOWS: 6 ETL/ELT pipelines
+
+================================================================================
+2. DATA LINEAGE - SOURCE TO DATASET FLOW
+================================================================================
+
+A. PRODUCTION DATABASE (production_db) - Primary transactional data
+   Source: production_db (PostgreSQL)
+   Entities: users, orders, order_items, products, categories, inventory, reviews
+   
+   Flow: user_etl_pipeline
+     Extract: production_db.users -> users_raw -> users_refined -> customer_analytics
+   
+   Flow: orders_etl_pipeline  
+     Extract: production_db.orders + order_items + users -> orders_raw + order_items_raw
+     Transform: -> orders_refined + order_items_refined -> sales_dashboard
+   
+   Flow: products_etl_pipeline
+     Extract: production_db.products + categories + inventory -> products_raw
+     Transform: -> products_refined -> product_analytics
+
+B. PAYMENT API (payment_api) - Financial data
+   Source: payment_api (REST API - Stripe/PayPal)
+   Entities: transactions, refunds, payment_methods, chargebacks, settlements
+   
+   Flow: unified_analytics_pipeline
+     Extract: payment_api.transactions -> refined_payments -> unified_orders -> sales_dashboard
+
+C. ANALYTICS DATABASE (analytics_db) - Behavioral data
+   Source: analytics_db (ClickHouse)
+   Entities: events, sessions, experiments, attribution, cohorts
+   
+   Flow: unified_analytics_pipeline
+     Extract: analytics_db.events + sessions -> refined_events -> unified_customers -> customer_analytics
+
+D. EXTERNAL APIs - Third-party integrations
+   Source: external_apis (REST - FedEx/UPS/DHL, HubSpot, Zendesk)
+   Entities: shipments, shipping_rates, delivery_estimates, campaigns, etc.
+   
+   Flow: unified_analytics_pipeline
+     Extract: external_apis.shipments + campaigns -> shipping_data -> unified_orders -> sales_dashboard
+
+E. EXTERNAL S3 BUCKET - File-based data
+   Source: external_s3_bucket (S3 external bucket)
+   Entities: marketing_csv_exports, application_logs, etc.
+   
+   Flow: marketing_elt_pipeline (ELT pattern)
+     Extract: external_s3_bucket.marketing_csv_exports -> Load to raw -> Transform -> Load to refined
+   
+   Flow: marketing_s3_ingestion
+     Extract: external_s3_bucket.marketing_csv_exports -> Transform (Spark) -> marketing_campaigns_raw
+
+F. KAFKA EVENTS - Real-time streaming
+   Source: kafka_events (Kafka)
+   Entities: user_events, order_events, payment_events, etc.
+   
+   Note: kafka_events.analytics_events -> events_raw (configured but not in main flows)
+
+G. ORPHANED SOURCES (defined but not used by any flow):
+   - salesforce_crm: 8 entities (accounts, contacts, opportunities, leads, cases, etc.)
+   - grpc_user_service: 7 entities (get_user, list_users, create_user, etc.)
+   - websocket_notifications: 5 entities (live_order_updates, etc.)
+
+================================================================================
+3. VALIDATION ISSUES FOUND
+================================================================================
+
+A. ORPHANED SOURCES: 3 sources have contracts defined but no flow extracts from them
+   1. salesforce_crm - Salesforce CRM integration
+   2. grpc_user_service - Internal gRPC microservice
+   3. websocket_notifications - Real-time WebSocket push
+
+B. SOURCE ENTITIES WITHOUT DATASETS: Many source entities have contracts but 
+   no corresponding datasets (e.g., reviews, categories, refunds, experiments)
+
+C. POTENTIAL CONFLICT: Both marketing_elt_pipeline and marketing_s3_ingestion 
+   write to marketing_campaigns_raw - may cause data conflicts
+
+D. POSITIVE FINDINGS:
+   - All datasets correctly reference storage backends from platform
+   - All flows correctly reference existing sources, engines, and datasets
+   - Proper three-layer architecture (raw -> refined -> analytics/serving)
+   - Contract references are valid and consistent
+
+================================================================================
+4. RECOMMENDATIONS
+================================================================================
+
+1. Either integrate the orphaned sources (salesforce_crm, grpc_user_service, 
+   websocket_notifications) into flows or document why they are defined but unused
+
+2. Resolve the conflict between marketing_elt_pipeline and marketing_s3_ingestion 
+   writing to the same dataset
+
+3. Consider creating datasets for commonly used source entities or consolidate 
+   the contract definitions
+
+4. The workspace demonstrates good practices: clear data lineage, proper contract 
+   usage, and separation of ETL vs ELT patterns
+================================================================================

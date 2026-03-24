@@ -1,0 +1,23 @@
+# Dataset: Inventory Updates Raw
+# Raw ingestion of inventory update events from Kafka
+
+name: inventory_updates_raw
+storage:
+  backend: s3-data-lake
+  format: parquet
+  location: s3://data-lake/raw/inventory-updates/
+
+contract:
+  name: inventory_updates_stream_schema
+  version: '1.0.0'
+
+metadata:
+  description: Raw inventory update events ingested from Kafka
+  owner: streaming-team
+  tags:
+    - raw
+    - inventory
+    - kafka
+    - streaming
+  refresh_frequency: realtime
+  retention_days: 30

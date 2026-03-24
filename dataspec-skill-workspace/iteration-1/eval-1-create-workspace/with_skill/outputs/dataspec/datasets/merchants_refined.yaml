@@ -1,0 +1,23 @@
+# Dataset: Merchants Refined
+# Cleaned and validated merchant data with aggregated metrics
+
+name: merchants_refined
+storage:
+  backend: s3-data-lake
+  format: delta
+  location: s3://fintech-data-lake/refined/merchants/
+
+contract:
+  name: merchant_contract
+  version: '1.0.0'
+
+metadata:
+  description: Cleaned and validated merchant data with aggregated metrics
+  owner: data-platform-team
+  tags:
+    - refined
+    - merchants
+    - business
+    - silver-layer
+  refresh_frequency: hourly
+  retention_days: 1095

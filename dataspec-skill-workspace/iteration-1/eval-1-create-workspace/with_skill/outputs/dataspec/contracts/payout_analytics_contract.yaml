@@ -1,0 +1,99 @@
+# Contract: Payout Analytics Contract
+# Analytics schema for payout processing dashboard
+
+name: payout_analytics_contract
+version: '1.0.0'
+fields:
+  - name: date
+    type: date
+    constraints:
+      not_null: true
+    description: Date for daily aggregation
+
+  - name: merchant_id
+    type: uuid
+    constraints:
+      not_null: true
+    description: Merchant identifier
+
+  - name: merchant_name
+    type: string
+    description: Merchant business name
+
+  - name: total_payouts
+    type: integer
+    constraints:
+      not_null: true
+      min: 0
+    description: Total number of payouts
+
+  - name: successful_payouts
+    type: integer
+    constraints:
+      not_null: true
+      min: 0
+    description: Number of successful payouts
+
+  - name: failed_payouts
+    type: integer
+    constraints:
+      not_null: true
+      min: 0
+    description: Number of failed payouts
+
+  - name: total_amount_usd
+    type: decimal
+    constraints:
+      not_null: true
+      precision: 20
+      scale: 2
+      min: 0
+    description: Total payout amount in USD
+
+  - name: average_amount_usd
+    type: decimal
+    constraints:
+      not_null: true
+      precision: 18
+      scale: 2
+      min: 0
+    description: Average payout amount in USD
+
+  - name: success_rate
+    type: decimal
+    constraints:
+      not_null: true
+      min: 0
+      max: 100
+    description: Payout success rate percentage
+
+  - name: total_fees_usd
+    type: decimal
+    constraints:
+      not_null: true
+      precision: 18
+      scale: 2
+      min: 0
+    description: Total processing fees in USD
+
+  - name: average_processing_time_hours
+    type: decimal
+    constraints:
+      min: 0
+    description: Average processing time in hours
+
+  - name: failure_rate
+    type: decimal
+    constraints:
+      min: 0
+      max: 100
+    description: Payout failure rate percentage
+
+metadata:
+  description: Aggregated daily payout analytics by merchant
+  owner: analytics-team
+  pii: false
+  tags:
+    - analytics
+    - payouts
+    - dashboard

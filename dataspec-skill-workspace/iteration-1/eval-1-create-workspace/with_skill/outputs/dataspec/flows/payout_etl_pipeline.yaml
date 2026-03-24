@@ -1,0 +1,36 @@
+# Flow: Payout ETL Pipeline
+# Extract payouts from PostgreSQL, load to raw, transform to refined
+
+name: payout_etl_pipeline
+steps:
+  # Extract from PostgreSQL source
+  - type: extract
+    source: postgresql_db
+    entity: payouts
+    output: raw_payouts
+
+  # Load to raw layer in S3
+  - type: load
+    input: raw_payouts
+    target: payouts_raw
+
+  # Transform with dbt for refined layer
+  - type: transform
+    inputs:
+      - raw_payouts
+    engine: dbt-transforms
+    output: refined_payouts
+
+  # Load to refined layer in S3 (Delta format)
+  - type: load
+    input: refined_payouts
+    target: payouts_refined
+
+metadata:
+  description: ETL pipeline for payout data - from PostgreSQL to S3 data lake
+  version: '1.0.0'
+  labels:
+    - etl
+    - payouts
+    - settlement
+    - core

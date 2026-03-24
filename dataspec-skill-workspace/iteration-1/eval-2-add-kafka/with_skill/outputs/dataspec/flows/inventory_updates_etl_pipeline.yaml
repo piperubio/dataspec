@@ -1,0 +1,25 @@
+# Flow: Inventory Updates ETL Pipeline
+# Extracts inventory update events from Kafka and loads to raw S3 dataset
+
+name: inventory_updates_etl_pipeline
+steps:
+  # Step 1: Extract raw inventory updates from Kafka
+  - type: extract
+    source: inventory_updates_kafka
+    entity: inventory_updates
+    output: raw_inventory_updates
+
+  # Step 2: Load to raw dataset in S3 data lake
+  - type: load
+    input: raw_inventory_updates
+    target: inventory_updates_raw
+
+metadata:
+  description: ETL pipeline for inventory updates from Kafka to S3 raw layer
+  version: '1.0.0'
+  labels:
+    - etl
+    - kafka
+    - streaming
+    - inventory
+  definedAt: flows/inventory_updates_etl_pipeline.yaml

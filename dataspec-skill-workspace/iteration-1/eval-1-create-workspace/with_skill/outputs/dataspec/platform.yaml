@@ -1,0 +1,45 @@
+# Payment Processing Data Platform
+# DataSpec workspace for fintech payment processing system
+
+platform:
+  name: payment-platform
+  version: '1.0.0'
+  description: 'Data platform for payment processing, merchant management, and payout operations'
+  owner: fintech-data-team
+
+# Storage backends configuration
+storage:
+  - name: s3-data-lake
+    type: s3
+    connection: 's3://fintech-data-lake/'
+    options:
+      region: us-east-1
+      encryption: AES256
+
+  - name: clickhouse-analytics
+    type: clickhouse
+    connection: 'clickhouse://analytics:8123/analytics'
+    options:
+      compression: lz4
+      timeout: 300
+
+# Analytics engines
+engines:
+  - name: dbt-transforms
+    type: dbt
+    version: '>=1.5.0'
+    config:
+      threads: 8
+      target: production
+
+  - name: spark-processing
+    type: spark
+    version: '>=3.4.0'
+    config:
+      executor_memory: 4g
+      executor_cores: 4
+
+# Default settings
+defaults:
+  storage: s3-data-lake
+  engine: dbt-transforms

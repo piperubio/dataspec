@@ -1,0 +1,23 @@
+# Dataset: Merchants Raw
+# Raw ingestion of merchant data from PostgreSQL
+
+name: merchants_raw
+storage:
+  backend: s3-data-lake
+  format: parquet
+  location: s3://fintech-data-lake/raw/merchants/
+
+contract:
+  name: merchants_raw_schema
+  version: '1.0.0'
+
+metadata:
+  description: Raw merchant data ingested from PostgreSQL production database
+  owner: data-engineering-team
+  tags:
+    - raw
+    - merchants
+    - business
+    - pii
+  refresh_frequency: hourly
+  retention_days: 365
