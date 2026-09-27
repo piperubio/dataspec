@@ -6,7 +6,7 @@
 
 ## ¿Qué es Dataspec?
 
-DataSpec (*Declarative Data Platform Architecture* / *Data Platform Specs*) es un toolset para diseñar especificaciones de plataformas de datos mediante un **DSL declarativo basado en YAML**. Describe *qué es* tu plataforma — no *cómo se ejecuta* — separando el diseño arquitectónico de las herramientas específicas (orquestadores, motores de transformación, catálogos, etc.).
+DataSpec (_Declarative Data Platform Architecture_ / _Data Platform Specs_) es un toolset para diseñar especificaciones de plataformas de datos mediante un **DSL declarativo basado en YAML**. Describe _qué es_ tu plataforma — no _cómo se ejecuta_ — separando el diseño arquitectónico de las herramientas específicas (orquestadores, motores de transformación, catálogos, etc.).
 
 El proyecto incluye la lógica central (`@dataspec/dataspec-core`), la CLI (`@dataspec/dataspec-cli`), la integración con DataHub (`@dataspec/dataspec-datahub`) y una skill para agentes de IA. El desarrollo sigue un enfoque de **desarrollo dirigido por especificaciones** mediante el framework [OpenSpec](./openspec/).
 
@@ -20,13 +20,13 @@ Los stacks modernos de datos están fragmentados: frameworks de orquestación, h
 
 Dataspec modela 5 tipos de recursos dentro de una carpeta `dataspec/`:
 
-| Recurso | Ubicación | Propósito |
-|---|---|---|
-| **Platform** | `dataspec/platform.yaml` (uno solo) | Configuración global: storage backends, engines, defaults |
-| **Source** | `dataspec/sources/*.yaml` | Productores de datos externos (`database`, `api`, `file_system`, `streaming`, `saas`) — sin credenciales |
-| **Contract** | `dataspec/contracts/*.yaml` | Schemas versionados (semver) con 8 tipos de dato y constraints |
-| **Dataset** | `dataspec/datasets/*.yaml` | Unidades lógicas de datos con storage backend, formato y ubicación |
-| **Flow** | `dataspec/flows/*.yaml` | Pipelines ETL/ELT con steps `extract` → `transform` → `load` |
+| Recurso      | Ubicación                           | Propósito                                                                                                |
+| ------------ | ----------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| **Platform** | `dataspec/platform.yaml` (uno solo) | Configuración global: storage backends, engines, defaults                                                |
+| **Source**   | `dataspec/sources/*.yaml`           | Productores de datos externos (`database`, `api`, `file_system`, `streaming`, `saas`) — sin credenciales |
+| **Contract** | `dataspec/contracts/*.yaml`         | Schemas versionados (semver) con 8 tipos de dato y constraints                                           |
+| **Dataset**  | `dataspec/datasets/*.yaml`          | Unidades lógicas de datos con storage backend, formato y ubicación                                       |
+| **Flow**     | `dataspec/flows/*.yaml`             | Pipelines ETL/ELT con steps `extract` → `transform` → `load`                                             |
 
 Puntos clave del modelo:
 
@@ -140,11 +140,11 @@ bun install
 
 Monorepo con workspaces en `packages/`:
 
-| Paquete | Descripción |
-|---|---|
-| `@dataspec/dataspec-core` | Parsing, types y schemas JSON del DSL |
-| `@dataspec/dataspec-cli` | CLI, grafo, validación semántica y comandos |
-| `@dataspec/dataspec-datahub` | Cliente y syncs hacia DataHub |
+| Paquete                      | Descripción                                 |
+| ---------------------------- | ------------------------------------------- |
+| `@dataspec/dataspec-core`    | Parsing, types y schemas JSON del DSL       |
+| `@dataspec/dataspec-cli`     | CLI, grafo, validación semántica y comandos |
+| `@dataspec/dataspec-datahub` | Cliente y syncs hacia DataHub               |
 
 Comandos principales:
 
@@ -179,6 +179,6 @@ Notas:
 5. **Convenciones de código**:
    - ESM; prefijo `node:` en builtins; named imports sobre default imports.
    - Sin barrel files: importa directamente desde los source files.
-   - El proyecto es *specification-driven*: los cambios funcionales se proponen primero vía OpenSpec (ver [`AGENTS.md`](./AGENTS.md) y [`openspec/`](./openspec/)).
+   - El proyecto es _specification-driven_: los cambios funcionales se proponen primero vía OpenSpec (ver [`AGENTS.md`](./AGENTS.md) y [`openspec/`](./openspec/)).
 
 Más detalles en [`AGENTS.md`](./AGENTS.md).
