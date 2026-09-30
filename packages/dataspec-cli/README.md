@@ -14,6 +14,30 @@ Or use with npx:
 npx @dataspec/dataspec-cli <command>
 ```
 
+### Prebuilt binaries
+
+Standalone binaries (no Bun or Node required) are attached to every [GitHub Release](../../releases):
+
+| OS      | amd64                          | arm64                          |
+| ------- | ------------------------------ | ------------------------------ |
+| Linux   | `dataspec-linux-amd64.tar.gz`  | `dataspec-linux-arm64.tar.gz`  |
+| macOS   | `dataspec-darwin-amd64.tar.gz` | `dataspec-darwin-arm64.tar.gz` |
+| Windows | `dataspec-windows-amd64.zip`   | `dataspec-windows-arm64.zip`   |
+
+```bash
+# Example: macOS on Apple Silicon
+tar -xzf dataspec-darwin-arm64.tar.gz
+./dataspec --version
+```
+
+Verify the download against `checksums.txt` from the same release:
+
+```bash
+shasum -a 256 -c checksums.txt --ignore-missing
+```
+
+> The binaries are not signed or notarized. On macOS, a binary downloaded with a browser may be blocked by Gatekeeper; remove the quarantine flag with `xattr -d com.apple.quarantine dataspec`. On Windows, SmartScreen may show a warning.
+
 ## Quick Start
 
 ```bash
@@ -255,6 +279,36 @@ If you have an existing DataSpec project with resources at the root level, migra
    ```bash
    dataspec validate
    ```
+
+## Releasing
+
+Releases are built and published by `.github/workflows/release.yml` when a `v*` tag is pushed.
+
+1. Set the new version in `packages/dataspec-cli/package.json` (e.g. `0.5.0`) and merge it to `main` through a PR.
+2. Tag the merge commit on `main` and push the tag:
+
+   ```bash
+   git checkout main && git pull
+   git tag v0.5.0
+   git push origin v0.5.0
+   ```
+
+3. The workflow then:
+   - checks that the tag matches the CLI version (`v0.5.0` requires `"version": "0.5.0"`), so a mismatch fails the run,
+   - runs typecheck, lint, format check and tests,
+   - cross-compiles the six binaries (Linux, macOS and Windows, each for amd64 and arm64),
+   - publishes a GitHub Release with the archives, a `checksums.txt` and auto-generated notes.
+
+Tags that contain a `-` (e.g. `v0.5.0-rc.1`) are published as prereleases. Because of the version check, a prerelease tag also needs a matching prerelease version in `package.json`.
+
+To build a binary for another platform locally:
+
+```bash
+cd packages/dataspec-cli
+bun scripts/build.ts --target=bun-linux-arm64 --outfile ./dist/dataspec
+```
+
+Valid targets are `bun-{linux,darwin,windows}-{x64,arm64}`. Without arguments, `bun run build` builds `bin/dataspec` for the current platform.
 
 ## License
 
