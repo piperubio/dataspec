@@ -39,6 +39,9 @@ jobs:
       - name: Check formatting
         run: bun run fmt:check
 
+      - name: Build CLI binary
+        run: bun run build
+
       - name: Run tests
         run: bun test
 
